@@ -1,0 +1,45 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}information | {% endblock %}
+{% block content %}
+    <div>
+        <h1>User Information</h1>
+        <div>
+            <p> total : {{ total }} </p>
+            <table>
+                <tr>
+                    <th>วันที่ทำนาย</th>
+                    <th>เพศ</th>
+                    <th>แผนการเรียนมัธยมศึกษา</th>
+                    <th>เกรดเฉลี่ยมัธยมปลาย</th>
+                    <th>ผลลัพธ์ของกลุ่มอาชีพพื้นฐาน</th>
+                    <th>ผลการศึกษากลุ่มวิชาชีพบังคับ</th>
+                    <th>ผลการเรียนสายอาชีพที่เลือก</th>
+                    <th>วิชาบังคับเลือกภาคเรียนที่ 1</th>
+                    <th>รายวิชาบังคับเลือกภาคเรียนที่ 2</th>
+                    <th>ผลการเรียนกลุ่มภาษาต่างประเทศ</th>
+                    <th>ผลการเรียนกลุ่มภาษาไทย</th>
+                    <th>เกรดเฉลี่ยในปีที่ 1</th>
+                    <th>ผลการทำนาย</th>
+                </tr>
+                <tr {% for result in results %}>
+                
+                    <td>{{ result.predict_at|date:'j N Y' }}</td>
+                    <td>{{ result.gender }}</td>
+                    <td>{{ result.plan_highschool }}</td>
+                    <td>{{ result.highschool_grade }}</td>
+                    <td>{{ result.professional_grade }}</td>
+                    <td>{{ result.compulsory_pro_grade }}</td>
+                    <td>{{ result.select_vocation_grade }}</td>
+                    <td>{{ result.compulsory_elective_1 }}</td>
+                    <td>{{ result.compulsory_elective_2 }}</td>
+                    <td>{{ result.foreign_language_grade }}</td>
+                    <td>{{ result.thai_grade }}</td>
+                    <td>{{ result.avg_grade }}</td>
+                    <td> {{ result.result_predict }}</td>
+
+                </tr {% endfor %}>
+            </table>
+        </div>
+        <div></div>
+    </div>
+{% endblock %}
