@@ -1,62 +1,62 @@
 {% extends 'app_general/components/base.html' %}
 {% block site_title %}prediction | {% endblock %}
 {% block content %}
-    <div style="height:85vh; overflow: scroll;">
+    <div>
         <h2>Prediction</h2>
         <div>
             <form action="{% url 'prediction' %}" method="post">
                 {% csrf_token %}
-                <div>
+                <div class="form-check">
                     {{ form.gender.label }}
                     {{ form.gender }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.plan_highschool.label }}
                     {{ form.plan_highschool }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.highschool_grade.label }}
                     {{ form.highschool_grade }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.professional_grade.label }}
                     {{ form.professional_grade }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.compulsory_pro_grade.label }}
                     {{ form.compulsory_pro_grade }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.select_vocation_grade.label }}
                     {{ form.select_vocation_grade }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.compulsory_elective_1.label }}
                     {{ form.compulsory_elective_1 }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.compulsory_elective_2.label }}
                     {{ form.compulsory_elective_2 }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.foreign_language_grade.label }}
                     {{ form.foreign_language_grade }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.thai_grade.label }}
                     {{ form.thai_grade }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.avg_grade.label }}
                     {{ form.avg_grade }}
                 </div>
-                <div>
+                <div class="form-check">
                     {{ form.result_predict.label }}
                     {{ form.result_predict }}
                 </div>
 
-                <div stylr="margin-bottom: 16px;">
-                    <button type="submit">
+                <div>
+                    <button type="submit" class="btn btn-primary">
                         ทำนาย
                     </button>
                 </div>

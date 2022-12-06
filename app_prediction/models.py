@@ -15,3 +15,4 @@ class Prediction(models.Model):
     avg_grade = models.CharField(max_length=50)
     result_predict = models.CharField(max_length=50)
     predict_at = models.DateField(auto_now_add=True)
+    

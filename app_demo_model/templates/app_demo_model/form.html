@@ -1,0 +1,16 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}prediction | {% endblock %}
+{% block content %}
+    <div>
+        <h2>Upload File</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">    
+              </div>
+                <input type="file" name="myfile" class="form-control">
+                  <button type="submit" class="btn btn-success" >Upload</button> 
+              </div>
+            </div>
+          </form>   
+    </div>
+{% endblock %}

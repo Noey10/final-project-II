@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app_general.apps.AppGeneralConfig',
     'app_prediction.apps.AppPredictionConfig',
+    'app_demo_model.apps.AppDemoModelConfig',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'test_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_data',
+        'NAME': 'test_model',
         'USER': 'root',
         'PASSWORD': 'jlfA4434',
         'HOST': 'localhost',

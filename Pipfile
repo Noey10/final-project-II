@@ -6,6 +6,11 @@ name = "pypi"
 [packages]
 django = "*"
 mysql-connector-python = "*"
+pandas = "*"
+faker = "*"
+django-import-export = "*"
+attrs = "*"
+attr = "*"
 
 [dev-packages]
 autopep8 = "*"
