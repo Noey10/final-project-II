@@ -11,6 +11,8 @@ faker = "*"
 django-import-export = "*"
 attrs = "*"
 attr = "*"
+seaborn = "*"
+scikit-learn = "*"
 
 [dev-packages]
 autopep8 = "*"

@@ -12,6 +12,10 @@
         "dbframe",
         "empexceldata",
         "itertuples",
+        "matplotlib",
+        "pyplot",
+        "seaborn",
+        "sklearn",
         "tablib"
     ]
 }
