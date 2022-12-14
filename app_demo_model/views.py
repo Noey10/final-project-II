@@ -11,7 +11,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 import sklearn.metrics as metrics
-
+import openpyxl
+from .resources import GradesResource
+from tablib import Dataset
 
 def upload(request):
     if request.method == 'POST' and request.FILES['myfile']:      
@@ -21,7 +23,8 @@ def upload(request):
         empexceldata = pd.read_excel(filename)        
         dbframe = empexceldata
         for dbframe in dbframe.itertuples():
-            obj = Grades.objects.create(major=dbframe.major, 
+            obj = Grades.objects.create(
+                # major=dbframe.major, 
                                         gpa=dbframe.gpa,
                                         admission_grade=dbframe.admission_grade,
                                         gpa_year_1=dbframe.gpa_year_1,
@@ -37,7 +40,7 @@ def upload(request):
                                         )           
             print(obj)
             obj.save()
-            
+    
     return render(request, 'app_demo_model/form.html')
 
 def test_predict(request):
@@ -72,14 +75,15 @@ def test(request):
     pred = model.predict([[val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11]])
     
     result2 = ""
-    if pred ==[1]:
+    if pred == [1]:
         result2 = "True"
     else:
         result2 = "FALSE"
+            
+    context = {'result2': result2}
     
-    # print("result2", result2, "\n", "pred", pred)
-    
-        
-    # context = {'result2': result2}
-    
-    return render(request, 'app_demo_model/test_predict.html', {'result2': result2})
+    return render(request, 'app_prediction/prediction_result.html', context)
+
+
+def data_in_model(request):
+    return render(request, 'app_demo_model/show_data_model.html')

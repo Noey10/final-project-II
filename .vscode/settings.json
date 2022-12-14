@@ -13,8 +13,12 @@
         "empexceldata",
         "itertuples",
         "matplotlib",
+        "mymo",
+        "mymodal",
+        "openpyxl",
         "pyplot",
         "seaborn",
+        "sheetnames",
         "sklearn",
         "tablib"
     ]

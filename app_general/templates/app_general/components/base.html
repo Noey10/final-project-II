@@ -23,56 +23,61 @@
     </head>
     <body>
         {% include 'app_general/components/site_header.html' %}
-            <div class="container-fluid" style="height: 92vh;">
-                <div class="row h-100">
-                    <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collpase">
-                        <div class="position-sticky">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a href="{% url 'dashboard' %}" class="nav-link">
-                                        <i data-feather="home"></i>
-                                        <span class="ml-2">Dashboard</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'prediction' %}" class="nav-link">
-                                        <i data-feather="home"></i>
-                                        <span class="ml-2">Prediction</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'information' %}" class="nav-link">
-                                        <i data-feather="file-text"></i>
-                                        <span class="ml-2">Information</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'profile' %}" class="nav-link">
-                                        <i data-feather="user"></i>
-                                        <span class="ml-2">Profile</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'upload' %}" class="nav-link">
-                                        <i data-feather="user"></i>
-                                        <span class="ml-2">upload model</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'test_predict' %}" class="nav-link">
-                                        <i data-feather="user"></i>
-                                        <span class="ml-2">test predict</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+        <div class="container-fluid" style="min-height: 92vh;">
 
-                        <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4 h-100">
-                            {% block content %}{% endblock %}
-                        </main>
+            <div class="row h-100">
+
+                <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collpase">
+
+                    <div class="position-sticky sticky-top">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link">
+                                    <i data-feather="home"></i>
+                                    <span class="ml-2">Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'prediction' %}" class="nav-link">
+                                    <i data-feather="feather"></i>
+                                    <span class="ml-2">Prediction</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'information' %}" class="nav-link">
+                                    <i data-feather="file-text"></i>
+                                    <span class="ml-2">Information</span>
+                                 </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'profile' %}" class="nav-link">
+                                    <i data-feather="user"></i>
+                                    <span class="ml-2">Profile</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'upload' %}" class="nav-link">
+                                    <i data-feather="arrow-down"></i>
+                                    <span class="ml-2">upload model</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'test_predict' %}" class="nav-link">
+                                    <i data-feather="box"></i>
+                                    <span class="ml-2">test predict</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </div>
+                    
+                </nav>
+
+                <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4" style="min-height: 92vh;">
+                    {% block content %}{% endblock %}
+                </main>
             </div>
+        </div>
+        
 
         {% include 'app_general/components/site_footer.html' %}
         <script>
