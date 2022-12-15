@@ -4,7 +4,7 @@ from app_prediction.models import Prediction
 
 # Create your views here.
 def information(request):
-    all_result = Prediction.objects.order_by('-predict_at')
+    all_result = Prediction.objects.all()
     total = Prediction.objects.all().count()
     context = {'results': all_result,
                'total': total
@@ -30,8 +30,7 @@ def dashboard(request):
     
     data.append(tot)
     data.append(tot2)
-    
-    print(tot)
+
     context = {
         'labels': labels,
         'data': data,

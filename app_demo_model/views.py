@@ -16,7 +16,7 @@ from .resources import GradesResource
 from tablib import Dataset
 
 def upload(request):
-    if request.method == 'POST' and request.FILES['myfile']:      
+    if request.method == 'POST':   
         myfile = request.FILES['myfile']
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)          
@@ -38,7 +38,6 @@ def upload(request):
                                         english=dbframe.english,
                                         status=dbframe.status, 
                                         )           
-            print(obj)
             obj.save()
     
     return render(request, 'app_demo_model/form.html')
@@ -48,11 +47,13 @@ def test_predict(request):
 
 def test(request):
     #read data
-    data = pd.read_excel(r"D:\pythonTest\data\science-student2.XLSX")
+    all_data = Grades.objects.all().values()
+    df = pd.DataFrame(all_data)
     
     #train-test split data
-    X = data.drop("status", axis=1)
-    y = data['status']
+    features = ['gpa', 'admission_grade', 'gpa_year_1', 'thai', 'mathematics', 'science', 'society', 'hygiene', 'art', 'career', 'english' ]
+    X = df[features]
+    y = df['status']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
     
     #training model
@@ -73,17 +74,28 @@ def test(request):
     
     #prediction
     pred = model.predict([[val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11]])
-    
+    print('pred : ', pred)
     result2 = ""
-    if pred == [1]:
+    if pred == ['1']:
         result2 = "True"
     else:
         result2 = "FALSE"
-            
+    
     context = {'result2': result2}
     
     return render(request, 'app_prediction/prediction_result.html', context)
 
 
 def data_in_model(request):
-    return render(request, 'app_demo_model/show_data_model.html')
+    all_data = Grades.objects.all()
+    total_data = Grades.objects.all().count()
+
+    context = {'results2': all_data,
+               'total2': total_data
+               }
+    return render(request, 'app_demo_model/show_data_model.html', context)
+
+def delete_datas(request):
+    grades = Grades.objects.all()
+    grades.delete()
+    return HttpResponseRedirect(reverse('result'))
