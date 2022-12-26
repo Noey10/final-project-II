@@ -18,7 +18,6 @@ class Grades(models.Model):
     
     
 class GradesInput(models.Model):
-    # major = models.CharField(default='', blank=True, max_length=50, null=True)
     gpa = models.CharField(default='', blank=True, max_length=50, null=True)
     admission_grade = models.CharField(default='', blank=True, max_length=50, null=True)
     gpa_year_1 = models.CharField(default='', blank=True, max_length=50, null=True)

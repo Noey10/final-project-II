@@ -1,3 +1,4 @@
+from contextlib import _RedirectStream
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -14,6 +15,8 @@ import sklearn.metrics as metrics
 import openpyxl
 from .resources import GradesResource
 from tablib import Dataset
+from app_demo_model.forms import TestPredictionGradeForm
+from django.contrib import messages
 
 def upload(request):
     if request.method == 'POST':   
@@ -39,8 +42,9 @@ def upload(request):
                                         status=dbframe.status, 
                                         )           
             obj.save()
+
     
-    return render(request, 'app_demo_model/form.html')
+    return render(request, 'app_demo_model/form_upload_model.html')
 
 def test_predict(request):
     return render(request, 'app_demo_model/test_predict.html')
@@ -85,7 +89,6 @@ def test(request):
     
     return render(request, 'app_prediction/prediction_result.html', context)
 
-
 def data_in_model(request):
     all_data = Grades.objects.all()
     total_data = Grades.objects.all().count()
@@ -98,4 +101,55 @@ def data_in_model(request):
 def delete_datas(request):
     grades = Grades.objects.all()
     grades.delete()
-    return HttpResponseRedirect(reverse('result'))
+    return render(request, 'app_demo_model/show_data_model.html')
+
+def testing_predict(request):
+    result2 = ""
+    all_data = Grades.objects.all().values()
+    df = pd.DataFrame(all_data)
+    grade = TestPredictionGradeForm()
+    
+    #train-test split data
+    features = ['gpa', 'admission_grade', 'gpa_year_1', 'thai', 'mathematics', 'science', 'society', 'hygiene', 'art', 'career', 'english' ]
+    X = df[features]
+    y = df['status']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+    
+    #training model
+    model = DecisionTreeClassifier()
+    model = model.fit(X_train.values, y_train.values)
+    
+    if request.method == 'POST':
+        grade = TestPredictionGradeForm(request.POST)
+        if grade.is_valid():
+            val1 = request.POST['gpa']
+            val2 = request.POST['admission_grade']
+            val3 = request.POST['gpa_year_1']
+            val4 = request.POST['thai']
+            val5 = request.POST['mathematics']
+            val6 = request.POST['science']
+            val7 = request.POST['society']
+            val8 = request.POST['hygiene']
+            val9 = request.POST['art']
+            val10 = request.POST['career']
+            val11 = request.POST['english']               
+    #prediction
+            pred = model.predict([[val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11]])
+            print('pred : ', pred)
+            if pred == ['1']:
+                result2 = "True"                
+            else:
+                result2 = "FALSE"
+            
+            grade.status = pred
+            grade.save()                
+            return render(request, 'app_prediction/prediction_result.html', {'result2': result2})
+            
+    print('result2 : ', result2)
+    
+    context = {'grade': grade}
+    
+    return render(request, 'app_demo_model/form_testing_model.html', context)
+
+def show_data_input(request):
+    return render(request, 'app_demo_model/show_data_input.html')

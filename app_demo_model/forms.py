@@ -1,26 +1,43 @@
 from attr import fields
 from django import forms
 from .models import Grades, GradesInput
-
-
-class GradesForm(forms.Form):
-    class Meta:
-        model = Grades
-        fields = ['gpa', 'admission_grade', 'gap_year_1', 'thai', 'mathematics', 'science', 'society', 'hygiene', 'art', 'career', 'english', 'status']
-        
-        
+      
 #choices
+# grade_choices = [
+#     ('7', 'A'), 
+#     ('6', 'B+'), 
+#     ('5', 'B'), 
+#     ('4', 'C+'), 
+#     ('3', 'C'), 
+#     ('2', 'D+'), 
+#     ('1', 'D'), 
+#     ('0', 'F')
+#     ]        
+
+
 grade_choices = [
-    ('A', 'A'), 
-    ('B+', 'B+'), 
-    ('B', 'B'), 
-    ('C+', 'C+'), 
-    ('C', 'C'), 
-    ('D+', 'D+'), 
-    ('D', 'D'), 
-    ('F', 'F')
+    ('1', 'A'), 
+    ('2', 'B+'), 
+    ('3', 'B'), 
+    ('4', 'C+'), 
+    ('5', 'C'), 
+    ('6', 'D+'), 
+    ('7', 'D'), 
+    ('8', 'F')
     ]        
-class TestPredictionGradeForm(forms.Form):
+
+
+choices = [
+    ('A','A'),
+    ('B+','B+'),
+    ('B','B'),
+    ('C+','C+'),
+    ('C','C'),
+    ('D+','D+'),
+    ('D','D'),
+    ('F','F'),
+    ]   
+class TestPredictionGradeForm(forms.ModelForm):
     class Meta: 
         model = GradesInput
         fields = [
@@ -35,7 +52,6 @@ class TestPredictionGradeForm(forms.Form):
             'art',
             'career',
             'english',
-            'status'
         ]
         
         labels = {

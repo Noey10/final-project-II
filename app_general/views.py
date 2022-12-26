@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import render
 from app_prediction.models import Prediction
+from app_demo_model.models import GradesInput
 
 # Create your views here.
 def information(request):
@@ -15,12 +16,12 @@ def dashboard(request):
     labels = []
     data = []
 
-    queryset = Prediction.objects.order_by('-predict_at')
+    queryset = GradesInput.objects.all()
     tot = 0
     tot2 = 0
     
     for item in queryset:
-        if item.result_predict == 'True':
+        if item.status == '1':
             tot += 1
         else:
             tot2 += 1
@@ -39,3 +40,6 @@ def dashboard(request):
 
 def profile(request):
     return render(request, 'app_general/profile.html')
+
+def homepage(request):
+    return render(request, 'app_general/homepage.html')

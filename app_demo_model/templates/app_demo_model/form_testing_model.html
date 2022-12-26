@@ -1,0 +1,101 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}prediction | {% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-3">Testing prediction</h2>
+
+    <form action="{% url 'testing_predict' %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.gpa.label }}
+                    {{ grade.gpa }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.admission_grade.label }}
+                    {{ grade.admission_grade }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.gpa_year_1.label }}
+                    {{ grade.gpa_year_1 }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.thai.label }}
+                    {{ grade.thai }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.mathematics.label }}
+                    {{ grade.mathematics }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.science.label }}
+                    {{ grade.science }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.society.label }}
+                    {{ grade.society }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.hygiene.label }}
+                    {{ grade.hygiene }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.art.label }}
+                    {{ grade.art }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.career.label }}
+                    {{ grade.career }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.english.label }}
+                    {{ grade.english }}
+                </div>
+            </div>
+            <div class="col-3 mt-2">
+                <div>
+                    {{ grade.status }}
+                </div>
+            </div>
+
+        </div>
+        <div class="container d-flex justify-content-center mt-5">
+            <button type="submit" class="btn btn-primary">submit</button>
+        </div>
+    </form>
+    <div class="mt-5">
+        <h3>สัญลักษณ์ที่ใช้แทนของช่วงเกรดเฉลี่ย</h3>
+        <ul class="row">
+            <li class="col-3">A = 4.00 </li>
+            <li class="col-3">B+ = 3.50-3.99</li>
+            <li class="col-3">B = 3.00-3.49</li>
+            <li class="col-3">C+ = 2.50-2.99</li>
+            <li class="col-3">C = 2.00-2.49</li>
+            <li class="col-3">D+ = 1.50-1.99</li>
+            <li class="col-3">D = 1.00-1.49</li>
+            <li class="col-3">F = <1.00</li>
+        </ul>
+    </div>
+<div>             
+{% endblock %}

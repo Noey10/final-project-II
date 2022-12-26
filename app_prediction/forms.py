@@ -27,8 +27,7 @@ CHOICES = [
 class PredictionModelForm(forms.ModelForm):
     class Meta:
         model = Prediction
-        fields = ['gender',
-                  'plan_highschool',
+        fields = [
                   'highschool_grade',
                   'professional_grade',
                   'compulsory_pro_grade',
@@ -38,12 +37,9 @@ class PredictionModelForm(forms.ModelForm):
                   'foreign_language_grade',
                   'thai_grade',
                   'avg_grade',
-                  'result_predict', 
                   ]
         
         labels = {
-            'gender': 'เพศ',
-            'plan_highschool': 'แผนการศึกษาระดับมัธยม',
             'highschool_grade': 'ผลการเรียนเฉลี่ยระดับมัธยม',
             'professional_grade': 'ผลการเรียนกลุ่มพื้นฐานวิชาชีพ',
             'compulsory_pro_grade': 'ผลการเรียนกลุ่มวิชาชีพบังคับ',
@@ -53,12 +49,9 @@ class PredictionModelForm(forms.ModelForm):
             'foreign_language_grade': 'ผลการเรียนกลุ่มภาษาต่างประเทศ',
             'thai_grade': 'ผลการเรียนกลุ่มภาษาไทย',
             'avg_grade': 'ผลการเรียนเฉลี่ยในชั้นปีที่ 1',
-            'result_predict': 'เรียนผ่าน?',
         }
         
         widgets = {
-            'gender': forms.RadioSelect(choices=gender_choices),
-            'plan_highschool': forms.RadioSelect(choices=CHOICES2),
             'highschool_grade': forms.RadioSelect(choices=grade_choices),
             'professional_grade': forms.RadioSelect(choices=grade_choices),
             'compulsory_pro_grade': forms.RadioSelect(choices=grade_choices),
@@ -68,5 +61,4 @@ class PredictionModelForm(forms.ModelForm):
             'foreign_language_grade': forms.RadioSelect(choices=grade_choices),
             'thai_grade': forms.RadioSelect(choices=grade_choices),
             'avg_grade': forms.RadioSelect(choices=grade_choices),
-            'result_predict': forms.RadioSelect(choices=CHOICES),
         }

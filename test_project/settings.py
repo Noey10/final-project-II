@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'app_general.apps.AppGeneralConfig',
     'app_prediction.apps.AppPredictionConfig',
     'app_demo_model.apps.AppDemoModelConfig',
+    'app_users.apps.AppUsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'test_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_db',
+        'NAME': 'final_db',
         'USER': 'root',
         'PASSWORD': 'jlfA4434',
         'HOST': 'localhost',
@@ -128,3 +129,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#Auth
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "homepage"

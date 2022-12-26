@@ -4,8 +4,7 @@ from app_prediction.models import Prediction
 
 # Register your models here.
 class PredictionAdmin(admin.ModelAdmin):
-    list_display = ['gender',
-                    'plan_highschool',
+    list_display = [
                     'highschool_grade', 
                     'professional_grade',
                     'compulsory_pro_grade',

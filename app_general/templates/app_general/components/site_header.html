@@ -9,7 +9,17 @@
             <h3>ระบบทำนายการจบการศึกษา</h3>
         </div>
     </a>
-    <a href="{% url 'dashboard' %}">
-        <button class="btn btn-warning me-3">Log out</button>
+    {% if user.is_authenticated %}
+        <a class="me-3" href="{% url 'profile' %}">
+            <span>{{ user.username }}</span>
+        </a>
+        <a href="{% url 'logout' %}">
+            <button class="btn btn-warning me-3">Log out</button>
+        </a>
+    {% else %}
+    <a href="{% url 'login' %}">
+        <button class="btn btn-warning me-3">Log in</button>
     </a>
+    {% endif %}
+    
     </nav>

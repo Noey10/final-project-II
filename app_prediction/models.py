@@ -2,8 +2,6 @@ from django.db import models
 
 # Create your models here.
 class Prediction(models.Model):
-    gender = models.CharField(max_length=30)
-    plan_highschool = models.CharField(max_length=50)
     highschool_grade = models.CharField(max_length=50)
     professional_grade = models.CharField(max_length=50)
     compulsory_pro_grade = models.CharField(max_length=50)

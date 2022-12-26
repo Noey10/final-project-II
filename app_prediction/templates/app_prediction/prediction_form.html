@@ -7,7 +7,7 @@
             <form action="{% url 'prediction' %}" method="post">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-12 d-flex justify-content-center mt-2">
+                <!--   <div class="col-12 d-flex justify-content-center mt-2">
                         <div>
                             {{ form.gender.label }}
                             {{ form.gender }}
@@ -18,7 +18,7 @@
                             {{ form.plan_highschool.label }}
                             {{ form.plan_highschool }}
                         </div>
-                    </div>
+                    </div> --> 
                     <div class="col-4 mt-2">
                         {{ form.highschool_grade.label }}
                         {{ form.highschool_grade }}
@@ -55,12 +55,12 @@
                         {{ form.avg_grade.label }}
                         {{ form.avg_grade }}
                     </div>
-                    <div class="col-12 d-flex justify-content-center mt-2">
+                <!--   <div class="col-12 d-flex justify-content-center mt-2">
                         <div>
                             {{ form.result_predict.label }}
                             {{ form.result_predict }}
                         </div>
-                    </div>
+                    </div>--> 
                 </div>
 
                 <div>
