@@ -4,7 +4,7 @@
     <div class="container">
         <div class="card p-3 d-flex justify-content-center"> 
             <h1>สวัสดี!! คุณ {{ user.username }}</h1>
-
+            <a href="{% url 'password_change' %}">reset password</a>
             <h2>ข้อมูลผู้ใช้</h2>
             <form action="{% url 'profile' %}" method="post" class="form">
                 {% csrf_token %}
@@ -37,6 +37,7 @@
                 <p>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </p>
+            </form>
         </div>
     </div>
 {% endblock %}
