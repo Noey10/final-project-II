@@ -1,5 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import render
+from django.http import HttpRequest
+from django.contrib.auth.decorators import login_required
 from app_prediction.models import Prediction
 from app_demo_model.models import GradesInput
 
@@ -12,7 +14,7 @@ def information(request):
                }
     return render(request, 'app_general/information.html', context)
 
-def dashboard(request):
+def dashboard(request: HttpRequest):
     labels = []
     data = []
 
