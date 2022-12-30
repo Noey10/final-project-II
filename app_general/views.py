@@ -40,8 +40,5 @@ def dashboard(request: HttpRequest):
     }
     return render(request, 'app_general/dashboard.html', context)
 
-def profile(request):
-    return render(request, 'app_general/profile.html')
-
 def homepage(request):
     return render(request, 'app_general/homepage.html')

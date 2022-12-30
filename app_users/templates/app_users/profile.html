@@ -3,15 +3,40 @@
 {% block content %}
     <div class="container">
         <div class="card p-3 d-flex justify-content-center"> 
-            <img src="https://images.unsplash.com/photo-1668454223705-926990e645c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" alt="img" style="width:240px; height: 360px;" />
-            <p>name : </p>
-            <p>email : </p>
-            <!--<p>gender : </p>
-            <p>email : </p>
-            <p>university : </p>
-            <p>prediction result</p>
-            <h2>Graduarion</h2>
-            <p>2022-12-12</p>-->
+            <h1>สวัสดี!! คุณ {{ user.username }}</h1>
+
+            <h2>ข้อมูลผู้ใช้</h2>
+            <form action="{% url 'profile' %}" method="post" class="form">
+                {% csrf_token %}
+                {{ form.non_fields_errors }}
+                <div class="form-field">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                    {{ form.first_name.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                    {{ form.last_name.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+                <div class="form-field">
+                    {{ extended_form.gender.label_tag }}
+                    {{ extended_form.gender }}
+                    {{ extended_form.gender.errors }}
+                </div>
+                <div class="form-field">
+                    {{ extended_form.university.label_tag }}
+                    {{ extended_form.university }}
+                    {{ extended_form.university.errors }}
+                </div>
+                <p>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </p>
         </div>
     </div>
 {% endblock %}
