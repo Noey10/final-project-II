@@ -1,11 +1,17 @@
 {% extends 'app_general/components/base.html' %}
 {% block site_title %}profile | {% endblock %}
 {% block content %}
-    <div class="container">
-        <div class="card p-3 d-flex justify-content-center"> 
-            <h1>สวัสดี!! คุณ {{ user.username }}</h1>
-            <a href="{% url 'password_change' %}">reset password</a>
-            <h2>ข้อมูลผู้ใช้</h2>
+    <div class="container d-flex justify-content-center">
+        <div class="card p-5 mt-3" style="width: 580px;"> 
+            <h1 class="text-center">สวัสดี!! คุณ {{ user.username }}</h1>
+            <div class="row d-flex align-items-center">
+                <div class="col">
+                    <h2>ข้อมูลผู้ใช้</h2>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <a href="{% url 'password_change' %}">reset password</a>
+                </div>
+            </div>
             <form action="{% url 'profile' %}" method="post" class="form">
                 {% csrf_token %}
                 {{ form.non_fields_errors }}
@@ -34,9 +40,10 @@
                     {{ extended_form.university }}
                     {{ extended_form.university.errors }}
                 </div>
-                <p>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </p>
+                <div class="form-field mt-3 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary col-6">Update profile</button>
+                </div>
+                
             </form>
         </div>
     </div>

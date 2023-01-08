@@ -17,7 +17,9 @@ from .resources import GradesResource
 from tablib import Dataset
 from app_demo_model.forms import TestPredictionGradeForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def upload(request):
     if request.method == 'POST':   
         myfile = request.FILES['myfile']
@@ -46,9 +48,11 @@ def upload(request):
     
     return render(request, 'app_demo_model/form_upload_model.html')
 
+@login_required
 def test_predict(request):
     return render(request, 'app_demo_model/test_predict.html')
 
+@login_required
 def test(request):
     #read data
     all_data = Grades.objects.all().values()
@@ -89,6 +93,7 @@ def test(request):
     
     return render(request, 'app_prediction/prediction_result.html', context)
 
+@login_required
 def data_in_model(request):
     all_data = Grades.objects.all()
     total_data = Grades.objects.all().count()
@@ -98,11 +103,13 @@ def data_in_model(request):
                }
     return render(request, 'app_demo_model/show_data_model.html', context)
 
+@login_required
 def delete_datas(request):
     grades = Grades.objects.all()
     grades.delete()
     return render(request, 'app_demo_model/show_data_model.html')
 
+@login_required
 def testing_predict(request):
     result2 = ""
     all_data = Grades.objects.all().values()
@@ -151,5 +158,6 @@ def testing_predict(request):
     
     return render(request, 'app_demo_model/form_testing_model.html', context)
 
+@login_required
 def show_data_input(request):
     return render(request, 'app_demo_model/show_data_input.html')

@@ -134,10 +134,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Auth
 LOGIN_REDIRECT_URL = "dashboard"
-LOGOUT_REDIRECT_URL = "homepage"
+LOGOUT_REDIRECT_URL = "login"
 LOGIN_URL = "login"
+AUTH_USER_MODEL = "app_users.CustomUser"
 
 #Email
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "test_inbox"
-PASSWORD_RESET_TIMEOUT = 180
+PASSWORD_RESET_TIMEOUT = 600
+

@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.contrib.auth.decorators import login_required
 from app_prediction.models import Prediction
 from app_demo_model.models import GradesInput
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def information(request):
@@ -14,6 +15,7 @@ def information(request):
                }
     return render(request, 'app_general/information.html', context)
 
+@login_required
 def dashboard(request: HttpRequest):
     labels = []
     data = []

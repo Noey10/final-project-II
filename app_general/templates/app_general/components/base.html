@@ -17,6 +17,7 @@
         <!-- JavaScript Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/feather-icons"></script>
+        <script src="https://kit.fontawesome.com/9918a0d039.js" crossorigin="anonymous"></script>
             
 
 
@@ -65,6 +66,12 @@
                                 <a href="{% url 'upload' %}" class="nav-link">
                                     <i data-feather="arrow-down"></i>
                                     <span class="ml-2">upload model</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'my-dashboard' %}" class="nav-link">
+                                    <i data-feather="monitor"></i>
+                                    <span class="ml-2">My Dashboard</span>
                                 </a>
                             </li>
                             <!--<li class="nav-item">

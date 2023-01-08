@@ -63,3 +63,7 @@ def profile(request):
     }
     
     return render(request, "app_users/profile.html", context)
+
+
+def my_dashboard(request):
+    return render(request, 'app_users/my_dashboard.html')

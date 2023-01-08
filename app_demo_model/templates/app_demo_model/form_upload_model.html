@@ -2,20 +2,56 @@
 {% block site_title %}prediction | {% endblock %}
 {% block content %}
     <div class="container text-center p-3" style="min-height: 480px; border-radius: 25px;">
-      <div class="bg-warning p-3">
-        <h2>Upload File</h2>
-          <form action="upload" method="POST" enctype="multipart/form-data" class="form">
-            {% csrf_token %}
-            <div class=" container w-75 pt-3">    
-              <input type="file" name="myfile" class="form-control">
-              <button id="myButton" type="submit" class="btn btn-success mt-3" >Upload</button> 
-            </div>
-          </form>
+      <div class="container mb-5">
+        <div class="bg-warning p-3">
+          <h2>Upload File model Pure Science</h2>
+            <form action="upload" method="POST" enctype="multipart/form-data" class="form">
+              {% csrf_token %}
+              <div class=" container w-75 pt-3">    
+                <input type="file" name="myfile" class="form-control">
+                <button id="myButton" type="submit" class="btn btn-success mt-3" >Upload</button> 
+              </div>
+            </form>
+        </div>
+        <div class="mt-3">
+          <a href="{% url 'data_in_model' %}">
+            <button type="submit" class="btn btn-info">Show data in model</button>
+          </a>
+        </div>
       </div>
-      <div class="mt-3">
-        <a href="{% url 'data_in_model' %}">
-          <button type="submit" class="btn btn-info">Show data in model</button>
-        </a>
+      <div class="container mb-5">
+        <div class="bg-danger p-3">
+          <h2>Upload File model Applied Science</h2>
+            <form action="upload" method="POST" enctype="multipart/form-data" class="form">
+              {% csrf_token %}
+              <div class=" container w-75 pt-3">    
+                <input type="file" name="myfile" class="form-control">
+                <button id="myButton" type="submit" class="btn btn-success mt-3" >Upload</button> 
+              </div>
+            </form>
+        </div>
+        <div class="mt-3">
+          <a href="{% url 'data_in_model' %}">
+            <button type="submit" class="btn btn-info">Show data in model</button>
+          </a>
+        </div>
+      </div>
+      <div class="container mb-5">
+        <div class="bg-primary p-3">
+          <h2>Upload File model Health Science</h2>
+            <form action="upload" method="POST" enctype="multipart/form-data" class="form">
+              {% csrf_token %}
+              <div class=" container w-75 pt-3">    
+                <input type="file" name="myfile" class="form-control">
+                <button id="myButton" type="submit" class="btn btn-success mt-3" >Upload</button> 
+              </div>
+            </form>
+        </div>
+        <div class="mt-3">
+          <a href="{% url 'data_in_model' %}">
+            <button type="submit" class="btn btn-info">Show data in model</button>
+          </a>
+        </div>
       </div>
     </div>
 
