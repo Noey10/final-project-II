@@ -126,6 +126,7 @@ def testing_predict(request):
     model = DecisionTreeClassifier()
     model = model.fit(X_train.values, y_train.values)
     
+    #input for prediction
     if request.method == 'POST':
         grade = TestPredictionGradeForm(request.POST)
         if grade.is_valid():
