@@ -1,0 +1,41 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}upload applied science model | {% endblock %}
+{% block content %}
+    <div class="container text-center p-3" style="min-height: 480px; border-radius: 25px;">
+      <div class="container mb-5">
+        {% if messages %} 
+          {% for msg in messages %} 
+            {% if msg.tags == 'success' %}
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ msg }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endif %} 
+            {% if msg.tags == 'error' %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>บันทึกข้อมูลไม่สำเร็จ</strong>&nbsp;&nbsp;{{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endif %} 
+          {% endfor %} 
+        {% endif %}
+
+        <div class="p-3">
+          <h2>Upload File model Applied Science</h2>
+            <form action="{% url 'upload_applied_sci_model' %}" method="POST" enctype="multipart/form-data" class="form">
+              {% csrf_token %}
+              <div class=" container w-75 pt-3">    
+                <input type="file" name="myfile" class="form-control">
+                <button id="myButton" type="submit" class="btn btn-success mt-3" >Upload</button> 
+              </div>
+            </form>
+        </div>
+        <div class="mt-3">
+          <a href="{% url 'data_in_applied_sci' %}">
+            <button type="submit" class="btn">Show data applied science in model</button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

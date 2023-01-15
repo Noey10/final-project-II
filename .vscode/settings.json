@@ -25,6 +25,7 @@
         "seaborn",
         "sheetnames",
         "sklearn",
-        "tablib"
+        "tablib",
+        "userpredictions"
     ]
 }

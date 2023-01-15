@@ -1,0 +1,18 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}upload model | {% endblock %}
+{% block content %}
+<div class="container text-center">
+    <h1 class="mb-5 mt-5">Upload model</h1>
+    <div class="row">
+        <div class="col">
+            <a href="{% url 'upload_applied_sci_model' %}" class="btn btn-primary">uploade aplied science model</a>
+        </div>
+        <div class="col">
+            <a href="{% url 'upload_health_sci_model' %}" class="btn btn-primary">uploade health science model</a>
+        </div>
+        <div class="col">
+            <a href="{% url 'upload_pure_sci_model' %}" class="btn btn-primary">uploade pure science model</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

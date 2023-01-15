@@ -8,11 +8,10 @@
 
         <h1>User Information</h1>
         <div class="container-fluid">
-            <p> total : {{ total }} </p>
+            <p> total : จำนวนข้อมูลใน DB </p>
             <table class="table">
                 <thead class="bg-light">
                     <th scope="col">#</th>
-                    <th scope="col">เกรดเฉลี่ยมัธยมปลาย</th>
                     <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
                     <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
                     <th scope="col">วิชาภาษาไทย</th>
@@ -26,21 +25,20 @@
                     <th scope="col">ผลการทำนาย</th>
                 </thead>
                 <tbody>
-                    <tr {% for result in results %}>
-                        <th scope="row">{{ result.id }}</th>
-                        <td>{{ result.gender }}</td>
-                        <td>{{ result.plan_highschool }}</td>
-                        <td>{{ result.highschool_grade }}</td>
-                        <td>{{ result.professional_grade }}</td>
-                        <td>{{ result.compulsory_pro_grade }}</td>
-                        <td>{{ result.select_vocation_grade }}</td>
-                        <td>{{ result.compulsory_elective_1 }}</td>
-                        <td>{{ result.compulsory_elective_2 }}</td>
-                        <td>{{ result.foreign_language_grade }}</td>
-                        <td>{{ result.thai_grade }}</td>
-                        <td>{{ result.avg_grade }}</td>
-                        <td> {{ result.result_predict }}</td>
-                    </tr {% endfor %}>
+                    <tr>
+                        <th scope="row">id</th>
+                        <td>col 0</td>
+                        <td>col 1</td>
+                        <td>col 2</td>
+                        <td>col 4</td>
+                        <td>col 5</td>
+                        <td>col 6</td>
+                        <td>col 7</td>
+                        <td>col 8</td>
+                        <td>col 9</td>
+                        <td>col 10</td>
+                        <td>col 11</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

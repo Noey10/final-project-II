@@ -1,0 +1,25 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}upload health science model | {% endblock %}
+{% block content %}
+<div class="container text-center p-3" style="min-height: 480px; border-radius: 25px;">
+    <div class="container mb-5">
+        <div class="p-3">
+        <h2>Upload File model Health Science</h2>
+            <form action="" method="POST" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            <div class=" container w-75 pt-3">    
+                <input type="file" name="myfile" class="form-control">
+                <button id="myButton" type="submit" class="btn btn-success mt-3" >Upload</button> 
+            </div>
+            </form>
+        </div>
+        <div class="mt-3">
+        <a href="{% url 'data_in_health_sci' %}">
+            <button type="submit" class="btn">Show data health science in model</button>
+        </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

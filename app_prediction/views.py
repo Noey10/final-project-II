@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from app_prediction.forms import PredictionModelForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -8,15 +7,12 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 @login_required
-def prediction(request):
-    if request.method == 'POST':
-        form = PredictionModelForm(request.POST)
-        if form.is_valid():
-           form.save()
-        return HttpResponseRedirect(reverse('result'))
-    form = PredictionModelForm()
-    context = {'form': form}
-    return render(request, 'app_prediction/prediction_form.html', context)
+def form(request):
+    return render(request, 'app_prediction/form_testing_model.html')
+
+@login_required
+def information(request):
+    return render(request, 'app_prediction/show_data_input.html')
 
 @login_required
 def result(request):
