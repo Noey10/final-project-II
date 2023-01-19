@@ -13,6 +13,7 @@ attrs = "*"
 attr = "*"
 seaborn = "*"
 scikit-learn = "*"
+import-export = "*"
 
 [dev-packages]
 autopep8 = "*"

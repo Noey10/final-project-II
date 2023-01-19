@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'app_general.apps.AppGeneralConfig',
     'app_prediction.apps.AppPredictionConfig',
     'app_demo_model.apps.AppDemoModelConfig',
+    'import_export',
     
 ]
 

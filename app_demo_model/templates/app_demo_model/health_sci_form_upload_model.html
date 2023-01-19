@@ -3,12 +3,26 @@
 {% block content %}
 <div class="container text-center p-3" style="min-height: 480px; border-radius: 25px;">
     <div class="container mb-5">
+        {% for msg in messages %}
+          {% if msg.tags == 'success' %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>{{ msg }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% else %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ msg }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+          
+        {% endfor %} 
         <div class="p-3">
         <h2>Upload File model Health Science</h2>
-            <form action="" method="POST" enctype="multipart/form-data" class="form">
+            <form action="upload_health_sci_model" method="POST" enctype="multipart/form-data" class="form">
             {% csrf_token %}
             <div class=" container w-75 pt-3">    
-                <input type="file" name="myfile" class="form-control">
+                <input type="file" name="healthfile" required class="form-control">
                 <button id="myButton" type="submit" class="btn btn-success mt-3" >Upload</button> 
             </div>
             </form>

@@ -8,52 +8,66 @@
       <div style="border-bottom: 1px solid #000; margin-top: 35px;">
         <h2>Data in health science model</h2>
       </div>
-      <div class="row mb-2">
-        <div class="col-6">
-          <strong>
-            <p class="mt-3">total: {{ total2 }}</p>
-          </strong>
+      {% if health|length < 1 %}
+        <div class="row mt-5 mb-2">
+          <div class="container text-center">
+            <strong>
+              <h1>"ไม่มีข้อมูล"</h1>
+          </div>
+          <div class="container d-flex align-items-center justify-content-center">
+            <a href="{% url 'upload_health_sci_model' %}" style="padding-right: 8px">
+              <button class="btn btn-primary" type="submit">add data</button>
+            </a>       
+          </div>
         </div>
-        <div class="col-6 d-flex align-items-center justify-content-end">
-          <a href="{% url 'upload_health_sci_model' %}" style="padding-right: 8px">
-            <button class="btn btn-primary" type="submit">add data</button>
-          </a>
-          <a href="{% url 'delete_data_health' %}">
-            <button class="btn btn-danger" title="delete_datas">delete data</button>
-          </a>       
+      {% else %}
+        <div class="row mb-2">
+          <div class="col-6">
+            <strong>
+              <p class="mt-3">total: {{ total }}</p>
+            </strong>
+          </div>
+          <div class="col-6 d-flex align-items-center justify-content-end">
+            <a href="{% url 'upload_health_sci_model' %}" style="padding-right: 8px">
+              <button class="btn btn-primary" type="submit">add data</button>
+            </a>
+            <a href="{% url 'delete_data_health' %}">
+              <button class="btn btn-danger" title="delete_datas">delete data</button>
+            </a>       
+          </div>
         </div>
-      </div>
-      
-      <table class="table">
-        <thead class="bg-light">
-          <th scope="col">admission grade</th>
-          <th scope="col">gpa year 1</th>
-          <th scope="col">thai</th>
-          <th scope="col">math</th>
-          <th scope="col">sci</th>
-          <th scope="col">society</th>
-          <th scope="col">hygiene</th>
-          <th scope="col">art</th>
-          <th scope="col">career</th>
-          <th scope="col">english</th>
-          <th scope="col">status</th>              
-        </thead>
-        <tbody>
-          <tr {% for data in health %}>
-            <td>{{ data.admission_grade }}</td>
-            <td>{{ data.gpa_year_1 }}</td>
-            <td>{{ data.thai }}</td>
-            <td>{{ data.mathematics }}</td>
-            <td>{{ data.science }}</td>
-            <td>{{ data.society }}</td>
-            <td>{{ data.hygiene }}</td>
-            <td>{{ data.art }}</td>
-            <td>{{ data.career }}</td>
-            <td>{{ data.langues }}</td>
-            <td>{{ data.status }}</td>
-          </tr {% endfor %}>
-        </tbody>
-      </table>      
+        
+        <table class="table">
+          <thead class="bg-light">
+            <th scope="col">admission grade</th>
+            <th scope="col">gpa year 1</th>
+            <th scope="col">thai</th>
+            <th scope="col">math</th>
+            <th scope="col">sci</th>
+            <th scope="col">society</th>
+            <th scope="col">hygiene</th>
+            <th scope="col">art</th>
+            <th scope="col">career</th>
+            <th scope="col">english</th>
+            <th scope="col">status</th>              
+          </thead>
+          <tbody>
+            <tr {% for data in health %}>
+              <td>{{ data.admission_grade }}</td>
+              <td>{{ data.gpa_year_1 }}</td>
+              <td>{{ data.thai }}</td>
+              <td>{{ data.math }}</td>
+              <td>{{ data.sci }}</td>
+              <td>{{ data.society }}</td>
+              <td>{{ data.hygiene }}</td>
+              <td>{{ data.art }}</td>
+              <td>{{ data.career }}</td>
+              <td>{{ data.langues }}</td>
+              <td>{{ data.status }}</td>
+            </tr {% endfor %}>
+          </tbody>
+        </table>  
+      {% endif %}    
     </div>
     <script>
         // Get the button

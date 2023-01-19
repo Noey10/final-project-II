@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    #upload model
     path('upload', views.upload_model, name='upload'),
     path('upload_applied_sci_model', views.upload_applied_sci_model, name='upload_applied_sci_model'),
     path('upload_health_sci_model', views.upload_health_sci_model, name='upload_health_sci_model'),
@@ -15,6 +16,7 @@ urlpatterns = [
     #Pure science model
     path('data_in_pure_sci', views.data_in_pure_sci, name="data_in_pure_sci"),
     path('delete_data_pure', views.delete_data_pure, name="delete_data_pure"),
-    
+    #show button select model
+    path('show_model', views.show_model, name="show_model"),
     
 ]

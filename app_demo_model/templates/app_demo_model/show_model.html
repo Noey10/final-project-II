@@ -1,0 +1,18 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}show model | {% endblock %}
+{% block content %}
+
+<div class="container">
+    <h2>Show data for me please.</h2>
+    <a href="{% url 'data_in_applied_sci' %}">
+        <p>Show data in applied sci model</p>
+    </a>
+    <a href="{% url 'data_in_health_sci' %}">
+        <p>Show data in health sci model</p>
+    </a>
+    <a href="{% url 'data_in_pure_sci' %}">
+        <p>Show data in pure sci model</p>
+    </a>
+</div>
+
+{% endblock %}
