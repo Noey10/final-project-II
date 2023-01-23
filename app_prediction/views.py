@@ -211,6 +211,7 @@ def prediction(request):
             langues = 'D'
         elif float(langues) < 1.00:
             langues = 'F'
+        
         #create data frame for data user input 
         df_new = pd.DataFrame({
             'major': [major],
@@ -233,7 +234,7 @@ def prediction(request):
             df = pd.concat([data, df_new])#รวม df_new เข้ากับ data
             data_categories = df.select_dtypes(include=[object]) #เลือกข้อมูลที่มี type เป็น object
             X_label = data_categories.apply(LabelEncoder().fit_transform)
-            X_1hot = OneHotEncoder(sparse=False)
+            X_1hot = OneHotEncoder()
             xt = X_1hot.fit_transform(X_label[['major', 
                                    'admission_grade',
                                    'gpa_year_1', 
@@ -256,6 +257,9 @@ def prediction(request):
             hh = xt[-1:]#เลือกข้อมูลจาก xt เฉพาะแถวสุดท้าย
             
             pred = model.predict(hh)
+            acc = model.score(X_test, y_test)
+            acc2 = round(acc*100, 2)
+            print(acc2)
             print(pred)
             result = ''
             if pred == 1:
@@ -267,7 +271,7 @@ def prediction(request):
             else:
                 result = 'Error'
                 print('what?')
-            return render(request, 'app_prediction/prediction_result.html', {'result': result})
+            return render(request, 'app_prediction/prediction_result.html', {'result': result, 'acc': acc2})
                 
         elif major == 'safety'or major == 'enviSci':
             print("เรียกโมเดล Health Science มาใช้จ้า")
@@ -276,7 +280,7 @@ def prediction(request):
             df = pd.concat([data, df_new])#รวม df_new เข้ากับ data
             data_categories = df.select_dtypes(include=[object]) #เลือกข้อมูลที่มี type เป็น object
             X_label = data_categories.apply(LabelEncoder().fit_transform)
-            X_1hot = OneHotEncoder(sparse=False)
+            X_1hot = OneHotEncoder()
             xt = X_1hot.fit_transform(X_label[['major', 
                                    'admission_grade',
                                    'gpa_year_1', 
@@ -300,6 +304,8 @@ def prediction(request):
             
             pred = model.predict(hh)
             print(pred)
+            acc = model.score(X_test, y_test)
+            acc2 = round(acc*100, 2)
             result = ''
             if pred == 1:
                 result = 'Pass'
@@ -310,7 +316,7 @@ def prediction(request):
             else:
                 result = 'Error'
                 print('what?')
-            return render(request, 'app_prediction/prediction_result.html', {'result': result})
+            return render(request, 'app_prediction/prediction_result.html', {'result': result, 'acc': acc2})
         
         elif major == 'math'or major == 'bio' or major == 'microBio' or major == 'physics' or major == 'chemi':
             print("เรียกโมเดล Pure Science มาใช้จ้า")
@@ -319,7 +325,7 @@ def prediction(request):
             df = pd.concat([data, df_new])#รวม df_new เข้ากับ data
             data_categories = df.select_dtypes(include=[object]) #เลือกข้อมูลที่มี type เป็น object
             X_label = data_categories.apply(LabelEncoder().fit_transform)
-            X_1hot = OneHotEncoder(sparse=False)
+            X_1hot = OneHotEncoder()
             xt = X_1hot.fit_transform(X_label[['major', 
                                    'admission_grade',
                                    'gpa_year_1', 
@@ -343,6 +349,8 @@ def prediction(request):
             
             pred = model.predict(hh)
             print(pred)
+            acc = model.score(X_test, y_test)
+            acc2 = round(acc*100, 2)
             result = ''
             if pred == 1:
                 result = 'Pass'
@@ -353,7 +361,8 @@ def prediction(request):
             else:
                 result = 'Error'
                 print('what?')
-            return render(request, 'app_prediction/prediction_result.html', {'result': result})
+            return render(request, 'app_prediction/prediction_result.html', {'result': result, 'acc': acc2})
+        
         else:
             print("ไม่เข้าเงื่อนไข")
     return render(request, 'app_prediction/prediction_result.html')

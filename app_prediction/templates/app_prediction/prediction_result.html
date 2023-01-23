@@ -5,8 +5,12 @@
         <div class="container d-flex align-items-center justify-content-center">
             <div class="card bg-light text-center d-flex align-items-center justify-content-center w-75" style="min-height: 580px; max-width: 480px; border: none; border-radius: 25px; background-color: #c6e2e9;">
                 <div>
-                    <h3 class="pt-3"> RESULT : {{ result }}</h3>
-                    <a href="{% url 'form' %}"><h3>Try Prediction again</h3></a>
+                    <h4 class="pt-3"> ผลการทำนาย </h4>
+                    <h3>{{ result }}</h3>
+                    <h5>มีโอกาสเกิดขึ้น {{ acc }}%</h5>
+                    <a href="{% url 'form' %}">
+                        <button type="submit" class="btn btn-primary">ทำนายอีกครั้ง</button>
+                    </a>
                 </div>   
             </div>
         </div>
