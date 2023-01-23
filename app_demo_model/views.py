@@ -5,14 +5,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
 from .models import AppliedScience, HealthScience, PureScience
 from .resources import AppliedSciResource, HealthSciResource, PureSciResource
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from tablib import Dataset
-from django.utils.datastructures import MultiValueDictKeyError
-
 @login_required
 def upload_model(request):   
     return render(request, 'app_demo_model/upload_model.html')
