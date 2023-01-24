@@ -8,10 +8,11 @@
 
         <h1>User Information</h1>
         <div class="container-fluid">
-            <p> total : จำนวนข้อมูลใน DB </p>
+            <p> total : {{ total }} </p>
             <table class="table">
                 <thead class="bg-light">
                     <th scope="col">#</th>
+                    <th scope="col">major</th>
                     <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
                     <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
                     <th scope="col">วิชาภาษาไทย</th>
@@ -25,20 +26,21 @@
                     <th scope="col">ผลการทำนาย</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">id</th>
-                        <td>col 0</td>
-                        <td>col 1</td>
-                        <td>col 2</td>
-                        <td>col 4</td>
-                        <td>col 5</td>
-                        <td>col 6</td>
-                        <td>col 7</td>
-                        <td>col 8</td>
-                        <td>col 9</td>
-                        <td>col 10</td>
-                        <td>col 11</td>
-                    </tr>
+                    <tr {% for i in data %}>
+                        <th scope="row">{{i.id}}</th>
+                        <td>{{ i.major }}</td>
+                        <td>{{ i.admission_grade }}</td>
+                        <td>{{ i.gpa_year_1 }}</td>
+                        <td>{{ i.thai }}</td>
+                        <td>{{ i.math }}</td>
+                        <td>{{ i.sci }}</td>
+                        <td>{{ i.society }}</td>
+                        <td>{{ i.hygiene }}</td>
+                        <td>{{ i.art }}</td>
+                        <td>{{ i.career }}</td>
+                        <td>{{ i.langues }}</td>
+                        <td>column status</td>
+                    </tr {% endfor %}>
                 </tbody>
             </table>
         </div>

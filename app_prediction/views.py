@@ -6,18 +6,16 @@ from .models import UserPredict, UserAnswer
 from .forms import UserPredictForm
 from app_demo_model.models import AppliedScience, HealthScience, PureScience
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 import sklearn.metrics as metrics
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
-
-
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import cross_validate
 
 # Create your views here.
 @login_required
@@ -37,7 +35,7 @@ def form(request):
 @login_required
 def prediction(request):
     if request.method == 'POST':
-        form = UserPredictForm()
+        form = UserPredictForm(request.POST)
         major = request.POST.get('major')
         print(major)
         #user input
@@ -211,7 +209,10 @@ def prediction(request):
             langues = 'D'
         elif float(langues) < 1.00:
             langues = 'F'
-        
+        if form.is_valid():
+            user_input: UserPredict = form.save(commit=False)
+            user_input.user = request.user
+            user_input.save()
         #create data frame for data user input 
         df_new = pd.DataFrame({
             'major': [major],
@@ -230,137 +231,110 @@ def prediction(request):
         if major == 'DSSI' or major == 'ICT' or major == 'polymer':
             print("เรียกโมเดล Applied Science มาใช้จ้า")
             applied = AppliedScience.objects.all().values()#read data in Applied Science
-            data = pd.DataFrame(applied)#crate data frame             
-            df = pd.concat([data, df_new])#รวม df_new เข้ากับ data
-            data_categories = df.select_dtypes(include=[object]) #เลือกข้อมูลที่มี type เป็น object
-            X_label = data_categories.apply(LabelEncoder().fit_transform)
-            X_1hot = OneHotEncoder()
-            xt = X_1hot.fit_transform(X_label[['major', 
-                                   'admission_grade',
-                                   'gpa_year_1', 
-                                   'thai', 
-                                   'math', 
-                                   'sci', 
-                                   'society', 
-                                   'hygiene', 
-                                   'art', 
-                                   'career', 
-                                   'langues'
-                                   ]])
-            gg = xt[:-1]#เลือกข้อมูลจาก xt ทุกแถวยกเว้นแถวสุดท้าย
-            X = gg
-            y = X_label.iloc[:-1, -1:]#เลือกข้อมูลจาก X_label คอลัมน์สุดท้ายและทุกแถวยกเว้นแถวสุดท้าย
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+            df = pd.DataFrame(applied)#crate data frame             
+            #แบ่งข้อมูล X, y
+            X = df.iloc[:, 1:-1]
+            y = df.iloc[:, -1:]
             
-            model = DecisionTreeClassifier(max_depth=6)
-            model = model.fit(X_train ,y_train)
-            hh = xt[-1:]#เลือกข้อมูลจาก xt เฉพาะแถวสุดท้าย
-            
-            pred = model.predict(hh)
-            acc = model.score(X_test, y_test)
+            categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+            categories_transforms = Pipeline(steps=[
+                # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
+                ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+            ])
+            #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+            preprocessor = ColumnTransformer(remainder='passthrough',
+                transformers=[
+                    ('catagories', categories_transforms, categories_feature )
+                ]
+            )
+            #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+            pipe = Pipeline(steps=[
+                ('prep', preprocessor),
+                ('tree', DecisionTreeClassifier(max_depth=6))
+            ])
+            # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
+            cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+
+            print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
+            acc = cv_data['test_score'].mean()
             acc2 = round(acc*100, 2)
-            print(acc2)
-            print(pred)
-            result = ''
-            if pred == 1:
-                result = 'Pass'
-                print('Pass')
-            elif pred == 0:
-                result = 'Fail'
-                print('Fail')
-            else:
-                result = 'Error'
-                print('what?')
-            return render(request, 'app_prediction/prediction_result.html', {'result': result, 'acc': acc2})
+            print(cv_data['test_score'].mean())
+
+            pipe.fit(X, y)#model
+            result = pipe.predict(df_new)#predict
+            result2 = result[0]
+            return render(request, 'app_prediction/prediction_result.html', {'result': result2, 'acc': acc2})
                 
         elif major == 'safety'or major == 'enviSci':
             print("เรียกโมเดล Health Science มาใช้จ้า")
             health = HealthScience.objects.all().values()#read data in Applied Science
-            data = pd.DataFrame(health)#crate data frame             
-            df = pd.concat([data, df_new])#รวม df_new เข้ากับ data
-            data_categories = df.select_dtypes(include=[object]) #เลือกข้อมูลที่มี type เป็น object
-            X_label = data_categories.apply(LabelEncoder().fit_transform)
-            X_1hot = OneHotEncoder()
-            xt = X_1hot.fit_transform(X_label[['major', 
-                                   'admission_grade',
-                                   'gpa_year_1', 
-                                   'thai', 
-                                   'math', 
-                                   'sci', 
-                                   'society', 
-                                   'hygiene', 
-                                   'art', 
-                                   'career', 
-                                   'langues'
-                                   ]])
-            gg = xt[:-1]#เลือกข้อมูลจาก xt ทุกแถวยกเว้นแถวสุดท้าย
-            X = gg
-            y = X_label.iloc[:-1, -1:]#เลือกข้อมูลจาก X_label คอลัมน์สุดท้ายและทุกแถวยกเว้นแถวสุดท้าย
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+            df = pd.DataFrame(health)#crate data frame             
+            X = df.iloc[:, 1:-1]
+            y = df.iloc[:, -1:]
             
-            model = DecisionTreeClassifier(max_depth=6)
-            model = model.fit(X_train ,y_train)
-            hh = xt[-1:]#เลือกข้อมูลจาก xt เฉพาะแถวสุดท้าย
-            
-            pred = model.predict(hh)
-            print(pred)
-            acc = model.score(X_test, y_test)
+            categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+            categories_transforms = Pipeline(steps=[
+                # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
+                ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+            ])
+            #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+            preprocessor = ColumnTransformer(remainder='passthrough',
+                transformers=[
+                    ('catagories', categories_transforms, categories_feature )
+                ]
+            )
+            #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+            pipe = Pipeline(steps=[
+                ('prep', preprocessor),
+                ('tree', DecisionTreeClassifier(max_depth=6))
+            ])
+            # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
+            cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+
+            print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
+            acc = cv_data['test_score'].mean()
             acc2 = round(acc*100, 2)
-            result = ''
-            if pred == 1:
-                result = 'Pass'
-                print('Pass')
-            elif pred == 0:
-                result = 'Fail'
-                print('Fail')
-            else:
-                result = 'Error'
-                print('what?')
-            return render(request, 'app_prediction/prediction_result.html', {'result': result, 'acc': acc2})
+            print(cv_data['test_score'].mean())
+
+            pipe.fit(X, y)#model
+            result = pipe.predict(df_new)#predict
+            result2 = result[0]
+            return render(request, 'app_prediction/prediction_result.html', {'result': result2, 'acc': acc2})
         
         elif major == 'math'or major == 'bio' or major == 'microBio' or major == 'physics' or major == 'chemi':
             print("เรียกโมเดล Pure Science มาใช้จ้า")
             pure = PureScience.objects.all().values()#read data in Applied Science
-            data = pd.DataFrame(pure)#crate data frame             
-            df = pd.concat([data, df_new])#รวม df_new เข้ากับ data
-            data_categories = df.select_dtypes(include=[object]) #เลือกข้อมูลที่มี type เป็น object
-            X_label = data_categories.apply(LabelEncoder().fit_transform)
-            X_1hot = OneHotEncoder()
-            xt = X_1hot.fit_transform(X_label[['major', 
-                                   'admission_grade',
-                                   'gpa_year_1', 
-                                   'thai', 
-                                   'math', 
-                                   'sci', 
-                                   'society', 
-                                   'hygiene', 
-                                   'art', 
-                                   'career', 
-                                   'langues'
-                                   ]])
-            gg = xt[:-1]#เลือกข้อมูลจาก xt ทุกแถวยกเว้นแถวสุดท้าย
-            X = gg
-            y = X_label.iloc[:-1, -1:]#เลือกข้อมูลจาก X_label คอลัมน์สุดท้ายและทุกแถวยกเว้นแถวสุดท้าย
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+            df = pd.DataFrame(pure)#crate data frame             
+            X = df.iloc[:, 1:-1]
+            y = df.iloc[:, -1:]
             
-            model = DecisionTreeClassifier(max_depth=6)
-            model = model.fit(X_train ,y_train)
-            hh = xt[-1:]#เลือกข้อมูลจาก xt เฉพาะแถวสุดท้าย
-            
-            pred = model.predict(hh)
-            print(pred)
-            acc = model.score(X_test, y_test)
+            categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+            categories_transforms = Pipeline(steps=[
+                # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
+                ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+            ])
+            #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+            preprocessor = ColumnTransformer(remainder='passthrough',
+                transformers=[
+                    ('catagories', categories_transforms, categories_feature )
+                ]
+            )
+            #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+            pipe = Pipeline(steps=[
+                ('prep', preprocessor),
+                ('tree', DecisionTreeClassifier(max_depth=6))
+            ])
+            # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
+            cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+
+            print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
+            acc = cv_data['test_score'].mean()
             acc2 = round(acc*100, 2)
-            result = ''
-            if pred == 1:
-                result = 'Pass'
-                print('Pass')
-            elif pred == 0:
-                result = 'Fail'
-                print('Fail')
-            else:
-                result = 'Error'
-                print('what?')
+            print(cv_data['test_score'].mean())
+
+            pipe.fit(X, y)#model
+            result = pipe.predict(df_new)#predict
+            result2 = result[0]
             return render(request, 'app_prediction/prediction_result.html', {'result': result, 'acc': acc2})
         
         else:
@@ -370,7 +344,14 @@ def prediction(request):
 
 @login_required
 def information(request):
-    return render(request, 'app_prediction/show_data_input.html')
+    data = UserPredict.objects.all()
+    total = data.count() 
+    print(total)
+    context={
+      'data': data,
+      'total': total,
+    } 
+    return render(request, 'app_prediction/show_data_input.html', context)
 
 @login_required
 def result(request):
