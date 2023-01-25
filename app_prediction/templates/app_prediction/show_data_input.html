@@ -11,8 +11,8 @@
             <p> total : {{ total }} </p>
             <table class="table">
                 <thead class="bg-light">
-                    <th scope="col">#</th>
-                    <th scope="col">major</th>
+                    <th scope="col">วันที่ทำนาย</th>
+                    <th scope="col">สาขาวิชา</th>
                     <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
                     <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
                     <th scope="col">วิชาภาษาไทย</th>
@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     <tr {% for i in data %}>
-                        <th scope="row">{{i.id}}</th>
+                        <td scope="row">{{i.predict_at}}</td>
                         <td>{{ i.major }}</td>
                         <td>{{ i.admission_grade }}</td>
                         <td>{{ i.gpa_year_1 }}</td>
@@ -39,7 +39,7 @@
                         <td>{{ i.art }}</td>
                         <td>{{ i.career }}</td>
                         <td>{{ i.langues }}</td>
-                        <td>column status</td>
+                        <td>{{ i.status }}</td>
                     </tr {% endfor %}>
                 </tbody>
             </table>

@@ -38,7 +38,7 @@ def upload_applied_sci_model(request):
 @login_required
 def data_in_applied_sci(request):
     applied = AppliedScience.objects.all() #for all the records
-    print(applied)
+    # print(applied)
     total = applied.count() 
     context={
       'applied':applied,
@@ -114,7 +114,7 @@ def upload_pure_sci_model(request):
 @login_required
 def data_in_pure_sci(request):
     pure = PureScience.objects.all() #for all the records
-    print(pure)
+    # print(pure)
     total = pure.count() 
     print(total)
     context={

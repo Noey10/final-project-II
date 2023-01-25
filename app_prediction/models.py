@@ -28,10 +28,11 @@ class UserPredict(models.Model):
     art = models.CharField(max_length=10)
     career = models.CharField(max_length=10)
     langues = models.CharField(max_length=10)
+    status = models.CharField(max_length=10)
     predict_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('app_users.CustomUser', on_delete=models.CASCADE)
     
-class UserAnswer(models.Model):
-    status = models.CharField(max_length=45)
-    predict = models.ForeignKey('app_prediction.UserPredict', on_delete=models.CASCADE)
+# class UserAnswer(models.Model):
+#     status = models.CharField(max_length=45)
+#     predict = models.ForeignKey('app_prediction.UserPredict', on_delete=models.CASCADE)
     

@@ -5,7 +5,7 @@ class UserPredictForm(forms.ModelForm):
     
     class Meta:
         model = UserPredict
-        fields = ("major", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "langues",)
+        fields = ("major", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "langues")
         labels = {
             "major": "สาขา",
             "admission_grade": "เกรดเฉลี่ยรับเข้า",
