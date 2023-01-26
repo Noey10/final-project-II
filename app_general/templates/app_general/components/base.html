@@ -8,9 +8,10 @@
         <title>{% block site_title %}{% endblock %}test web</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="{% static 'app_general/ubu-logo-2.png' %}">
-        <link rel="stylesheet" href="{% static 'app_general/normalize.css' %}">
-        <link rel="stylesheet" href="{% static 'app_general/main.css' %}">
+        <link rel="icon" href="{% static 'app_general/img/ubu-logo-2.png' %}">
+        <link rel="stylesheet" href="{% static 'app_general/css/normalize.css' %}">
+        <link rel="stylesheet" href="{% static 'app_general/css/main.css' %}">
+        
         
         <!-- CSS only -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -18,11 +19,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/feather-icons"></script>
         <script src="https://kit.fontawesome.com/9918a0d039.js" crossorigin="anonymous"></script>
-            
+        <script src="{% static 'app_general/js/canvasjs/canvasjs.min.js' %}"></script>
 
-
+        {% block scripts %}{% endblock scripts %}
     </head>
     <body>
+        
         {% include 'app_general/components/site_header.html' %}
         <div class="container-fluid" style="min-height: 92vh;">
 
@@ -33,7 +35,7 @@
                     <div class="position-sticky sticky-top">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a href="{% url 'my-dashboard' %}" class="nav-link">
+                                <a href="{% url 'dashboard' %}" class="nav-link">
                                     <i data-feather="monitor"></i>
                                     <span class="ml-2">Dashboard</span>
                                 </a>
@@ -61,7 +63,13 @@
                                     <i data-feather="folder"></i>
                                     <span class="ml-2">show model</span>
                                 </a>
-                            </li>                       
+                            </li> 
+                            <li class="nav-item">
+                                <a href="{% url 'my-dashboard' %}" class="nav-link">
+                                    <i data-feather="monitor"></i>
+                                    <span class="ml-2">my Dashboard</span>
+                                </a>
+                            </li>                      
                         </ul>
                     </div>
                     
