@@ -1,36 +1,7 @@
 {% extends 'app_general/components/base.html' %}
-{% block site_title %}dashboard | {% endblock %}
+{% block site_title %}information | {% endblock %}
 {% block content %}
-    <div class="container text-center">
-        <h1>Dashboard</h1>
-        <div>
-            <canvas id="pie-chart"></canvas>
-        </div>
+    <div class="container">
+        <h1>Hello Dashboard</h1>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-  <script>
-
-    var config = {
-      type: 'pie',
-      data: {
-        datasets: [{
-          data: {{ data|safe }},
-          backgroundColor: [
-            '#b5ead7', '#D3D3D3'
-          ],
-          label: 'result_prediction'
-        }],
-        labels: {{ labels|safe }}
-      },
-      options: {
-        responsive: true
-      }
-    };
-
-    window.onload = function() {
-      var ctx = document.getElementById('pie-chart').getContext('2d');
-      window.myPie = new Chart(ctx, config);
-    };
-
-  </script>
 {% endblock %}

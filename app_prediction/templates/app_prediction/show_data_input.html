@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     <tr {% for i in data %}>
-                        <td scope="row">{{i.predict_at}}</td>
+                        <td scope="row">{{i.predict_at|date:'j N Y'}}</td>
                         <td>{{ i.major }}</td>
                         <td>{{ i.admission_grade }}</td>
                         <td>{{ i.gpa_year_1 }}</td>

@@ -50,6 +50,7 @@ def prediction(request):
         art = request.POST.get('art')
         career = request.POST.get('career')
         langues = request.POST.get('langues')
+        #เก็บเกรดที่ input เข้ามาลงใน list
         grade_list.append(admission_grade)
         grade_list.append(gpa_year_1)
         grade_list.append(thai)
@@ -61,6 +62,7 @@ def prediction(request):
         grade_list.append(career)
         grade_list.append(langues)
         new_grades = []
+        #แปลงเกรดจากทศนิยมเป็นตัวอักษร
         for i in grade_list:
             if float(i) == 4.00:
                 i = 'A'

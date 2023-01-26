@@ -1,7 +1,7 @@
 {% load static %}
 
 <nav class="navbar navbar-light bg-light">
-    <a href="{% url 'dashboard' %}" class="navbar-brand ms-3 d-flex align-items-center">
+    <a href="{% url 'my-dashboard' %}" class="navbar-brand ms-3 d-flex align-items-center">
         <div>
             <img src="{% static 'app_general/Ubu_logo.png' %}" width="40" height="40" class="d-inline-block align-top" alt="">
         </div>
@@ -11,8 +11,9 @@
     </a>
     {% if user.is_authenticated %}
         <div class="d-flex justify-content-end">
-            <a class="me-3" href="{% url 'profile' %}">
-                <span>{{ user.username }}</span>
+            <a class="me-3 btn btn-primary" href="{% url 'profile' %}">
+                <i data-feather="user"></i>
+                <span class="ms-2" style="width: 20px">{{ user.username }}</span>
             </a>
             <a href="{% url 'logout' %}">
                 <button class="btn btn-warning me-3">Log out</button>

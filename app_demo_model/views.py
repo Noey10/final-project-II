@@ -1,3 +1,4 @@
+from mimetypes import types_map
 from django.shortcuts import render
 import os
 from django.urls import reverse
@@ -8,6 +9,10 @@ from .resources import AppliedSciResource, HealthSciResource, PureSciResource
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from tablib import Dataset
+import pandas as pd
+import numpy as np
+
+
 @login_required
 def upload_model(request):   
     return render(request, 'app_demo_model/upload_model.html')
@@ -20,19 +25,31 @@ def upload_applied_sci_model(request):
         dataset = Dataset()
         new_applied = request.FILES['appliedfile']
         print('name file = ', new_applied.name)
-        
+        print(new_applied)
+        #check type file
         if not new_applied.name.endswith('xlsx'):
-            print('name file gg')
-            messages.info(request, 'Wrong format')
+            print(new_applied.name)
+            messages.info(request, 'ต้องการไฟล์นามสกุล XLSX')
             return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
         
-        data_import = dataset.load(new_applied.read())
+        #create data frame
+        df = pd.read_excel(new_applied)
+        df = df.dropna()#delete row with missing value
+        
+        #check type column
+        for i in df.columns:
+            if df.dtypes[i] != np.object_:
+                print('cc')
+                messages.info(request, 'Wrong format value in file should type object or A B C D')
+                return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+        
+        import_data = dataset.load(df)
+        # print(data_import)                 
         result = applied.import_data(dataset, dry_run=True)
         if not result.has_errors():
             applied.import_data(dataset, dry_run=False)       
         messages.success(request, "Upload Applied model successfully.")
         
-            
     return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
 
 @login_required
@@ -59,13 +76,23 @@ def upload_health_sci_model(request):
         dataset = Dataset()
         new_health = request.FILES['healthfile']
         print('name file = ', new_health.name)
-        
+        #check type file
         if not new_health.name.endswith('xlsx'):
             print('name file gg')
             messages.info(request, 'Wrong format')
             return render(request, 'app_demo_model/health_sci_form_upload_model.html')
         
-        data_import = dataset.load(new_health.read())
+        df = pd.read_excel(new_health)
+        df = df.dropna()#delete row with missing value
+        
+        #check type column
+        for i in df.columns:
+            if df.dtypes[i] != np.object_:
+                print('cc')
+                messages.info(request, 'Wrong format value in file should type object or A B C D')
+                return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+        
+        import_data = dataset.load(df)
         result = health.import_data(dataset, dry_run=True)
         if not result.has_errors():
             health.import_data(dataset, dry_run=False)       
@@ -102,7 +129,17 @@ def upload_pure_sci_model(request):
             messages.info(request, 'Wrong format')
             return render(request, 'app_demo_model/pure_sci_form_upload_model.html')
         
-        imported_data = dataset.load(new_pure.read())
+        df = pd.read_excel(new_pure)
+        df = df.dropna()#delete row with missing value
+        
+        #check type column
+        for i in df.columns:
+            if df.dtypes[i] != np.object_:
+                print('cc')
+                messages.info(request, 'Wrong format value in file should type object or A B C D')
+                return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+        
+        import_data = dataset.load(df)
         result = pure.import_data(dataset, dry_run=True)
         if not result.has_errors():
             pure.import_data(dataset, dry_run=False)
