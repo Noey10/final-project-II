@@ -1,12 +1,79 @@
 {% extends 'app_general/components/base.html' %}
 {% block site_title %}information | {% endblock %}
 {% block scripts %}
-<script>
 
-</script> 
 {% endblock scripts %}
 {% block content %}
     <div class="container">
         <h1>Hello Dashboard</h1>
+        <div class="container">
+            <div class="container col-6" style="width: 540px; height: auto;">
+                <canvas id="myChart"></canvas>
+                <script>
+                    const ctx = document.getElementById('myChart');
+                    
+                    new Chart(ctx, {
+                      data: {
+                          datasets: [{
+                              type: 'bar',
+                              label: 'Pass',
+                              data: [{% for i in status_pass %} {{ i }}, {% endfor %}],
+                          }, {
+                              type: 'bar',
+                              label: 'Fail',
+                              data: [{% for j in status_fail %} {{ j }}, {% endfor %}],
+                          }],
+                          labels: ['DSSI', 'ICT', 'Polymer', 'Environment Science', 'Safety', 'Bio', 'Chemical', 'Math', 'Micro Bio', 'Physics']
+                      },
+                      options: {
+                        scales: {
+                          y: {
+                            beginAtZero: true
+                          }
+                        }
+                      }
+                  });
+                  </script>
+            </div>
+            <div class="container col-6" style="width: 540px; height: auto;">
+              <p>กราฟสรุปแต่ละรายวิชา</p>
+                <canvas id="chart"></canvas>
+                <script>
+                  const ctx2 = document.getElementById('chart');
+
+                  new Chart(ctx2, {
+                    data: {
+                        datasets: [{
+                            type: 'line',
+                            label: 'เกรดมากว่า 2',
+                            data: [{% for k in subject_more_than_two %} {{ k }}, {% endfor %}]
+                        }, {
+                            type: 'line',
+                            label: 'เกรดน้อยกว่า 2',
+                            data: [{% for l in subject_less_than_two %} {{ l }}, {% endfor %}],
+                        }],
+                        labels: ['admission_grade',
+                                  'gpa year 1',
+                                  'thai',
+                                  'math',
+                                  'sci',
+                                  'society',
+                                  'hygiene',
+                                  'art',
+                                  'career',
+                                  'langues',
+                                ]
+                    },
+                    options: {
+                      scales: {
+                        y: {
+                          beginAtZero: true
+                        }
+                      }
+                    }
+                  });
+                </script>
+            </div>
+        </div>
     </div>
 {% endblock %}

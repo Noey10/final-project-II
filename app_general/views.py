@@ -12,71 +12,125 @@ def dashboard(request):
 
     total = item.count()
     print('total = ', total)
-    
-    #จำนวนทำนายผลเป็น PASS, FAIL
-    status_pass = data.objects.filter(status='Pass').count()
-    print('status pass = ', status_pass)
-    status_fail = data.objects.filter(status='fail').count()
-    print('status fail = ', status_fail)
-    print('-----------------------------------------------------------')
-    #จำนวนทำนายผลเป็น PASS, FAIL ของแต่ละสาขา
     ict_pass = data.objects.filter(major='ICT').filter(status='Pass').count()
     ict_fail = data.objects.filter(major='ICT').filter(status='Fail').count()
-    print('ict pass = ', ict_pass)
-    print('ict fail = ', ict_fail)
 
     dssi_pass = data.objects.filter(major='DSSI').filter(status='Pass').count()
     dssi_fail = data.objects.filter(major='DSSI').filter(status='Fail').count()
-    print('dssi pass = ', dssi_pass)
-    print('dssi fail = ', dssi_fail)
     
     polymer_pass = data.objects.filter(major='polymer').filter(status='Pass').count()
     polymer_fail = data.objects.filter(major='polymer').filter(status='Fail').count()
-    print('polymer pass = ', polymer_pass)
-    print('polymer fail = ', polymer_fail)
     
     enviSci_pass = data.objects.filter(major='enviSci').filter(status='Pass').count()
     enviSci_fail = data.objects.filter(major='enviSci').filter(status='Fail').count()
-    print('environment sci pass = ', enviSci_pass)
-    print('environment sci fail = ', enviSci_fail)
     
     safety_pass = data.objects.filter(major='safety').filter(status='Pass').count()
     safety_fail = data.objects.filter(major='safety').filter(status='Fail').count()
-    print('safety pass = ', safety_pass)
-    print('safety fail = ', safety_fail)
     
     math_pass = data.objects.filter(major='math').filter(status='Pass').count()
     math_fail = data.objects.filter(major='math').filter(status='Fail').count()
-    print('math pass = ', math_pass)
-    print('math fail = ', math_fail)
     
     bio_pass = data.objects.filter(major='bio').filter(status='Pass').count()
     bio_fail = data.objects.filter(major='bio').filter(status='Fail').count()
-    print('bio pass = ', bio_pass)
-    print('bio fail = ', bio_fail)
     
     microBio_pass = data.objects.filter(major='microBio').filter(status='Pass').count()
     microBio_fail = data.objects.filter(major='microBio').filter(status='Fail').count()
-    print('micro bio pass = ', microBio_pass)
-    print('micro bio fail = ', microBio_fail)
     
     chemi_pass = data.objects.filter(major='chemi').filter(status='Pass').count()
     chemi_fail = data.objects.filter(major='chemi').filter(status='Fail').count()
-    print('chemi pass = ', chemi_pass)
-    print('chemi fail = ', chemi_fail)
     
     physics_pass = data.objects.filter(major='physics').filter(status='Pass').count()
     physics_fail = data.objects.filter(major='physics').filter(status='Fail').count()
-    print('physics pass = ', physics_pass)
-    print('physics fail = ', physics_fail)
-    print('-----------------------------------------------------------')
-    #ดูจำนวนเกรดแต่ละวิชาที่มากกกว่า 2 และ น้อยกว่า 2
-    thai_grade = data.objects.filter(thai__lt =2.00).values()
-    print(thai_grade.count())
-    thai_grade2 = data.objects.filter(thai__gte =2.00).values()
-    print(thai_grade2.count())
+    #
+    status_pass = [
+        dssi_pass,
+        ict_pass,
+        polymer_pass,
+        enviSci_pass,
+        safety_pass,
+        bio_pass,
+        chemi_pass,
+        math_pass,
+        microBio_pass,
+        physics_pass
+    ]
+    
+    status_fail = [
+        dssi_fail,
+        ict_fail,
+        polymer_fail,
+        enviSci_fail,
+        safety_fail,
+        bio_fail,
+        chemi_fail,
+        math_fail,
+        microBio_fail,
+        physics_fail
+    ]
+    #
+    admission_grade = data.objects.filter(admission_grade__lt =2.00).count()
+    admission_grade2 = data.objects.filter(admission_grade__gte =2.00).count()
+    
+    gpa = data.objects.filter(gpa_year_1__lt =2.00).count()
+    gpa2 = data.objects.filter(gpa_year_1__gte =2.00).count()
+    
+    thai = data.objects.filter(thai__lt =2.00).count()
+    thai2 = data.objects.filter(thai__gte =2.00).count()
+    
+    math = data.objects.filter(math__lt =2.00).count()
+    math2 = data.objects.filter(math__gte =2.00).count()
+    
+    sci = data.objects.filter(sci__lt =2.00).count()
+    sci2 = data.objects.filter(sci__gte =2.00).count()
+    
+    society = data.objects.filter(society__lt =2.00).count()
+    society2 = data.objects.filter(society__gte =2.00).count()
+    
+    hygiene = data.objects.filter(hygiene__lt =2.00).count()
+    hygiene2 = data.objects.filter(hygiene__gte =2.00).count()
+    
+    art = data.objects.filter(art__lt =2.00).count()
+    art2 = data.objects.filter(art__gte =2.00).count()
+    
+    career = data.objects.filter(career__lt =2.00).count()
+    career2 = data.objects.filter(career__gte =2.00).count()
+    
+    langues = data.objects.filter(langues__lt =2.00).count()
+    langues2 = data.objects.filter(langues__gte =2.00).count()
+    
+    subject_more_than_two = [
+        admission_grade,
+        gpa,
+        thai,
+        math,
+        sci,
+        society,
+        hygiene,
+        art,
+        career,
+        langues,
+    ]
+    
+    subject_less_than_two = [
+        admission_grade2,
+        gpa2,
+        thai2,
+        math2,
+        sci2,
+        society2,
+        hygiene2,
+        art2,
+        career2,
+        langues2,
+    ]
+    print('มากกว่า 2', subject_more_than_two)
+    print('น้อยกว่า 2', subject_less_than_two)
     
     context = {
         'item': item,
+        'status_pass': status_pass,
+        'status_fail': status_fail,
+        'subject_more_than_two': subject_more_than_two,
+        'subject_less_than_two': subject_less_than_two,
     }
     return render(request, 'app_general/dashboard.html', context)
