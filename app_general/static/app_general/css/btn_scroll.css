@@ -1,0 +1,18 @@
+#myBtn {
+    display: none;
+    position: fixed;
+    bottom: 35px;
+    right: 30px;
+    height: 55px;
+    width: 55px;
+    /* z-index: 99; */
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: #ffadc1;
+    color: white;
+    cursor: pointer;
+    /* padding: 15px; */
+    border-radius: 50px;
+
+}

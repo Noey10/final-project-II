@@ -1,3 +1,4 @@
+import http
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponseRedirect
@@ -15,6 +16,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_validate
 
 # Create your views here.
@@ -38,7 +40,7 @@ def prediction(request):
         form = UserPredictForm(request.POST)
         major = request.POST.get('major')
         print(major)
-        grade_list = []
+        
         #user input
         admission_grade = request.POST.get('admission_grade')
         gpa_year_1 = request.POST.get('gpa_year_1')
@@ -50,19 +52,23 @@ def prediction(request):
         art = request.POST.get('art')
         career = request.POST.get('career')
         langues = request.POST.get('langues')
+        
         #เก็บเกรดที่ input เข้ามาลงใน list
-        grade_list.append(admission_grade)
-        grade_list.append(gpa_year_1)
-        grade_list.append(thai)
-        grade_list.append(math)
-        grade_list.append(sci)
-        grade_list.append(society)
-        grade_list.append(hygiene)
-        grade_list.append(art)
-        grade_list.append(career)
-        grade_list.append(langues)
-        new_grades = []
+        grade_list = [
+            admission_grade,
+            gpa_year_1,
+            thai,
+            math,
+            sci,
+            society,
+            hygiene,
+            art,
+            career,
+            langues,
+        ]
+        
         #แปลงเกรดจากทศนิยมเป็นตัวอักษร
+        new_grades = []
         for i in grade_list:
             if float(i) == 4.00:
                 i = 'A'
@@ -139,7 +145,6 @@ def prediction(request):
                 result = pipe.predict(df_new)#predict
                 result2 = result[0]
                 print(result2)
-                #return render(request, 'app_prediction/prediction_result.html', {'result': result2, 'acc': acc2})
                     
             elif major == 'safety'or major == 'enviSci':
                 print("เรียกโมเดล Health Science มาใช้จ้า")
@@ -176,7 +181,6 @@ def prediction(request):
                 result = pipe.predict(df_new)#predict
                 result2 = result[0]
                 print(result2)
-                #return render(request, 'app_prediction/prediction_result.html', {'result': result2, 'acc': acc2})
             
             elif major == 'math'or major == 'bio' or major == 'microBio' or major == 'physics' or major == 'chemi':
                 print("เรียกโมเดล Pure Science มาใช้จ้า")
@@ -213,13 +217,57 @@ def prediction(request):
                 result = pipe.predict(df_new)#predict
                 result2 = result[0]
                 print(result2)
-                # result3 = request.get(result2)
-                #return render(request, 'app_prediction/prediction_result.html', {'result': result2, 'acc': acc2})
                     
             user_input.status = result2
             user_input.save()
             print('save success')
-    return render(request, 'app_prediction/prediction_result.html', {'result': result2, 'acc': acc2})
+            form = UserPredictForm()
+        
+        branch = ''
+        if major == 'DSSI':
+            branch = 'สาขาวิทยาการคอมพิวเตอร์หรือสาขาวิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'
+        elif major == 'ICT':
+            branch = 'สาขาเทคโนโลยีสารสนเทศหรือสาขาเทคโนโลยีและการสื่อสาร'
+        elif major == 'polymer':
+            branch = 'สาขาเทคโนโลยีการยางและพอลิเมอร์'
+        elif major == 'enviSci':
+            branch = 'สาขาวิทยศาสตร์สิ่งแวดล้อม'
+        elif major == 'safety':
+            branch = 'สาขาอนามัยสิ่งแวดล้อมและความปลอดภัย'
+        elif major == 'bio':
+            branch = 'สาขาชีววิทยา'
+        elif major == 'chemi':
+            branch = 'สาขาเคมี'
+        elif major == 'math':
+            branch = 'สาขาคณิตศาสตร์'
+        elif major == 'microBio':
+            branch = 'สาขาจุลชีววิทยา'
+        elif major == 'Physics':
+            branch = 'สาขาฟิสิกส์หรือสาขาฟิสิกส์อุตสาหกรรมหรือสาขาฟิสิกส์ทางการแพทย์'
+        else:
+            branch = 'ไม่มีสาขาที่ระบุ'
+                
+        grade_dict = {
+            'สาขาวิชา': branch,
+            'เกรดเฉลี่ยมัธยมตอนปลาย': grade_list[0],
+            'เกรดเฉลี่ยชั้นปีที่ 1': grade_list[1],
+            'วิชาภาษาไทย': grade_list[2],
+            'วิชาคณิตศาสตร์': grade_list[3],
+            'วิชาวิทยาศาสตร์': grade_list[4],
+            'วิชาสังคมศึกษา ศาสนาและวัฒนธรรม': grade_list[5],
+            'วิชาสุขศึกษาและพลศึกษา': grade_list[6],
+            'วิชาศิลปศึกษา': grade_list[7],
+            'วิชาการงานอาชีพ': grade_list[8],
+            'วิชาสุขศึกษาและพลศึกษา': grade_list[9]
+        }
+
+    context = {
+        'result': result2, 
+        'acc': acc2,
+        'grade_dict': grade_dict
+    }
+    
+    return render(request, 'app_prediction/prediction_result.html', context)
     
 
 @login_required
@@ -235,4 +283,5 @@ def information(request):
 
 @login_required
 def result(request):
+    form = UserPredictForm()
     return render(request, 'app_prediction/prediction_result.html')

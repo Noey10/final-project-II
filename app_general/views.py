@@ -6,12 +6,19 @@ import pandas as pd
 from app_prediction.models import UserPredict
 
 # Create your views here.
+@login_required
 def dashboard(request):
     data = UserPredict
     item = data.objects.all()
 
     total = item.count()
     print('total = ', total)
+    
+    all_pass = data.objects.filter(status='Pass').count()
+    all_fail = data.objects.filter(status='Fail').count()
+    print(all_pass, ', ', all_fail)
+    
+    
     ict_pass = data.objects.filter(major='ICT').filter(status='Pass').count()
     ict_fail = data.objects.filter(major='ICT').filter(status='Fail').count()
 
@@ -125,12 +132,20 @@ def dashboard(request):
     ]
     print('มากกว่า 2', subject_more_than_two)
     print('น้อยกว่า 2', subject_less_than_two)
+
+    per_pass = round((all_pass/total)*100, 2)
+    per_fail = round((all_fail/total)*100, 2)
     
     context = {
         'item': item,
+        'total': total,
+        'all_pass': all_pass,
+        'all_fail': all_fail,
         'status_pass': status_pass,
         'status_fail': status_fail,
         'subject_more_than_two': subject_more_than_two,
         'subject_less_than_two': subject_less_than_two,
+        'per_pass': per_pass,
+        'per_fail': per_fail,
     }
     return render(request, 'app_general/dashboard.html', context)

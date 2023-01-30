@@ -30,7 +30,7 @@ def upload_applied_sci_model(request):
         if not new_applied.name.endswith('xlsx'):
             print(new_applied.name)
             messages.info(request, 'ต้องการไฟล์นามสกุล XLSX')
-            return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+            return render(request, 'app_demo_model/upload_applied_sci.html')
         
         #create data frame
         df = pd.read_excel(new_applied)
@@ -40,17 +40,19 @@ def upload_applied_sci_model(request):
         for i in df.columns:
             if df.dtypes[i] != np.object_:
                 print('cc')
-                messages.info(request, 'Wrong format value in file should type object or A B C D')
-                return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+                messages.info(request, 'เกรดเฉลี่ยจะต้องเป็นตัวอักษร (A, B+, B, C+, C, D+, D, F)')
+                return render(request, 'app_demo_model/upload_applied_sci.html')
         
         import_data = dataset.load(df)
         # print(data_import)                 
         result = applied.import_data(dataset, dry_run=True)
         if not result.has_errors():
             applied.import_data(dataset, dry_run=False)       
-        messages.success(request, "Upload Applied model successfully.")
+        messages.success(request, "อัปโหลดข้อมูลสำหรับสร้างโมเดลสำเร็จ.")
         
-    return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+    applied = AppliedSciResource()
+        
+    return render(request, 'app_demo_model/upload_applied_sci.html')
 
 @login_required
 def data_in_applied_sci(request):
@@ -80,7 +82,7 @@ def upload_health_sci_model(request):
         if not new_health.name.endswith('xlsx'):
             print('name file gg')
             messages.info(request, 'Wrong format')
-            return render(request, 'app_demo_model/health_sci_form_upload_model.html')
+            return render(request, 'app_demo_model/upload_health_sci.html')
         
         df = pd.read_excel(new_health)
         df = df.dropna()#delete row with missing value
@@ -89,16 +91,16 @@ def upload_health_sci_model(request):
         for i in df.columns:
             if df.dtypes[i] != np.object_:
                 print('cc')
-                messages.info(request, 'Wrong format value in file should type object or A B C D')
-                return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+                messages.info(request, 'เกรดเฉลี่ยจะต้องเป็นตัวอักษร (A, B+, B, C+, C, D+, D, F)')
+                return render(request, 'app_demo_model/upload_health_sci.html')
         
         import_data = dataset.load(df)
         result = health.import_data(dataset, dry_run=True)
         if not result.has_errors():
             health.import_data(dataset, dry_run=False)       
-        messages.success(request, "Upload Applied model successfully.")
+        messages.success(request, "Upload health model successfully.")
         
-    return render(request, 'app_demo_model/health_sci_form_upload_model.html')
+    return render(request, 'app_demo_model/upload_health_sci.html')
 
 @login_required
 def data_in_health_sci(request):
@@ -127,7 +129,7 @@ def upload_pure_sci_model(request):
         if not new_pure.name.endswith('xlsx'):
             print('name file gg')
             messages.info(request, 'Wrong format')
-            return render(request, 'app_demo_model/pure_sci_form_upload_model.html')
+            return render(request, 'app_demo_model/upload_pure_sci.html')
         
         df = pd.read_excel(new_pure)
         df = df.dropna()#delete row with missing value
@@ -136,17 +138,18 @@ def upload_pure_sci_model(request):
         for i in df.columns:
             if df.dtypes[i] != np.object_:
                 print('cc')
-                messages.info(request, 'Wrong format value in file should type object or A B C D')
-                return render(request, 'app_demo_model/applied_sci_form_upload_model.html')
+                messages.info(request, 'เกรดเฉลี่ยจะต้องเป็นตัวอักษร (A, B+, B, C+, C, D+, D, F)')
+                return render(request, 'app_demo_model/upload_pure_sci.html')
         
         import_data = dataset.load(df)
         result = pure.import_data(dataset, dry_run=True)
         if not result.has_errors():
             pure.import_data(dataset, dry_run=False)
         
-        messages.success(request, 'Upload model successfully.')
+        messages.success(request, 'Upload pure model successfully.')
+        pure = PureSciResource()
         
-    return render(request, 'app_demo_model/pure_sci_form_upload_model.html')
+    return render(request, 'app_demo_model/upload_pure_sci.html')
 
 @login_required
 def data_in_pure_sci(request):
@@ -168,4 +171,19 @@ def delete_data_pure(request):
 
 @login_required
 def show_model(request):
-    return render(request, 'app_demo_model/show_model.html')
+    applied = AppliedScience.objects.all()
+    health = HealthScience.objects.all()
+    pure = PureScience.objects.all()
+    total_applied = applied.count()
+    total_health = health.count()
+    total_pure = pure.count()
+    total = total_applied + total_health + total_pure
+    context = {
+        'applied': applied,
+        'health': health,
+        'pure': pure,
+        'total': total,
+    }
+    
+    return render(request, 'app_demo_model/show_model.html', context)
+

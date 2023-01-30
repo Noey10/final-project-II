@@ -2,11 +2,11 @@
 {% block site_title %}Health model | {% endblock %}
 {% block content %}
     <div class="container">
-      <button onclick="topFunction()" id="myBtn" title="Go to top" style="display: none; position: fixed; bottom: 35px; right: 30px; z-index: 99; font-size: 18px; border: none; outline: none; background-color: #ffadc1; color: white; cursor: pointer; padding: 15px; border-radius: 30px;">
-        top
+      <button onclick="topFunction()" id="myBtn" title="Go to top">
+        <i data-feather="arrow-up"></i>
       </button>
       <div style="border-bottom: 1px solid #000; margin-top: 35px;">
-        <h2>Data in health science model</h2>
+        <h2>ข้อมูลสำหรับสร้างโมเดลกลุ่ม Helath Science</h2>
       </div>
       {% if health|length < 1 %}
         <div class="row mt-5 mb-2">
@@ -16,7 +16,9 @@
           </div>
           <div class="container d-flex align-items-center justify-content-center">
             <a href="{% url 'upload_health_sci_model' %}" style="padding-right: 8px">
-              <button class="btn btn-primary" type="submit">add data</button>
+              <button class="btn btn-primary" type="submit">
+                <i data-feather="plus"></i> เพิ่มข้อมูล
+              </button>
             </a>       
           </div>
         </div>
@@ -29,10 +31,14 @@
           </div>
           <div class="col-6 d-flex align-items-center justify-content-end">
             <a href="{% url 'upload_health_sci_model' %}" style="padding-right: 8px">
-              <button class="btn btn-primary" type="submit">add data</button>
+              <button class="btn btn-primary" type="submit">
+                <i data-feather="plus"></i>
+              </button>
             </a>
             <a href="{% url 'delete_data_health' %}">
-              <button class="btn btn-danger" title="delete_datas">delete data</button>
+              <button class="btn btn-danger" title="delete_datas">
+                <i data-feather="trash"></i>
+              </button>
             </a>       
           </div>
         </div>

@@ -1,18 +1,123 @@
 {% extends 'app_general/components/base.html' %}
+{% load static %}
 {% block site_title %}show model | {% endblock %}
 {% block content %}
-
-<div class="container">
-    <h2>Show data for me please.</h2>
-    <a href="{% url 'data_in_applied_sci' %}">
-        <p>Show data in applied sci model</p>
-    </a>
-    <a href="{% url 'data_in_health_sci' %}">
-        <p>Show data in health sci model</p>
-    </a>
-    <a href="{% url 'data_in_pure_sci' %}">
-        <p>Show data in pure sci model</p>
-    </a>
-</div>
-
+    <div class="container">
+        <button onclick="topFunction()" id="myBtn" title="Go to top">
+            <i data-feather="arrow-up"></i>
+        </button>
+        <div style="border-bottom: 1px solid #000; margin-top: 35px;">
+            <h2>ข้อมูลโมเดล</h2>
+        </div>
+        <div class="row mb-2">
+            <div class="col-3">
+              <strong>
+                <h5 class="mt-4">Total: {{ total }}</h5>
+              </strong>
+            </div>
+            <div class="col-9">
+              <div class="row mt-3">
+                <div class="col-12 col-md-4 text-end">
+                    <a href="{% url 'data_in_applied_sci' %}">
+                        <p class="btn btn-primary">Show data in applied sci model</p>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4 text-end">
+                    <a href="{% url 'data_in_health_sci' %}">
+                        <p class="btn btn-primary">Show data in health sci model</p>
+                    </a>
+                </div>
+                <div class="col-12 col-md-4 text-end">
+                    <a href="{% url 'data_in_pure_sci' %}">
+                        <p class="btn btn-primary">Show data in pure sci model</p>
+                    </a>
+                </div>
+              </div>
+          </div>
+            
+        </div>
+        
+        <div class="container">
+            <table class="table">
+                <thead class="bg-light">
+                    <th scope="col">major</th>
+                    <th scope="col">admission grade</th>
+                    <th scope="col">gpa year 1</th>
+                    <th scope="col">thai</th>
+                    <th scope="col">math</th>
+                    <th scope="col">sci</th>
+                    <th scope="col">society</th>
+                    <th scope="col">hygiene</th>
+                    <th scope="col">art</th>
+                    <th scope="col">career</th>
+                    <th scope="col">english</th>
+                    <th scope="col">status</th>              
+                </thead>
+                <tbody>
+                    <tr {% for data in applied %}>
+                      <td>{{ data.major }}</td>
+                      <td>{{ data.admission_grade }}</td>
+                      <td>{{ data.gpa_year_1 }}</td>
+                      <td>{{ data.thai }}</td>
+                      <td>{{ data.math }}</td>
+                      <td>{{ data.sci }}</td>
+                      <td>{{ data.society }}</td>
+                      <td>{{ data.hygiene }}</td>
+                      <td>{{ data.art }}</td>
+                      <td>{{ data.career }}</td>
+                      <td>{{ data.langues }}</td>
+                      <td>{{ data.status }}</td>
+                    </tr {% endfor %}>
+                    <tr {% for data in health %}>
+                        <td>{{ data.major }}</td>
+                        <td>{{ data.admission_grade }}</td>
+                        <td>{{ data.gpa_year_1 }}</td>
+                        <td>{{ data.thai }}</td>
+                        <td>{{ data.math }}</td>
+                        <td>{{ data.sci }}</td>
+                        <td>{{ data.society }}</td>
+                        <td>{{ data.hygiene }}</td>
+                        <td>{{ data.art }}</td>
+                        <td>{{ data.career }}</td>
+                        <td>{{ data.langues }}</td>
+                        <td>{{ data.status }}</td>
+                    </tr {% endfor %}>
+                    <tr {% for data in pure %}>
+                        <td>{{ data.major }}</td>
+                        <td>{{ data.admission_grade }}</td>
+                        <td>{{ data.gpa_year_1 }}</td>
+                        <td>{{ data.thai }}</td>
+                        <td>{{ data.math }}</td>
+                        <td>{{ data.sci }}</td>
+                        <td>{{ data.society }}</td>
+                        <td>{{ data.hygiene }}</td>
+                        <td>{{ data.art }}</td>
+                        <td>{{ data.career }}</td>
+                        <td>{{ data.langues }}</td>
+                        <td>{{ data.status }}</td>
+                    </tr {% endfor %}>
+                </tbody>
+            </table>
+    </div>
+    <script>
+        // Get the button
+        let mybutton = document.getElementById("myBtn");
+        
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+        
+        function scrollFunction() {
+          if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+          } else {
+            mybutton.style.display = "none";
+          }
+        }
+        
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+        }
+    </script>
 {% endblock %}

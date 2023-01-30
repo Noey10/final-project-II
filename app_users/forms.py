@@ -24,10 +24,12 @@ class UserProfileForm(forms.ModelForm):
         }
         
         
-        
+CHOICES = [
+    ('female', 'หญิง'),
+    ('male', 'ชาย'),    
+]
 class ExtendedProfileForm(forms.ModelForm):
     prefix = "extended"
-    # name = 
     class Meta:
         model = Profile
         fields = ("gender", "university")
@@ -36,6 +38,6 @@ class ExtendedProfileForm(forms.ModelForm):
             "university": "มหาวิทยาลัย"
         }
         widgets = {
-            "gender": forms.TextInput(attrs={"class": "form-control mt-2"}),
+            "gender": forms.RadioSelect(choices=CHOICES),
             "university" : forms.Textarea(attrs={"class": "form-control mt-2", "style": "height: 120px;"}),
         }

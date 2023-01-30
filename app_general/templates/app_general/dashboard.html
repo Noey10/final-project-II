@@ -1,79 +1,126 @@
 {% extends 'app_general/components/base.html' %}
-{% block site_title %}information | {% endblock %}
-{% block scripts %}
-
-{% endblock scripts %}
+{% block site_title %}Dashboard | {% endblock %}
+{% block scripts %}{% endblock scripts %}
 {% block content %}
-    <div class="container">
-        <h1>Hello Dashboard</h1>
-        <div class="container">
-            <div class="container col-6" style="width: 540px; height: auto;">
-                <canvas id="myChart"></canvas>
-                <script>
-                    const ctx = document.getElementById('myChart');
-                    
-                    new Chart(ctx, {
-                      data: {
-                          datasets: [{
-                              type: 'bar',
-                              label: 'Pass',
-                              data: [{% for i in status_pass %} {{ i }}, {% endfor %}],
-                          }, {
-                              type: 'bar',
-                              label: 'Fail',
-                              data: [{% for j in status_fail %} {{ j }}, {% endfor %}],
-                          }],
-                          labels: ['DSSI', 'ICT', 'Polymer', 'Environment Science', 'Safety', 'Bio', 'Chemical', 'Math', 'Micro Bio', 'Physics']
-                      },
-                      options: {
-                        scales: {
-                          y: {
-                            beginAtZero: true
-                          }
-                        }
+  <div class="container">
+    {% if total|length < 0%}
+      <h1>Hello Dashboard</h1>
+      <p>ยังไม่มีข้อมูลการทำนาย</p>
+    {% else %}
+      <h1>Hello Dashboard</h1>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-5 bg-light mt-5 p-3">
+            <div class="container h-auto w-75">
+              <canvas id="donut_chart"></canvas>
+              <script>
+                const ctx3 = document.getElementById("donut_chart").getContext("2d");
+                const chart = new Chart(ctx3, {
+                  type: "doughnut",
+                  data: {
+                    labels: ['Fail', 'Pass'],
+                    datasets: [
+                      {
+                        backgroundColor: ['#d63384', '#0d6efd'],
+                        data: [{{ all_fail }}, {{ all_pass }}]
                       }
-                  });
-                  </script>
+                    ],
+                    hoverOffset: 4
+                  },
+                  options: {
+                    title: {
+                      display: true
+                    }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: true,
+                });
+              </script>
             </div>
-            <div class="container col-6" style="width: 540px; height: auto;">
-              <p>กราฟสรุปแต่ละรายวิชา</p>
-                <canvas id="chart"></canvas>
-                <script>
-                  const ctx2 = document.getElementById('chart');
+            <div class="container mt-3">
+              <p>จำนวนข้อมูลที่ทำนายทั้งหมด : <strong>{{ total }}</strong> ข้อมูล</p>
+              <p>ข้อมูลที่มีผลลัพธ์เป็น <strong>Pass</strong> คิดเป็น <strong>{{ per_pass }}%</strong></p>
+              <p>ข้อมูลที่มีผลลัพธ์เป็น <strong>Fail</strong> คิดเป็น <strong>{{ per_fail }}%</strong></p>
+            </div>
+          </div>
 
-                  new Chart(ctx2, {
-                    data: {
-                        datasets: [{
-                            type: 'line',
-                            label: 'เกรดมากว่า 2',
-                            data: [{% for k in subject_more_than_two %} {{ k }}, {% endfor %}]
-                        }, {
-                            type: 'line',
-                            label: 'เกรดน้อยกว่า 2',
-                            data: [{% for l in subject_less_than_two %} {{ l }}, {% endfor %}],
-                        }],
-                        labels: ['admission_grade',
-                                  'gpa year 1',
-                                  'thai',
-                                  'math',
-                                  'sci',
-                                  'society',
-                                  'hygiene',
-                                  'art',
-                                  'career',
-                                  'langues',
-                                ]
-                    },
-                    options: {
-                      scales: {
-                        y: {
-                          beginAtZero: true
-                        }
+          <div class="col-12 col-md-7">
+            <div class="row">
+              <p>กราฟสรุปผลแต่ละสาขาวิชา</p>
+              <canvas id="myChart"></canvas>
+              <script>
+                const ctx = document.getElementById('myChart');
+                new Chart(ctx, {
+                  data: {
+                    datasets: [{
+                      type: 'bar',
+                      label: 'Pass',
+                      data: [{% for i in status_pass %} {{ i }}, {% endfor %}],
+                    }, 
+                    {
+                      type: 'bar',
+                      label: 'Fail',
+                      data: [{% for j in status_fail %} {{ j }}, {% endfor %}],
+                    }],
+                    labels: ['DSSI', 'ICT', 'Polymer', 'Environment Science', 'Safety', 'Bio', 'Chemical', 'Math', 'Micro Bio', 'Physics']
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
                       }
                     }
-                  });
-                </script>
+                  },
+                  responsive: true,
+                  maintainAspectRatio: true,
+                });
+              </script>
             </div>
+            <div class="row">
+              <p>กราฟสรุปผลแต่ละรายวิชา</p>
+              <canvas id="chart"></canvas>
+              <script>
+                const ctx2 = document.getElementById('chart');
+                new Chart(ctx2, {
+                  data: {
+                    datasets: [{
+                      type: 'bar',
+                      label: 'เกรดมากว่า 2',
+                      data: [{% for k in subject_more_than_two %} {{ k }}, {% endfor %}]
+                    }, 
+                    {
+                      type: 'bar',
+                      label: 'เกรดน้อยกว่า 2',
+                      data: [{% for l in subject_less_than_two %} {{ l }}, {% endfor %}],
+                    }],
+                    labels: [
+                      'เกรดเฉลี่ยมัธยมตอนปลาย',
+                      'เกรดเฉลี่ยชั้นปีที่1',
+                      'วิชาภาษาไทย',
+                      'วิชาคณิตศาสตร์',
+                      'วิชาวิทยาศาสตร์',
+                      'วิชาสังคมศึกษา',
+                      'วิชาสุขศึกษาและพละศึกษา',
+                      'วิชาศิลปศึกษา',
+                      'วิชาการงานอาชีพ',
+                      'วิชาภาษาต่างประเทศ',
+                    ]
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: true,
+                });
+              </script>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}

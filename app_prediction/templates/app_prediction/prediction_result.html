@@ -1,18 +1,47 @@
 {% extends 'app_general/components/base.html' %}
+{% load static %}
 {% block site_title %}result | {% endblock %}
 {% block content %}
-    <div class="container">
-        <div class="container d-flex align-items-center justify-content-center">
-            <div class="card bg-light text-center d-flex align-items-center justify-content-center w-75" style="min-height: 580px; max-width: 480px; border: none; border-radius: 25px; background-color: #c6e2e9;">
-                <div>
-                    <h4 class="pt-3"> ผลการทำนาย </h4>
-                    <h3>{{ result }}</h3>
-                    <!--<h5>มีโอกาสเกิดขึ้น {{ acc }}%</h5>-->
-                    <a href="{% url 'form' %}">
-                        <button type="submit" class="btn btn-primary">ทำนายอีกครั้ง</button>
-                    </a>
-                </div>   
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="card w-50 p-3 d-flex justify-content-center align-items-center" style="border: none;">
+            <h5 class="text-center">ข้อมูลที่ทำนาย</h5>
+            <div class="row w-100 d-flex justify-content-center p-1">
+                <table>
+                    <tbody>
+                        <tr {% for key, value in grade_dict.items %} class="p-3">
+                            <td class="p-2">{{ key }} :</td>
+                            <td class="p-2">{{ value }}</td>
+                        </tr {% endfor %}>
+                    </tbody>
+                </table>
             </div>
+            <hr style="border-top: 2px solid #000; width: 100%;">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="container border border-success p-3 rounded shadow">
+                    <h4 class="text-center"> ผลการทำนาย </h4>
+                    <h3 class="text-center"> มีโอกาส <strong>{{ result }}</strong> {{ acc }}%</h3>
+                    {% if result == 'Fail' %}
+                        <h5 class="text-center">สู้ๆนะจ๊ะ</h5>
+                    {% else %}
+                    {% endif %}
+                </div>
+                <div class="row w-75 mt-3">
+                    <div class="col-12 col-md-7 mt-2 d-flex justify-content-end"> 
+                        <a href="{% url 'form' %}" class="text-center">
+                            <button type="submit" class="btn btn-primary">ทำนายอีกครั้ง</button>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-5 mt-2">
+                        <a href="{% url 'dashboard' %}" class="text-center">
+                            <button type="submit" class="btn btn-primary">ปิด</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>     
+        <div>
+        
         </div>
+                   
     </div>
 {% endblock %}
