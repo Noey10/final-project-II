@@ -1,59 +1,62 @@
 {% extends 'app_general/components/base.html' %}
 {% load static %}
-{% block site_title %}upload model | {% endblock %}
+{% block site_title %}Upload model | {% endblock %}
 {% block content %}
 <div class="container text-center">
-    <h1 class="mb-5">Upload model</h1>
+    <h2 class="mb-4 mt-5">อัปโหลดข้อมูลสำหรับสร้างโมเดล</h2>
+    <hr>
     <div class="container">
-        <div class="row">
+        <div class="row mt-5 mb-5">
             <div class="col-12 col-md-4">
-                <a href="{% url 'upload_applied_sci_model' %}">อัปโหลดข้อมูลสำหรับ Applied Science</a>
+                <a href="{% url 'upload_applied_sci_model' %}" class="btn btn-outline-primary shadow">อัปโหลดข้อมูลสำหรับ Applied Science</a>
             </div>
             <div class="col-12 col-md-4">
-                <a href="{% url 'upload_health_sci_model' %}">อัปโหลดข้อมูลสำหรับ Health Science</a>
+                <a href="{% url 'upload_health_sci_model' %}" class="btn btn-outline-primary shadow">อัปโหลดข้อมูลสำหรับ Health Science</a>
             </div>
             <div class="col-12 col-md-4">
-                <a href="{% url 'upload_pure_sci_model' %}">อัปโหลดข้อมูลสำหรับ Pure Science</a>
+                <a href="{% url 'upload_pure_sci_model' %}" class="btn btn-outline-primary shadow">อัปโหลดข้อมูลสำหรับ Pure Science</a>
             </div>
         </div>
-        <div class="row w-75 bg-info" style="margin-left: auto; margin-right: auto;">
-            <h4>Example data to update</h4>
-            <img src="{% static 'app_general/img/example.png' %}" alt="img" class="img-fluid">
-        </div>
-        <div class="row">
-            <p>สัญลักษณ์ข้อมูล</p>
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <p>DSSI : สาขาวิทยาการคอมพิวเตอร์และสาขาวิทยาการข้อมูลและนวัตกรรม</p>
+        <div class="row mt-5">
+            <div class="container" style="width: 90%">
+                <div class="row border-bottom">
+                    <h5 class="text-start">สัญลักษณ์</h5>
                 </div>
-                <div class="col-12 col-md-6">
-                    <p>ICT : สาขาเทคโนโลยีสารสนเทศและการสื่อสาร</p>
+                <div class="row text-start mt-2">
+                    <p class="col-12 col-md-6 ps-4">ICT : สาขาเทคโนโลยีสารสนเทศและการสื่อสาร</p>
+                    <p class="col-12 col-md-6 ps-4">DSSI : สาขาวิทยาการคอมพิวเตอร์และสาขาวิทยาการข้อมูลและนวัตกรรม</p>
+                    <p class="col-12 col-md-6 ps-4">polymer  : สาขาเทคโนโลยีการยางและพอลิเมอร์</p>
+                    <p class="col-12 col-md-6 ps-4">enviSci : สาขาวิทยศาสตร์สิ่งแวดล้อม</p>
+                    <p class="col-12 col-md-6 ps-4">safety : สาขาอนามัยสิ่งแวดล้อมและความปลอดภัย</p>
+                    <p class="col-12 col-md-6 ps-4">bio : สาขาชีววิทยา</p>
+                    <p class="col-12 col-md-6 ps-4">chemi : สาขาเคมี</p>
+                    <p class="col-12 col-md-6 ps-4">math : สาขาคณิตศาสตร์</p>
+                    <p class="col-12 col-md-6 ps-4">microBio : สาขาจุลชีววิทยา</p>
+                    <p class="col-12 col-md-6 ps-4">physics : สาขาฟิสิกส์ สาขาฟิสิกส์ทางการแพทย์ และสาขาฟิสิกส์อุตสาหกรรม</p>
+                    <p class="col-12 col-md-6 ps-4">major : สาขาวิชา</p>
+                    <p class="col-12 col-md-6 ps-4">admission_grade : เกรดเฉลี่ยมัธยมตอนปลาย</p>
+                    <p class="col-12 col-md-6 ps-4">gpa_year_1 : เกรดเฉลี่ยชั้นปีที่1</p>
+                    <p class="col-12 col-md-6 ps-4">thai : วิชาภาษาไทย</p>
+                    <p class="col-12 col-md-6 ps-4">math : วิชาคณิตศาสตร์</p>
+                    <p class="col-12 col-md-6 ps-4">sci : วิชาวิทยาศาสตร์</p>
+                    <p class="col-12 col-md-6 ps-4">society : วิชาสังคมศึกษา</p>
+                    <p class="col-12 col-md-6 ps-4">hygiene : วิชาสุขศึกษาและพละศึกษา</p>
+                    <p class="col-12 col-md-6 ps-4">art : วิชาศิลปศึกษา</p>
+                    <p class="col-12 col-md-6 ps-4">career : วิชาการงานอาชีพ</p>
+                    <p class="col-12 col-md-6 ps-4">langues : วิชาภาษาต่างประเทศ</p>
+                    <p class="col-12 col-md-6 ps-4">status : สถานะการสำเร็จการศึกษา</p>
+                    <p class="col-12 col-md-6 ps-4">Pass : สำเร็จการศึกษา</p>
+                    <p class="col-12 col-md-6 ps-4">Fail : ไม่สำเร็จการศึกษา</p>
+                    <p class="col-12 col-md-6 ps-4">A : เกรดเฉลี่ย 4.00</p>
+                    <p class="col-12 col-md-6 ps-4">B+ : เกรดเฉลี่ย 3.50 - 3.99</p>
+                    <p class="col-12 col-md-6 ps-4">B : เกรดเฉลี่ย 3.00 - 3.49</p>
+                    <p class="col-12 col-md-6 ps-4">C+ : เกรดเฉลี่ย 2.50 - 2.99</p>
+                    <p class="col-12 col-md-6 ps-4">C : เกรดเฉลี่ย 2.00 - 2.49</p>
+                    <p class="col-12 col-md-6 ps-4">D+ : เกรดเฉลี่ย 1.50 - 1.99</p>
+                    <p class="col-12 col-md-6 ps-4">D : เกรดเฉลี่ย 1.00 - 1.49</p>
+                    <p class="col-12 col-md-6 ps-4">F : เกรดเฉลี่ยน้อยกว่า 1.00</p>
                 </div>
-                <div class="col-12 col-md-6">
-                    <p>polymer  :</p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p>enviSci : </p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p>safety : </p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p>bio : </p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p>chemi : </p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p>math : </p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p>microBio : </p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <p>physics : </p>
-                </div>
-                
+            </div>
         </div>
     </div>
 </div>

@@ -1,35 +1,35 @@
 {% extends 'app_general/components/base.html' %}
 {% load static %}
-{% block site_title %}show model | {% endblock %}
+{% block site_title %}Show model | {% endblock %}
 {% block content %}
     <div class="container">
         <button onclick="topFunction()" id="myBtn" title="Go to top">
             <i data-feather="arrow-up"></i>
         </button>
         <div style="border-bottom: 1px solid #000; margin-top: 35px;">
-            <h2>ข้อมูลโมเดล</h2>
+            <h2>ข้อมูลใช้สร้างโมเดล</h2>
         </div>
         <div class="row mb-2">
             <div class="col-3">
               <strong>
-                <h5 class="mt-4">Total: {{ total }}</h5>
+                <h5 class="mt-4"><strong>Total: {{ total }}</strong></h5>
               </strong>
             </div>
             <div class="col-9">
               <div class="row mt-3">
                 <div class="col-12 col-md-4 text-end">
                     <a href="{% url 'data_in_applied_sci' %}">
-                        <p class="btn btn-primary">Show data in applied sci model</p>
+                        <p id="textCustom" class="btn btn-primary">ข้อมูลสร้างโมเดล Applied Science</p>
                     </a>
                 </div>
                 <div class="col-12 col-md-4 text-end">
                     <a href="{% url 'data_in_health_sci' %}">
-                        <p class="btn btn-primary">Show data in health sci model</p>
+                        <p id="textCustom" class="btn btn-primary">ข้อมูลสร้างโมเดล Health Science</p>
                     </a>
                 </div>
                 <div class="col-12 col-md-4 text-end">
                     <a href="{% url 'data_in_pure_sci' %}">
-                        <p class="btn btn-primary">Show data in pure sci model</p>
+                        <p id="textCustom" class="btn btn-primary">ข้อมูลสร้างโมเดล Pure Science</p>
                     </a>
                 </div>
               </div>

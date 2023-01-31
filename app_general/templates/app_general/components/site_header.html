@@ -1,12 +1,12 @@
 {% load static %}
 
 <nav class="navbar navbar-light" style="background: #EEE">
-    <a href="{% url 'my-dashboard' %}" class="navbar-brand ms-3 d-flex align-items-center">
+    <a id="logoGoToDashboard" href="{% url 'my-dashboard' %}" class="navbar-brand ms-3 d-flex align-items-center">
         <div>
             <img src="{% static 'app_general/img/Ubu_logo.png' %}" width="40" height="40" class="d-inline-block align-top" alt="">
         </div>
-        <div class="ms-2">
-            <h3>ระบบทำนายการสำเร็จการศึกษา</h3>
+        <div class="ms-2 d-flex align-items-center">
+            <h4 style="margin-top: auto; margin-bottome: auto;">ระบบทำนายการสำเร็จการศึกษา</h4>
         </div>
     </a>
     {% if user.is_authenticated %}
@@ -16,7 +16,7 @@
                 <span class="ms-2" style="width: 20px">{{ user.username }}</span>
             </a>
             <a href="{% url 'logout' %}">
-                <button class="btn me-3">
+                <button class="btn me-3" title="log out">
                     <i data-feather="log-out"></i>
                 </button>
             </a>

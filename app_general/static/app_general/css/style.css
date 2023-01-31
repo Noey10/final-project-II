@@ -9,9 +9,13 @@
 #selector:hover {
     background-color: #fff;
     border-radius: 25px;
-    color: #AEC6CF;
+    color: #000;
 }
 
 #titleTableCustom{
-    font-size: small;
+    font-size: 14px;
+}
+
+#textCustom{
+    font-size: 16px;
 }

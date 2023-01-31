@@ -16,8 +16,8 @@
         </div>
         <hr class="mt-3 mb-5">
         <div class="container-fluid">
-            <table class="table">
-                <thead id="titleTableCustom" class="bg-light">
+            <table id="titleTableCustom" class="table">
+                <thead class="bg-light">
                     <th scope="col">วันที่ทำนาย</th>
                     <th scope="col">สาขาวิชา</th>
                     <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
@@ -27,14 +27,14 @@
                     <th scope="col">วิชาวิทยาศาสตร์</th>
                     <th scope="col">วิชาสังคม</th>
                     <th scope="col">วิชาสุขศึกษา</th>
-                    <th scope="col">วิชาศิลปะ</th>
+                    <th scope="col">วิชาศิลปศึกษา</th>
                     <th scope="col">วิชาการงาน</th>
-                    <th scope="col">วิชาภาษาอังกฤษ</th>
+                    <th scope="col">วิชาภาษาต่างประเทศ</th>
                     <th scope="col">ผลการทำนาย</th>
                 </thead>
                 <tbody>
                     <tr {% for i in data %}>
-                        <td scope="row">{{i.predict_at|date:'j N Y'}}</td>
+                        <td scope="row">{{i.predict_at|date:'j/N/Y'}}</td>
                         <td>{{ i.major }}</td>
                         <td>{{ i.admission_grade }}</td>
                         <td>{{ i.gpa_year_1 }}</td>
