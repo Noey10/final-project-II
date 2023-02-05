@@ -25,24 +25,30 @@ def upload_applied_sci_model(request):
         # print(applied)
         dataset = Dataset()
         new_applied = request.FILES['appliedfile']
+        
+         #check type file
+        if not new_applied.name.endswith('xlsx'):
+            messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel")
+            return render(request, 'app_demo_model/upload_applied_sci.html')
 
         df = pd.read_excel(new_applied)
         print('read data')
         df = df.dropna()#delete row missing value
-        print(df.head())
+        # print(df.head())
         
         #check type column
         for i in df.columns:
             if df.dtypes[i] != np.object_:
-                print('cc')
-                messages.info(request, 'Wrong format column. Example: excellent, very good, good, medium, poor, very poor')
-                return render(request, 'app_demo_model/upload_pure_sci.html')
+                messages.info(request, "ในคอลัมน์ของเกรดเฉลี่ยต้องการข้อมูล excellent, very good, good, medium, poor, very poor")
+                return render(request, 'app_demo_model/upload_applied_sci.html')
               
         import_data = dataset.load(df)
-        print(import_data)
         result = applied.import_data(dataset, dry_run=True, raise_errors=True)
         if not result.has_errors():
             applied.import_data(dataset, dry_run=False) 
+            
+        messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
+        print('upload success.')
         
     return render(request, 'app_demo_model/upload_applied_sci.html')
 
@@ -72,8 +78,7 @@ def upload_health_sci_model(request):
         print('name file = ', new_health.name)
         #check type file
         if not new_health.name.endswith('xlsx'):
-            print('name file gg')
-            messages.info(request, 'Wrong format')
+            messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel")
             return render(request, 'app_demo_model/upload_health_sci.html')
         
         df = pd.read_excel(new_health)
@@ -82,15 +87,16 @@ def upload_health_sci_model(request):
         #check type column
         for i in df.columns:
             if df.dtypes[i] != np.object_:
-                print('cc')
-                messages.info(request, 'เกรดเฉลี่ยจะต้องเป็นตัวอักษร (A, B+, B, C+, C, D+, D, F)')
+                messages.info(request, "ในคอลัมน์ของเกรดเฉลี่ยต้องการข้อมูล excellent, very good, good, medium, poor, very poor")
                 return render(request, 'app_demo_model/upload_health_sci.html')
         
         import_data = dataset.load(df)
         result = health.import_data(dataset, dry_run=True)
         if not result.has_errors():
             health.import_data(dataset, dry_run=False)       
-        messages.success(request, "Upload health model successfully.")
+        messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
+        
+        print('upload success.')
         
     return render(request, 'app_demo_model/upload_health_sci.html')
 
@@ -119,8 +125,7 @@ def upload_pure_sci_model(request):
         print('name file = ', new_pure.name)
         
         if not new_pure.name.endswith('xlsx'):
-            print('name file gg')
-            messages.info(request, 'Wrong format')
+            messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel")
             return render(request, 'app_demo_model/upload_pure_sci.html')
         
         df = pd.read_excel(new_pure)
@@ -129,8 +134,7 @@ def upload_pure_sci_model(request):
         #check type column
         for i in df.columns:
             if df.dtypes[i] != np.object_:
-                print('cc')
-                messages.info(request, 'เกรดเฉลี่ยจะต้องเป็นตัวอักษร (A, B+, B, C+, C, D+, D, F)')
+                messages.info(request, "ในคอลัมน์ของเกรดเฉลี่ยต้องการข้อมูล excellent, very good, good, medium, poor, very poor")
                 return render(request, 'app_demo_model/upload_pure_sci.html')
         
         import_data = dataset.load(df)
@@ -138,7 +142,7 @@ def upload_pure_sci_model(request):
         if not result.has_errors():
             pure.import_data(dataset, dry_run=False)
         
-        messages.success(request, 'Upload pure model successfully.')
+        messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
         
     return render(request, 'app_demo_model/upload_pure_sci.html')
 

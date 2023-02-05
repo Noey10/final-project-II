@@ -43,7 +43,7 @@ def prediction(request):
     if request.method == 'POST':
         form = UserPredictForm(request.POST)
         major = request.POST.get('major')
-        print(major)
+        # print(major)
         
         #user input
         admission_grade = request.POST.get('admission_grade')
@@ -103,8 +103,8 @@ def prediction(request):
             'langues': new_grades[9]
         }
         df_new = pd.DataFrame([my_dict])      
-        print("-------------------------------------------")
-        print(df_new)  
+        # print("-------------------------------------------")
+        # print(df_new)  
         
         if form.is_valid():
             user_input= form.save(commit=False)

@@ -3,21 +3,6 @@
 {% block site_title %}Upload pure science model | {% endblock %}
 {% block content %}
     <div class="container w-75 w-md-100">
-        <div class="container">
-            {% for msg in messages %}
-                {% if msg.tags == 'success' %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>{{ msg }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% else %}
-                    <div class="alert alert-dismissible fade show" role="alert">
-                        <strong>{{ msg }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
         <div class="row mt-5">
             <div class="col-8 col-md-9">
                 <h4>อัปโหลดข้อมูลสำหรับสร้างโมเดล Pure Science</h4>
@@ -30,6 +15,21 @@
             </div>
         </div>
         <hr>
+        <div class="container">
+            {% for msg in messages %}
+                {% if msg.tags == 'success' %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ msg }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>{{ msg }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
         <div class="row d-flex justify-content-center mt-5" style="margin-left:0px;">
             <form action="{% url 'upload_pure_sci_model' %}" method="POST" enctype="multipart/form-data" class="form">
                 {% csrf_token %}

@@ -16,7 +16,7 @@ def dashboard(request):
     
     all_pass = data.objects.filter(status='Pass').count()
     all_fail = data.objects.filter(status='Fail').count()
-    print(all_pass, ', ', all_fail)
+    print('pass:', all_pass, ', ', 'fail:', all_fail)
     
     
     ict_pass = data.objects.filter(major='ICT').filter(status='Pass').count()
@@ -130,8 +130,8 @@ def dashboard(request):
         career2,
         langues2,
     ]
-    print('มากกว่า 2', subject_less_than_two)
-    print('น้อยกว่า 2', subject_more_than_two)
+    # print('มากกว่า 2', subject_less_than_two)
+    # print('น้อยกว่า 2', subject_more_than_two)
     
     per_pass = 0
     per_fail = 0
