@@ -1,11 +1,13 @@
 import http
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import UserPredict
 from .forms import UserPredictForm
 from app_demo_model.models import AppliedScience, HealthScience, PureScience
+from app_users.models import CustomUser
+from django.contrib import messages
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
@@ -18,6 +20,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_validate
+from io import BytesIO
+#######################################################
 
 # Create your views here.
 @login_required
@@ -66,28 +70,24 @@ def prediction(request):
             career,
             langues,
         ]
-        
+        print(grade_list)
         #แปลงเกรดจากทศนิยมเป็นตัวอักษร
         new_grades = []
         for i in grade_list:
-            if float(i) == 4.00:
-                i = 'A'
-            elif float(i) < 4.00 and float(i) > 3.49:
-                i = 'B+'
-            elif float(i) < 3.50 and float(i) > 2.99:
-                i = 'B'
-            elif float(i) < 3.00 and float(i) > 2.49:
-                i = 'C+'
-            elif float(i) < 2.50 and float(i) > 1.99:
-                i = 'C'
-            elif float(i) < 2.00 and float(i) > 1.49:
-                i = 'D+'
-            elif float(i) < 1.50 and float(i) > 0.99:
-                i = 'D'
-            elif float(i) < 1.00:
-                i = 'F'
+            if float(i) > 3.50:
+                i = 'excellent'
+            elif float(i) > 2.99:
+                i = 'very good'
+            elif float(i) > 2.49:
+                i = 'good'
+            elif float(i) > 1.99:
+                i = 'medium'
+            elif float(i) > 1.49:
+                i = 'poor'
+            elif float(i) < 1.50:
+                i = 'very poor'
             new_grades.append(i)
-        print(new_grades)
+        # print(new_grades)
         #create data frame for data user input 
         my_dict = {
             'major': major,
@@ -102,122 +102,145 @@ def prediction(request):
             'career': new_grades[8],
             'langues': new_grades[9]
         }
-        df_new = pd.DataFrame([my_dict])        
+        df_new = pd.DataFrame([my_dict])      
+        print("-------------------------------------------")
+        print(df_new)  
         
         if form.is_valid():
             user_input= form.save(commit=False)
             user_input.user = request.user
             
+            result2 = ''
+            acc2 = 0
+            
             #โค้ดทำนาย
             if major == 'DSSI' or major == 'ICT' or major == 'polymer':
                 print("เรียกโมเดล Applied Science มาใช้จ้า")
                 applied = AppliedScience.objects.all().values()#read data in Applied Science
-                df = pd.DataFrame(applied)#crate data frame             
-                #แบ่งข้อมูล X, y
-                X = df.iloc[:, 1:-1]
-                y = df.iloc[:, -1:]
-                
-                categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-                categories_transforms = Pipeline(steps=[
-                    # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
-                    ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
-                ])
-                #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
-                preprocessor = ColumnTransformer(remainder='passthrough',
-                    transformers=[
-                        ('catagories', categories_transforms, categories_feature )
-                    ]
-                )
-                #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
-                pipe = Pipeline(steps=[
-                    ('prep', preprocessor),
-                    ('tree', DecisionTreeClassifier(max_depth=6))
-                ])
-                # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
-                cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+                if not applied.count() == 0:
+                    df = pd.DataFrame(applied)#crate data frame             
+                    #แบ่งข้อมูล X, y
+                    X = df.iloc[:, 1:-1]
+                    y = df.iloc[:, -1:]
+                    
+                    categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+                    categories_transforms = Pipeline(steps=[
+                        # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
+                        ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+                    ])
+                    #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+                    preprocessor = ColumnTransformer(remainder='passthrough',
+                        transformers=[
+                            ('catagories', categories_transforms, categories_feature )
+                        ]
+                    )
+                    #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+                    pipe = Pipeline(steps=[
+                        ('prep', preprocessor),
+                        ('tree', DecisionTreeClassifier(max_depth=6))
+                    ])
+                    # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
+                    cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 fold
 
-                # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
-                acc = cv_data['test_score'].mean()
-                acc2 = round(acc*100, 2)
-                print(cv_data['test_score'].mean())
-
-                pipe.fit(X, y)#model
-                result = pipe.predict(df_new)#predict
-                result2 = result[0]
-                print(result2)
+                    # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
+                    acc = cv_data['test_score'].mean()
+                    acc2 = round(acc*100, 2)
+                    print(acc, ' = ', acc2)
+                    
+                    ff = pipe.fit(X, y)#model
+                    result = ff.predict(df_new)#predict
+                    print(result)
+                    # print(ff['test_score'])
+                    
+                    result2 = result[0]
+                    print(result2)
+                else:
+                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
+                    form = UserPredictForm()
+                    return HttpResponseRedirect(reverse('form'))
                     
             elif major == 'safety'or major == 'enviSci':
                 print("เรียกโมเดล Health Science มาใช้จ้า")
-                health = HealthScience.objects.all().values()#read data in Applied Science
-                df = pd.DataFrame(health)#crate data frame             
-                X = df.iloc[:, 1:-1]
-                y = df.iloc[:, -1:]
-                
-                categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-                categories_transforms = Pipeline(steps=[
-                    # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
-                    ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
-                ])
-                #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
-                preprocessor = ColumnTransformer(remainder='passthrough',
-                    transformers=[
-                        ('catagories', categories_transforms, categories_feature )
-                    ]
-                )
-                #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
-                pipe = Pipeline(steps=[
-                    ('prep', preprocessor),
-                    ('tree', DecisionTreeClassifier(max_depth=6))
-                ])
-                # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
-                cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+                health = HealthScience.objects.all().values()#read data in Health Science
+                if not health.count() == 0 :
+                    df = pd.DataFrame(health)#crate data frame             
+                    X = df.iloc[:, 1:-1]
+                    y = df.iloc[:, -1:]
+                    
+                    categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+                    categories_transforms = Pipeline(steps=[
+                        # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
+                        ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+                    ])
+                    #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+                    preprocessor = ColumnTransformer(remainder='passthrough',
+                        transformers=[
+                            ('catagories', categories_transforms, categories_feature )
+                        ]
+                    )
+                    #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+                    pipe = Pipeline(steps=[
+                        ('prep', preprocessor),
+                        ('tree', DecisionTreeClassifier(max_depth=6))
+                    ])
+                    # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
+                    cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
 
-                # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
-                acc = cv_data['test_score'].mean()
-                acc2 = round(acc*100, 2)
-                print(cv_data['test_score'].mean())
+                    # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
+                    acc = cv_data['test_score'].mean()
+                    acc2 = round(acc*100, 2)
+                    print(cv_data['test_score'].mean())
 
-                pipe.fit(X, y)#model
-                result = pipe.predict(df_new)#predict
-                result2 = result[0]
-                print(result2)
+                    pipe.fit(X, y)#model
+                    result = pipe.predict(df_new)#predict
+                    result2 = result[0]
+                    print(result2)
+                else:
+                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
+                    form = UserPredictForm()
+                    return HttpResponseRedirect(reverse('form'))
             
             elif major == 'math'or major == 'bio' or major == 'microBio' or major == 'physics' or major == 'chemi':
                 print("เรียกโมเดล Pure Science มาใช้จ้า")
-                pure = PureScience.objects.all().values()#read data in Applied Science
-                df = pd.DataFrame(pure)#crate data frame             
-                X = df.iloc[:, 1:-1]
-                y = df.iloc[:, -1:]
-                
-                categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-                categories_transforms = Pipeline(steps=[
-                    # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
-                    ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
-                ])
-                #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
-                preprocessor = ColumnTransformer(remainder='passthrough',
-                    transformers=[
-                        ('catagories', categories_transforms, categories_feature )
-                    ]
-                )
-                #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
-                pipe = Pipeline(steps=[
-                    ('prep', preprocessor),
-                    ('tree', DecisionTreeClassifier(max_depth=6))
-                ])
-                # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
-                cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
-
-                # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
-                acc = cv_data['test_score'].mean()
-                acc2 = round(acc*100, 2)
-                print(cv_data['test_score'].mean())
-
-                pipe.fit(X, y)#model
-                result = pipe.predict(df_new)#predict
-                result2 = result[0]
-                print(result2)
+                pure = PureScience.objects.all().values()#read data in Pure Science
+                if not pure.count() == 0:
+                    df = pd.DataFrame(pure)#crate data frame             
+                    X = df.iloc[:, 1:-1]
+                    y = df.iloc[:, -1:]
                     
+                    categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+                    categories_transforms = Pipeline(steps=[
+                        # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
+                        ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+                    ])
+                    #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+                    preprocessor = ColumnTransformer(remainder='passthrough',
+                        transformers=[
+                            ('catagories', categories_transforms, categories_feature )
+                        ]
+                    )
+                    #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+                    pipe = Pipeline(steps=[
+                        ('prep', preprocessor),
+                        ('tree', DecisionTreeClassifier(max_depth=6))
+                    ])
+                    # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
+                    cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+
+                    # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
+                    acc = cv_data['test_score'].mean()
+                    acc2 = round(acc*100, 2)
+                    # print(cv_data['test_score'].mean())
+
+                    pipe.fit(X, y)#model
+                    result = pipe.predict(df_new)#predict
+                    result2 = result[0]
+                    print(result2)
+                else: 
+                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
+                    form = UserPredictForm()
+                    return HttpResponseRedirect(reverse('form'))
+                
             user_input.status = result2
             user_input.save()
             print('save success')
@@ -248,23 +271,23 @@ def prediction(request):
             branch = 'ไม่มีสาขาที่ระบุ'
                 
         grade_dict = {
-            'สาขาวิชา': branch,
+            'สาขา': branch,
             'เกรดเฉลี่ยมัธยมตอนปลาย': grade_list[0],
             'เกรดเฉลี่ยชั้นปีที่ 1': grade_list[1],
-            'วิชาภาษาไทย': grade_list[2],
-            'วิชาคณิตศาสตร์': grade_list[3],
-            'วิชาวิทยาศาสตร์': grade_list[4],
-            'วิชาสังคมศึกษา ศาสนาและวัฒนธรรม': grade_list[5],
-            'วิชาสุขศึกษาและพลศึกษา': grade_list[6],
-            'วิชาศิลปศึกษา': grade_list[7],
-            'วิชาการงานอาชีพ': grade_list[8],
-            'วิชาสุขศึกษาและพลศึกษา': grade_list[9]
+            'ภาษาไทย': grade_list[2],
+            'คณิตศาสตร์': grade_list[3],
+            'วิทยาศาสตร์': grade_list[4],
+            'สังคมศึกษา ศาสนาและวัฒนธรรม': grade_list[5],
+            'สุขศึกษาและพลศึกษา': grade_list[6],
+            'ศิลปศึกษา': grade_list[7],
+            'การงานอาชีพ': grade_list[8],
+            'ภาษาต่างประเทศ': grade_list[9],
         }
 
     context = {
         'result': result2, 
         'acc': acc2,
-        'grade_dict': grade_dict
+        'grade_dict': grade_dict,
     }
     
     return render(request, 'app_prediction/prediction_result.html', context)
@@ -283,5 +306,34 @@ def information(request):
 
 @login_required
 def result(request):
-    form = UserPredictForm()
     return render(request, 'app_prediction/prediction_result.html')
+
+@login_required
+def download_file(request):
+    data = UserPredict.objects.all().values()
+    df = pd.DataFrame(data)
+    df = df.drop('predict_at', axis=1)
+    df = df.drop('user_id', axis=1)
+   
+    
+    with BytesIO() as b:
+        with pd.ExcelWriter(b) as writer:
+            # You can add multiple Dataframes to an excel file
+            # Using the sheet_name attribute
+            df.to_excel(writer, sheet_name="DATA 1", index=False)
+    
+        filename = "analytics_data.xlsx"
+    
+        # imported from django.http
+        res = HttpResponse(
+            b.getvalue(), # Gives the Byte string of the Byte Buffer object
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        res['Content-Disposition'] = f'attachment; filename={filename}'
+        return res
+
+@login_required    
+def delete_data_user_input(request):
+    data_input = UserPredict.objects.all()
+    data_input.delete()
+    return render(request, 'app_prediction/show_data_input.html')

@@ -105,7 +105,7 @@ def dashboard(request):
     langues = data.objects.filter(langues__lt =2.00).count()
     langues2 = data.objects.filter(langues__gte =2.00).count()
     
-    subject_more_than_two = [
+    subject_less_than_two = [
         admission_grade,
         gpa,
         thai,
@@ -118,7 +118,7 @@ def dashboard(request):
         langues,
     ]
     
-    subject_less_than_two = [
+    subject_more_than_two = [
         admission_grade2,
         gpa2,
         thai2,
@@ -130,11 +130,14 @@ def dashboard(request):
         career2,
         langues2,
     ]
-    print('มากกว่า 2', subject_more_than_two)
-    print('น้อยกว่า 2', subject_less_than_two)
-
-    per_pass = round((all_pass/total)*100, 2)
-    per_fail = round((all_fail/total)*100, 2)
+    print('มากกว่า 2', subject_less_than_two)
+    print('น้อยกว่า 2', subject_more_than_two)
+    
+    per_pass = 0
+    per_fail = 0
+    if not all_pass == 0 :
+        per_pass = round((all_pass/total)*100, 2)
+        per_fail = round((all_fail/total)*100, 2)
     
     context = {
         'item': item,

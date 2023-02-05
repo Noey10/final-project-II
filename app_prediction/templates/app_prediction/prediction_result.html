@@ -17,31 +17,32 @@
             </div>
             <hr style="border-top: 2px solid #000; width: 100%;">
             <div class="row d-flex justify-content-center align-items-center">
-                <div class="container border border-success p-3 rounded shadow">
-                    <h4 class="text-center"> ผลการทำนาย </h4>
-                    <h3 class="text-center"> มีโอกาส <strong>{{ result }}</strong> {{ acc }}%</h3>
-                    {% if result == 'Fail' %}
-                        <h5 class="text-center">สู้ๆนะจ๊ะ</h5>
-                    {% else %}
-                    {% endif %}
-                </div>
+                {% if result == 'Fail' %}
+                    <div class="container border border-danger p-3 rounded shadow">
+                        <h4 class="text-center"> ผลการทำนาย </h4>
+                        <h3 class="text-center"> มีโอกาส <strong>ไม่สำเร็จการศึกษา</strong></h3>
+                        <p class="text-center">พยายามเพิ่มขึ้นอีกนิด สู้ๆนะจ๊ะ</p>
+                    </div>
+                {% else %}
+                    <div class="container border border-success p-3 rounded shadow">
+                        <h4 class="text-center"> ผลการทำนาย </h4>
+                        <h3 class="text-center"> มีโอกาส <strong>สำเร็จการศึกษา</strong></h3>
+                        <p class="text-center">เก่งมากๆจ้า</p>
+                    </div>
+                {% endif %}
                 <div class="row w-75 mt-3">
-                    <div class="col-12 col-md-7 mt-2 d-flex justify-content-end"> 
+                    <div class="col-12 col-md-12 col-lg-6 mt-2 d-flex justify-content-end"> 
                         <a href="{% url 'form' %}" class="text-center">
                             <button type="submit" class="btn btn-primary">ทำนายอีกครั้ง</button>
                         </a>
                     </div>
-                    <div class="col-12 col-md-5 mt-2">
-                        <a href="{% url 'dashboard' %}" class="text-center">
-                            <button type="submit" class="btn btn-primary">ปิด</button>
+                    <div class="col-12 col-md-12 col-lg-6 mt-2">
+                        <a href="{% url 'my-dashboard' %}" class="text-center">
+                            <button type="submit" class="btn btn-primary">ประวัติการทำนาย</button>
                         </a>
                     </div>
                 </div>
             </div>
         </div>     
-        <div>
-        
-        </div>
-                   
-    </div>
+    <div>
 {% endblock %}

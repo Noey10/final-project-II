@@ -14,3 +14,4 @@ class HealthSciResource(resources.ModelResource):
 class PureSciResource(resources.ModelResource):
     class Meta:
         model = PureScience
+        

@@ -1,19 +1,21 @@
 {% load static %}
 
 <nav class="navbar navbar-light" style="background: #EEE">
-    <a id="logoGoToDashboard" href="{% url 'my-dashboard' %}" class="navbar-brand ms-3 d-flex align-items-center">
+    <div id="logoGoToDashboard" class="navbar-brand ms-3 d-flex align-items-center">
         <div>
             <img src="{% static 'app_general/img/Ubu_logo.png' %}" width="40" height="40" class="d-inline-block align-top" alt="">
         </div>
         <div class="ms-2 d-flex align-items-center">
             <h4 style="margin-top: auto; margin-bottome: auto;">ระบบทำนายการสำเร็จการศึกษา</h4>
         </div>
-    </a>
+    </div>
     {% if user.is_authenticated %}
         <div class="d-flex justify-content-end">
-            <a class="me-3 btn btn-outline-primary shadow" href="{% url 'profile' %}">
-                <i data-feather="user"></i>
-                <span class="ms-2" style="width: 20px">{{ user.username }}</span>
+            <a class="me-3" href="{% url 'profile' %}">
+                <button class="btn btn-outline-primary shadow" title="Profile">
+                    <i data-feather="user"></i>
+                    <span class="ms-2 text-uppercase" style="width: 20px">{{ user.username }}</span>
+                </button>
             </a>
             <a href="{% url 'logout' %}">
                 <button class="btn me-3" title="log out">

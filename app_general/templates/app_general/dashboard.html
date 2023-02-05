@@ -3,11 +3,19 @@
 {% block scripts %}{% endblock scripts %}
 {% block content %}
   <div class="container">
-    {% if total|length < 0%}
-      <h1>Hello Dashboard</h1>
-      <p>ยังไม่มีข้อมูลการทำนาย</p>
+    {% if total < 1%}
+    <div class="container w-50 d-flex align-items-center" style="height: 360px">
+      <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
+          <h4>Hello Admin</h4>
+          <p>**ขณะนี้ยังไม่มีการทำนายผล</p>
+          <a href="{% url 'form' %}" class="mt-3">
+              <span><i data-feather="chevrons-left"></i></span>
+              <span>ไปยังหน้าทำนายผลการสำเร็จการศึกษา</span>
+          </a>
+      </div>
+    </div>
     {% else %}
-      <h1>Hello Dashboard</h1>
+      <h2>Dashboard</h2>
       <div class="container">
         <div class="row">
           <div class="col-12 col-md-5 bg-light mt-5 p-3">

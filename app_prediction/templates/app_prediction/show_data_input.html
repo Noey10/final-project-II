@@ -1,76 +1,105 @@
 {% extends 'app_general/components/base.html' %}
+{% load static %}
 {% block site_title %}information | {% endblock %}
 {% block content %}
-    <div class="text-center mt-3">
-      <button onclick="topFunction()" id="myBtn" title="Go to top">
-        <i data-feather="arrow-up"></i>
-      </button>
+  <div class="container text-center">
+    <button onclick="topFunction()" id="myBtn" title="Go to top">
+      <i data-feather="arrow-up"></i>
+    </button>
+    <div class="row mt-5 d-flex align-items-center">
+      <div class="col-6 text-start">
+        <h3>ข้อมูลที่นำเข้ามาทำนายผลการศึกษา</h3>
+      </div>
+      <div class="col-6 text-end">
+        <span class="me-2">
+          <strong style="font-size: 18px;">total : {{ total }}</strong>
+        </span>
+        <span class="me-2">
+          <a href="{% url 'download_file' %}" style="text-decoration: none;">
+            <button class="btn shadow" title="download">
+              <i data-feather="download"></i>
+            </button>
+          </a>
+        </span>
+        <!--<span class="me-2">
+          <a href="{% url 'delete_data_user_input' %}" style="text-decoration: none;">
+            <button class="btn shadow" title="delete data">
+              <i data-feather="trash"></i>
+            </button>
+          </a>
+        </span>-->
+      </div>
+      </div>
+      <hr class="mt-3 mb-3">
 
-        <div class="row mt-5 d-flex align-items-center">
-          <div class="col-6">
-            <h3>ข้อมูลที่นำเข้ามาทำนายผลการศึกษา</h3>
+      <div class="container-fluid">
+        {% if total < 1 %}
+          <div class="container w-50 d-flex align-items-center" style="height: 360px">
+            <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
+              <h4>ขณะนี้ยังไม่มีการนำเข้าข้อมูล</h4>
+              <a href="{% url 'form' %}" class="mt-3">
+                  <span><i data-feather="chevrons-left"></i></span>
+                  <span>ไปยังหน้าทำนายผลการสำเร็จการศึกษา</span>
+              </a>
+            </div>
           </div>
-          <div class="col-6">
-            <h5><strong>total : {{ total }}</strong></h5>
-          </div>
-        </div>
-        <hr class="mt-3 mb-5">
-        <div class="container-fluid">
-            <table id="titleTableCustom" class="table">
-                <thead class="bg-light">
-                    <th scope="col">วันที่ทำนาย</th>
-                    <th scope="col">สาขาวิชา</th>
-                    <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
-                    <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
-                    <th scope="col">วิชาภาษาไทย</th>
-                    <th scope="col">วิชาคณิตศาสตร์</th>
-                    <th scope="col">วิชาวิทยาศาสตร์</th>
-                    <th scope="col">วิชาสังคม</th>
-                    <th scope="col">วิชาสุขศึกษา</th>
-                    <th scope="col">วิชาศิลปศึกษา</th>
-                    <th scope="col">วิชาการงาน</th>
-                    <th scope="col">วิชาภาษาต่างประเทศ</th>
-                    <th scope="col">ผลการทำนาย</th>
-                </thead>
-                <tbody>
-                    <tr {% for i in data %}>
-                        <td scope="row">{{i.predict_at|date:'j/N/Y'}}</td>
-                        <td>{{ i.major }}</td>
-                        <td>{{ i.admission_grade }}</td>
-                        <td>{{ i.gpa_year_1 }}</td>
-                        <td>{{ i.thai }}</td>
-                        <td>{{ i.math }}</td>
-                        <td>{{ i.sci }}</td>
-                        <td>{{ i.society }}</td>
-                        <td>{{ i.hygiene }}</td>
-                        <td>{{ i.art }}</td>
-                        <td>{{ i.career }}</td>
-                        <td>{{ i.langues }}</td>
-                        <td>{{ i.status }}</td>
-                    </tr {% endfor %}>
-                </tbody>
-            </table>
-        </div>
+        {% else %}
+          <table class="table">
+            <thead id="titleTableCustom" class="bg-light">
+              <!--<th scope="col">วันที่ทำนาย</th>-->
+              <th scope="col">สาขา</th>
+              <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
+              <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
+              <th scope="col">ภาษาไทย</th>
+              <th scope="col">คณิตศาสตร์</th>
+              <th scope="col">วิทยาศาสตร์</th>
+              <th scope="col">สังคมศึกษา</th>
+              <th scope="col">สุขศึกษา</th>
+              <th scope="col">ศิลปศึกษา</th>
+              <th scope="col">การงาน</th>
+              <th scope="col">ภาษาต่างประเทศ</th>
+              <th scope="col">ผลการทำนาย</th>
+            </thead>
+            <tbody>
+              <tr {% for i in data %}>
+                <!--<td scope="row">{{i.predict_at|date:'j/N/Y'}}</td>-->
+                <td>{{ i.major }}</td>
+                <td>{{ i.admission_grade }}</td>
+                <td>{{ i.gpa_year_1 }}</td>
+                <td>{{ i.thai }}</td>
+                <td>{{ i.math }}</td>
+                <td>{{ i.sci }}</td>
+                <td>{{ i.society }}</td>
+                <td>{{ i.hygiene }}</td>
+                <td>{{ i.art }}</td>
+                <td>{{ i.career }}</td>
+                <td>{{ i.langues }}</td>
+                <td>{{ i.status }}</td>
+              </tr {% endfor %}>
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
     </div>
-    <script>
-        // Get the button
-        let mybutton = document.getElementById("myBtn");
+  </div>
+  <script>
+    // Get the button
+    let mybutton = document.getElementById("myBtn");    
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
         
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
         
-        function scrollFunction() {
-          if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            mybutton.style.display = "block";
-          } else {
-            mybutton.style.display = "none";
-          }
-        }
-        
-        // When the user clicks on the button, scroll to the top of the document
-        function topFunction() {
-          document.body.scrollTop = 0;
-          document.documentElement.scrollTop = 0;
-        }
-    </script>
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+  </script>
 {% endblock %}

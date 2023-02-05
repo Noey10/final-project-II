@@ -9,17 +9,15 @@
         <h2>ข้อมูลสำหรับสร้างโมเดลกลุ่ม Helath Science</h2>
       </div>
       {% if health|length < 1 %}
-        <div class="row mt-5 mb-2">
-          <div class="container text-center">
-            <strong>
-              <h1>"ไม่มีข้อมูล"</h1>
-          </div>
-          <div class="container d-flex align-items-center justify-content-center">
-            <a href="{% url 'upload_health_sci_model' %}" style="padding-right: 8px">
-              <button class="btn btn-primary" type="submit">
-                <i data-feather="plus"></i> เพิ่มข้อมูล
+        <div class="container w-50 d-flex align-items-center" style="height: 360px">
+          <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
+            <h4>ไม่มีข้อมูล</h4>
+            <a href="{% url 'upload_health_sci_model' %}">
+              <button class="btn btn-primary shadow" title="add data">
+                <span><i data-feather="plus"></i></span>
+                <span>เพิ่มข้อมูล</span>
               </button>
-            </a>       
+            </a>
           </div>
         </div>
       {% else %}
@@ -45,6 +43,7 @@
         
         <table class="table">
           <thead class="bg-light">
+            <th scope="col">major</th>
             <th scope="col">admission grade</th>
             <th scope="col">gpa year 1</th>
             <th scope="col">thai</th>
@@ -59,6 +58,7 @@
           </thead>
           <tbody>
             <tr {% for data in health %}>
+              <td>{{ data.major }}</td>
               <td>{{ data.admission_grade }}</td>
               <td>{{ data.gpa_year_1 }}</td>
               <td>{{ data.thai }}</td>

@@ -2,6 +2,7 @@ from django import forms
 from attr import fields
 from .models import AppliedScience, HealthScience, PureScience
 
+
 class AppliedForm(forms.Form):
     class Meta:
         model = AppliedScience
@@ -16,5 +17,3 @@ class PureForm(forms.Form):
     class Meta:
         model = PureScience
         fields = '__all__'
-        
-    

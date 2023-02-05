@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
 from .models import AppliedScience, HealthScience, PureScience
 from .resources import AppliedSciResource, HealthSciResource, PureSciResource
+from .forms import AppliedForm, HealthForm, PureForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from tablib import Dataset
@@ -19,38 +20,29 @@ def upload_model(request):
 
 @login_required
 def upload_applied_sci_model(request):
-    
     if request.method == 'POST':
         applied = AppliedSciResource()
+        # print(applied)
         dataset = Dataset()
         new_applied = request.FILES['appliedfile']
-        print('name file = ', new_applied.name)
-        print(new_applied)
-        #check type file
-        if not new_applied.name.endswith('xlsx'):
-            print(new_applied.name)
-            messages.info(request, 'ต้องการไฟล์นามสกุล XLSX')
-            return render(request, 'app_demo_model/upload_applied_sci.html')
-        
-        #create data frame
+
         df = pd.read_excel(new_applied)
-        df = df.dropna()#delete row with missing value
+        print('read data')
+        df = df.dropna()#delete row missing value
+        print(df.head())
         
         #check type column
         for i in df.columns:
             if df.dtypes[i] != np.object_:
                 print('cc')
-                messages.info(request, 'เกรดเฉลี่ยจะต้องเป็นตัวอักษร (A, B+, B, C+, C, D+, D, F)')
-                return render(request, 'app_demo_model/upload_applied_sci.html')
-        
+                messages.info(request, 'Wrong format column. Example: excellent, very good, good, medium, poor, very poor')
+                return render(request, 'app_demo_model/upload_pure_sci.html')
+              
         import_data = dataset.load(df)
-        # print(data_import)                 
-        result = applied.import_data(dataset, dry_run=True)
+        print(import_data)
+        result = applied.import_data(dataset, dry_run=True, raise_errors=True)
         if not result.has_errors():
-            applied.import_data(dataset, dry_run=False)       
-        messages.success(request, "อัปโหลดข้อมูลสำหรับสร้างโมเดลสำเร็จ.")
-        
-    applied = AppliedSciResource()
+            applied.import_data(dataset, dry_run=False) 
         
     return render(request, 'app_demo_model/upload_applied_sci.html')
 
@@ -133,7 +125,7 @@ def upload_pure_sci_model(request):
         
         df = pd.read_excel(new_pure)
         df = df.dropna()#delete row with missing value
-        
+
         #check type column
         for i in df.columns:
             if df.dtypes[i] != np.object_:
@@ -147,7 +139,6 @@ def upload_pure_sci_model(request):
             pure.import_data(dataset, dry_run=False)
         
         messages.success(request, 'Upload pure model successfully.')
-        pure = PureSciResource()
         
     return render(request, 'app_demo_model/upload_pure_sci.html')
 
@@ -187,3 +178,15 @@ def show_model(request):
     
     return render(request, 'app_demo_model/show_model.html', context)
 
+@login_required
+def delete_all_data(request):
+    applied = AppliedScience.objects.all()
+    health = HealthScience.objects.all()
+    pure = PureScience.objects.all()
+    applied.delete()
+    health.delete()
+    pure.delete()
+    
+    return render(request, 'app_demo_model/show_model.html')
+    
+    

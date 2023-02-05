@@ -4,7 +4,8 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from app_users.forms import ExtendedProfileForm, RegisterForm, UserProfileForm
-
+from app_prediction.models import UserPredict
+from app_users.models import CustomUser
 
 # Create your views here.
 def register(request):
@@ -64,6 +65,19 @@ def profile(request):
     
     return render(request, "app_users/profile.html", context)
 
-
+@login_required
 def my_dashboard(request):
-    return render(request, 'app_users/my_dashboard.html')
+    user0 = request.user.id
+    print(user0)
+    data = UserPredict
+    filter_user_id = data.objects.filter(user_id=user0).values().order_by('-predict_at')
+    
+    total = filter_user_id.count()
+    # Company.objects.order_by(Length('name').desc())
+    
+    context = {
+        'filter_user_id': filter_user_id,
+        'total': total,
+    }
+    
+    return render(request, 'app_users/my_dashboard.html', context)

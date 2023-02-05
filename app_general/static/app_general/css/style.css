@@ -19,3 +19,13 @@
 #textCustom{
     font-size: 16px;
 }
+
+h6 #statusPass {
+    border-radius: 15px;
+    background-color: #C4FAF8;
+}
+
+h6 #statusFail {
+    border-radius: 15px;
+    background-color: #FFCCF9;
+}

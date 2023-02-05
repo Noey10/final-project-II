@@ -18,5 +18,8 @@ urlpatterns = [
     path('delete_data_pure', views.delete_data_pure, name="delete_data_pure"),
     #show button select model
     path('show_model', views.show_model, name="show_model"),    
+    #delete all data all model
+    path('delete_all_data', views.delete_all_data, name="delete_all_data"), 
+
     
 ]
