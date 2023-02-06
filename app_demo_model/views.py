@@ -27,11 +27,14 @@ def upload_applied_sci_model(request):
         new_applied = request.FILES['appliedfile']
         
          #check type file
-        if not new_applied.name.endswith('xlsx'):
-            messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel")
+        if new_applied.name.endswith('csv'):
+            df = pd.read_csv(new_applied)
+        elif new_applied.name.endswith('xlsx'):
+            df = pd.read_excel(new_applied)
+        else :
+            messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel หรือ csv")
             return render(request, 'app_demo_model/upload_applied_sci.html')
 
-        df = pd.read_excel(new_applied)
         print('read data')
         df = df.dropna()#delete row missing value
         # print(df.head())

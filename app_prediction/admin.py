@@ -1,22 +1,25 @@
 from django.contrib import admin
+from .models import UserPredict
 
 # Register your models here.
-# class PredictionAdmin(admin.ModelAdmin):
-#     list_display = [
-#                     'highschool_grade', 
-#                     'professional_grade',
-#                     'compulsory_pro_grade',
-#                     'select_vocation_grade',
-#                     'compulsory_elective_1',
-#                     'compulsory_elective_2',
-#                     'foreign_language_grade',
-#                     'thai_grade',
-#                     'avg_grade',
-#                     'result_predict',
-#                     'predict_at',
-#                     ]
-#     search_fields = ['predict_at']
-#     list_filter = ['result_predict']
+class UserPredictAdmin(admin.ModelAdmin):
+    list_display = [
+        'major',
+        'admission_grade',
+        'gpa_year_1',
+        'thai',
+        'math',
+        'sci',
+        'society',
+        'hygiene',
+        'art',
+        'career',
+        'langues',
+        'status',
+        'predict_at',
+        'user',
+    ]
+    search_fields = ['major']
+    list_filter = ['status']
 
-
-# admin.site.register(Prediction, PredictionAdmin)
+admin.site.register(UserPredict, UserPredictAdmin)

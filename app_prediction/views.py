@@ -296,6 +296,7 @@ def prediction(request):
 @login_required
 def information(request):
     data = UserPredict.objects.all()
+    print(data)
     total = data.count() 
     print('total = ', total)
     context={

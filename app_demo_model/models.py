@@ -14,6 +14,9 @@ class AppliedScience(models.Model):
     career = models.CharField(max_length=20)
     langues = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.major
 
 class HealthScience(models.Model):
     major = models.CharField(max_length=100)
@@ -29,6 +32,9 @@ class HealthScience(models.Model):
     langues = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
     
+    def __str__(self):
+        return self.major
+    
 class PureScience(models.Model):
     major = models.CharField(max_length=100)
     admission_grade = models.CharField(max_length=20)
@@ -42,3 +48,6 @@ class PureScience(models.Model):
     career = models.CharField(max_length=20)
     langues = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.major

@@ -31,3 +31,6 @@ class UserPredict(models.Model):
     status = models.CharField(max_length=10)
     predict_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('app_users.CustomUser', on_delete=models.PROTECT, related_name="user_grade_set")
+
+    def __str__(self):
+        return self.major
