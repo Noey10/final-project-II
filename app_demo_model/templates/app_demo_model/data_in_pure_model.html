@@ -2,7 +2,7 @@
 {% block site_title %}Pure model | {% endblock %}
 {% block content %}
     <div class="container">
-      <button onclick="topFunction()" id="myBtn" title="Go to top">
+      <button onclick="topFunction()" id="myBtn" title="กลับไปด้านบนสุด">
         <i data-feather="arrow-up"></i>
       </button>
       <div style="border-bottom: 1px solid #000; margin-top: 35px;">
@@ -12,8 +12,8 @@
         <div class="container w-50 d-flex align-items-center" style="height: 360px">
           <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
             <h4>ไม่มีข้อมูล</h4>
-            <a href="{% url 'upload_pure_sci_model' %}">
-              <button class="btn btn-primary shadow" title="add data">
+            <a href="{% url 'upload_sci_model' %}">
+              <button class="btn btn-primary shadow" title="เพิ่มข้อมูล">
                 <span><i data-feather="plus"></i></span>
                 <span>เพิ่มข้อมูล</span>
               </button>
@@ -28,13 +28,13 @@
             </strong>
           </div>
           <div class="col-6 d-flex align-items-center justify-content-end">
-            <a href="{% url 'upload_pure_sci_model' %}" style="padding-right: 8px">
-              <button class="btn btn-primary" type="submit" title="add data">
+            <a href="{% url 'upload_sci_model' %}" style="padding-right: 8px">
+              <button class="btn btn-primary" type="submit" title="เพิ่มข้อมูล">
                 <i data-feather="plus"></i>
               </button>
             </a>
             <a href="{% url 'delete_data_pure' %}">
-              <button class="btn btn-danger" title="delete data">
+              <button class="btn btn-danger" title="ลบข้อมูล">
                 <i data-feather="trash"></i>
               </button>
             </a>       
