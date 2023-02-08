@@ -42,42 +42,63 @@
 
                     <div class="position-sticky sticky-top">
                         <ul class="nav flex-column">
-                            <li id="selector" class="nav-item">
-                                <a href="{% url 'dashboard' %}" class="nav-link">
-                                    <i data-feather="monitor"></i>
-                                    <span class="ml-2">แดชบอร์ด(แอดมิน)</span>
-                                </a>
-                            </li>
-                            <li id="selector" class="nav-item">
-                                <a href="{% url 'form' %}" class="nav-link">
-                                    <i data-feather="box"></i>
-                                    <span class="ml-2">ทำนายผลสำเร็จการศึกษา</span>
-                                </a>
-                            </li>
-                            <li id="selector" class="nav-item">
-                                <a href="{% url 'information' %}" class="nav-link">
-                                    <i data-feather="file-text"></i>
-                                    <span class="ml-2">ข้อมูลการทำนาย</span>
-                                 </a>
-                            </li>
-                            <li id="selector" class="nav-item">
-                                <a href="{% url 'upload' %}" class="nav-link">
-                                    <i data-feather="arrow-down"></i>
-                                    <span class="ml-2">อัปโหลดข้อมูลโมเดล</span>
-                                </a>
-                            </li>
-                            <li id="selector" class="nav-item">
-                                <a href="{% url 'show_model' %}" class="nav-link">
-                                    <i data-feather="folder"></i>
-                                    <span class="ml-2">แสดงข้อมูลในโมเดล</span>
-                                </a>
-                            </li> 
-                            <li id="selector" class="nav-item">
-                                <a href="{% url 'my-dashboard' %}" class="nav-link">
-                                    <i data-feather="rotate-cw"></i>
-                                    <span class="ml-2">ประวัติการทำนาย</span>
-                                </a>
-                            </li> 
+                            {% if user.is_staff == True or user.is_superuser == True%}
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'dashboard' %}" class="nav-link">
+                                        <i data-feather="monitor"></i>
+                                        <span class="ml-2">แดชบอร์ด</span>
+                                    </a>
+                                </li>
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'form' %}" class="nav-link">
+                                        <i data-feather="box"></i>
+                                        <span class="ml-2">ทำนายผลสำเร็จการศึกษา</span>
+                                    </a>
+                                </li>
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'information' %}" class="nav-link">
+                                        <i data-feather="file-text"></i>
+                                        <span class="ml-2">ข้อมูลการทำนาย</span>
+                                    </a>
+                                </li>
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'upload' %}" class="nav-link">
+                                        <i data-feather="arrow-down"></i>
+                                        <span class="ml-2">อัปโหลดข้อมูลโมเดล</span>
+                                    </a>
+                                </li>
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'show_model' %}" class="nav-link">
+                                        <i data-feather="folder"></i>
+                                        <span class="ml-2">แสดงข้อมูลในโมเดล</span>
+                                    </a>
+                                </li> 
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'app_users:my_history' %}" class="nav-link">
+                                        <i data-feather="rotate-cw"></i>
+                                        <span class="ml-2">ประวัติการทำนาย</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'app_users:my_dashboard' %}" class="nav-link">
+                                        <i data-feather="monitor"></i>
+                                        <span class="ml-2">แดชบอร์ดของฉัน</span>
+                                    </a>
+                                </li>
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'form' %}" class="nav-link">
+                                        <i data-feather="box"></i>
+                                        <span class="ml-2">ทำนายผลสำเร็จการศึกษา</span>
+                                    </a>
+                                </li>
+                                <li id="selector" class="nav-item">
+                                    <a href="{% url 'app_users:my_history' %}" class="nav-link">
+                                        <i data-feather="rotate-cw"></i>
+                                        <span class="ml-2">ประวัติการทำนาย</span>
+                                    </a>
+                                </li>
+                            {% endif %}
                             <!--<li id="selector" class="nav-item">
                                 <a href="{% url 'result' %}" class="nav-link">
                                     <i data-feather="monitor"></i>

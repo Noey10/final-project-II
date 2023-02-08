@@ -66,7 +66,7 @@ def profile(request):
     return render(request, "app_users/profile.html", context)
 
 @login_required
-def my_dashboard(request):
+def my_history(request):
     user0 = request.user.id
     print(user0)
     data = UserPredict
@@ -80,4 +80,26 @@ def my_dashboard(request):
         'total': total,
     }
     
+    return render(request, 'app_users/my_history.html', context)
+
+@login_required
+def my_dashboard(request):
+    user0 = request.user.id
+    print('id = ', user0)
+    data = UserPredict
+    filter_user_id = data.objects.filter(user_id=user0).values().order_by('-predict_at')
+    total = filter_user_id.count()
+    print(total)
+    
+    status_pass = filter_user_id.filter(status='Pass').count()
+    print(status_pass)
+    status_fail = filter_user_id.filter(status='Fail').count()
+    print(status_fail)
+    
+    context = {
+        'filter': filter_user_id,
+        'total': total,
+        'pass': status_pass,
+        'fail': status_fail,
+    }
     return render(request, 'app_users/my_dashboard.html', context)

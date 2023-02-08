@@ -70,7 +70,8 @@ def prediction(request):
             career,
             langues,
         ]
-        print(grade_list)
+        # print(grade_list)
+        
         #แปลงเกรดจากทศนิยมเป็นตัวอักษร
         new_grades = []
         for i in grade_list:
@@ -88,6 +89,7 @@ def prediction(request):
                 i = 'very poor'
             new_grades.append(i)
         # print(new_grades)
+        
         #create data frame for data user input 
         my_dict = {
             'major': major,
@@ -103,16 +105,12 @@ def prediction(request):
             'langues': new_grades[9]
         }
         df_new = pd.DataFrame([my_dict])      
-        # print("-------------------------------------------")
-        # print(df_new)  
         
         if form.is_valid():
             user_input= form.save(commit=False)
             user_input.user = request.user
-            
             result2 = ''
             acc2 = 0
-            
             #โค้ดทำนาย
             if major == 'DSSI' or major == 'ICT' or major == 'polymer':
                 print("เรียกโมเดล Applied Science มาใช้จ้า")
@@ -289,21 +287,24 @@ def prediction(request):
         'acc': acc2,
         'grade_dict': grade_dict,
     }
-    
     return render(request, 'app_prediction/prediction_result.html', context)
     
 
 @login_required
 def information(request):
-    data = UserPredict.objects.all()
-    print(data)
-    total = data.count() 
-    print('total = ', total)
-    context={
-      'data': data,
-      'total': total,
-    } 
-    return render(request, 'app_prediction/show_data_input.html', context)
+    user = request.user
+    if user.is_staff == True and user.is_superuser == True:
+        data = UserPredict.objects.all()
+        # print(data)
+        total = data.count() 
+        print('total = ', total)
+        context={
+        'data': data,
+        'total': total,
+        } 
+        return render(request, 'app_prediction/show_data_input.html', context)
+    else:
+        return render(request, 'app_general/errors_page.html')
 
 @login_required
 def result(request):
@@ -323,7 +324,7 @@ def download_file(request):
             # Using the sheet_name attribute
             df.to_excel(writer, sheet_name="DATA 1", index=False)
     
-        filename = "analytics_data.xlsx"
+        filename = "dataset.xlsx"
     
         # imported from django.http
         res = HttpResponse(
@@ -335,6 +336,10 @@ def download_file(request):
 
 @login_required    
 def delete_data_user_input(request):
-    data_input = UserPredict.objects.all()
-    data_input.delete()
-    return render(request, 'app_prediction/show_data_input.html')
+    user = request.user
+    if user.is_staff == True and user.is_superuser == True:
+        data_input = UserPredict.objects.all()
+        data_input.delete()
+        return render(request, 'app_prediction/show_data_input.html')
+    else:
+        return render(request, 'app_general/errors_page.html')

@@ -11,13 +11,13 @@
     </div>
     {% if user.is_authenticated %}
         <div class="d-flex justify-content-end">
-            <a class="me-3" href="{% url 'profile' %}">
+            <a class="me-3" href="{% url 'app_users:profile' %}">
                 <button class="btn btn-outline-primary shadow" title="Profile">
                     <i data-feather="user"></i>
                     <span class="ms-2 text-uppercase" style="width: 20px">{{ user.username }}</span>
                 </button>
             </a>
-            <a href="{% url 'logout' %}">
+            <a href="{% url 'app_users:logout' %}">
                 <button class="btn me-3" title="log out">
                     <i data-feather="log-out"></i>
                 </button>
@@ -25,10 +25,10 @@
         </div>
     {% else %}
         <div class="d-flex justify-content-end">
-            <a href="{% url 'login' %}">
+            <a href="{% url 'app_users:login' %}">
                 <button class="btn btn-primary me-3">Log in</button>
             </a>
-            <a href="{% url 'register' %}">
+            <a href="{% url 'app_users:register' %}">
                 <button class="btn btn-success me-3">sign up</button>
             </a>
         </div>
