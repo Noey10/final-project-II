@@ -9,7 +9,7 @@ class UserPredictForm(forms.ModelForm):
         labels = {
             "major": "สาขา",
             "admission_grade": "เกรดเฉลี่ยรับเข้า",
-            "gpa_year_1": "เกรดเฉลี่ยชั้นปีที่",
+            "gpa_year_1": "เกรดเฉลี่ยชั้นปีที่ 1",
             "thai": "เกรดวิชาภาษาไทย",
             "math": "เกรดวิชาคณิตศาสตร์",
             "sci": "เกรดวิชาวิทยาศาสตร์",

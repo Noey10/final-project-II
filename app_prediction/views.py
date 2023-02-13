@@ -117,41 +117,6 @@ def prediction(request):
                 applied = AppliedScience.objects.all().values()#read data in Applied Science
                 if not applied.count() == 0:
                     df = pd.DataFrame(applied)#crate data frame             
-                    #แบ่งข้อมูล X, y
-                    X = df.iloc[:, 1:-1]
-                    y = df.iloc[:, -1:]
-                    
-                    categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-                    categories_transforms = Pipeline(steps=[
-                        # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
-                        ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
-                    ])
-                    #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
-                    preprocessor = ColumnTransformer(remainder='passthrough',
-                        transformers=[
-                            ('catagories', categories_transforms, categories_feature )
-                        ]
-                    )
-                    #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
-                    pipe = Pipeline(steps=[
-                        ('prep', preprocessor),
-                        ('tree', DecisionTreeClassifier(max_depth=6))
-                    ])
-                    # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
-                    cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 fold
-
-                    # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
-                    acc = cv_data['test_score'].mean()
-                    acc2 = round(acc*100, 2)
-                    print(acc, ' = ', acc2)
-                    
-                    ff = pipe.fit(X, y)#model
-                    result = ff.predict(df_new)#predict
-                    print(result)
-                    # print(ff['test_score'])
-                    
-                    result2 = result[0]
-                    print(result2)
                 else:
                     messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
                     form = UserPredictForm()
@@ -162,37 +127,6 @@ def prediction(request):
                 health = HealthScience.objects.all().values()#read data in Health Science
                 if not health.count() == 0 :
                     df = pd.DataFrame(health)#crate data frame             
-                    X = df.iloc[:, 1:-1]
-                    y = df.iloc[:, -1:]
-                    
-                    categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-                    categories_transforms = Pipeline(steps=[
-                        # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
-                        ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
-                    ])
-                    #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
-                    preprocessor = ColumnTransformer(remainder='passthrough',
-                        transformers=[
-                            ('catagories', categories_transforms, categories_feature )
-                        ]
-                    )
-                    #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
-                    pipe = Pipeline(steps=[
-                        ('prep', preprocessor),
-                        ('tree', DecisionTreeClassifier(max_depth=6))
-                    ])
-                    # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
-                    cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
-
-                    # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
-                    acc = cv_data['test_score'].mean()
-                    acc2 = round(acc*100, 2)
-                    print(cv_data['test_score'].mean())
-
-                    pipe.fit(X, y)#model
-                    result = pipe.predict(df_new)#predict
-                    result2 = result[0]
-                    print(result2)
                 else:
                     messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
                     form = UserPredictForm()
@@ -203,42 +137,45 @@ def prediction(request):
                 pure = PureScience.objects.all().values()#read data in Pure Science
                 if not pure.count() == 0:
                     df = pd.DataFrame(pure)#crate data frame             
-                    X = df.iloc[:, 1:-1]
-                    y = df.iloc[:, -1:]
-                    
-                    categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-                    categories_transforms = Pipeline(steps=[
-                        # ('Impure', SimpleImputer(strategy='constant', fill_value='missing')),
-                        ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
-                    ])
-                    #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
-                    preprocessor = ColumnTransformer(remainder='passthrough',
-                        transformers=[
-                            ('catagories', categories_transforms, categories_feature )
-                        ]
-                    )
-                    #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
-                    pipe = Pipeline(steps=[
-                        ('prep', preprocessor),
-                        ('tree', DecisionTreeClassifier(max_depth=6))
-                    ])
-                    # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
-                    cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
-
-                    # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
-                    acc = cv_data['test_score'].mean()
-                    acc2 = round(acc*100, 2)
-                    # print(cv_data['test_score'].mean())
-
-                    pipe.fit(X, y)#model
-                    result = pipe.predict(df_new)#predict
-                    result2 = result[0]
-                    print(result2)
                 else: 
                     messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
                     form = UserPredictForm()
                     return HttpResponseRedirect(reverse('form'))
-                
+            
+            print(df.head())
+            #แบ่งข้อมูล X,y
+            X = df.iloc[:, 1:-1]
+            y = df.iloc[:, -1:]
+                    
+            categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+            categories_transforms = Pipeline(steps=[
+                ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+            ])
+            #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+            preprocessor = ColumnTransformer(remainder='passthrough', 
+                                             transformers=[(
+                                                'catagories', categories_transforms, categories_feature 
+                                            )]
+            )
+            #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+            pipe = Pipeline(steps=[
+                ('prep', preprocessor),
+                ('tree', DecisionTreeClassifier(max_depth=6))
+            ])
+            # pipe = make_pipeline(prep2, DecisionTreeClassifier(max_depth=6))
+            cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+
+            # print(cv_data['test_score'])#ดูเปอร์เซ็นต์ความถูกต้องของแต่ละรอบที่ทำ cross validation
+            acc = cv_data['test_score'].mean()
+            acc2 = round(acc*100, 2)
+            print('accuracy model : ', cv_data['test_score'].mean())
+
+            pipe.fit(X, y)#model
+            result = pipe.predict(df_new)#predict
+            result2 = result[0]
+            print(result2)    
+            
+            
             user_input.status = result2
             user_input.save()
             print('save success')
