@@ -1,0 +1,24 @@
+{% extends 'app_general/components/base.html' %}
+{% block site_title %}Prediction | {% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h1>Hello {{ user }}</h1>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h2>ทำนายรายบุคคล</h2>
+                <a href="{% url 'form' %}">
+                    <button class="btn btn-primary"> Click </button>
+                </a>
+            </div>
+            <div class="col-6">
+                <h2>ทำนายหลายบุคคล</h2>
+                <a href="{% url 'predict_group_student' %}">
+                    <button class="btn btn-primary"> Click </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

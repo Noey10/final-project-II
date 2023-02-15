@@ -1,0 +1,105 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}Show model | {% endblock %}
+{% block content %}
+  <div class="container">
+    <button onclick="topFunction()" id="myBtn" title="Go to top">
+      <i data-feather="arrow-up"></i>
+    </button>
+       
+    <div class="container w-100">
+        <table class="table">
+          <thead class="bg-light">
+            <th scope="col">major</th>
+            <th scope="col">admission grade</th>
+            <th scope="col">gpa year 1</th>
+            <th scope="col">thai</th>
+            <th scope="col">math</th>
+            <th scope="col">sci</th>
+            <th scope="col">society</th>
+            <th scope="col">hygiene</th>
+            <th scope="col">art</th>
+            <th scope="col">career</th>
+            <th scope="col">english</th>
+            <th scope="col">status</th>              
+          </thead>
+          <tbody>
+            <tr {% for data in dssi %}>
+              <td>{{ data.major }}</td>
+              <td>{{ data.admission_grade }}</td>
+              <td>{{ data.gpa_year_1 }}</td>
+              <td>{{ data.thai }}</td>
+              <td>{{ data.math }}</td>
+              <td>{{ data.sci }}</td>
+              <td>{{ data.society }}</td>
+              <td>{{ data.hygiene }}</td>
+              <td>{{ data.art }}</td>
+              <td>{{ data.career }}</td>
+              <td>{{ data.langues }}</td>
+              <td>{{ data.status }}</td>
+            </tr {% endfor %}>
+            <tr {% for data in ict %}>
+              <td>{{ data.major }}</td>
+              <td>{{ data.admission_grade }}</td>
+              <td>{{ data.gpa_year_1 }}</td>
+              <td>{{ data.thai }}</td>
+              <td>{{ data.math }}</td>
+              <td>{{ data.sci }}</td>
+              <td>{{ data.society }}</td>
+              <td>{{ data.hygiene }}</td>
+              <td>{{ data.art }}</td>
+              <td>{{ data.career }}</td>
+              <td>{{ data.langues }}</td>
+              <td>{{ data.status }}</td>
+            </tr {% endfor %}>
+            <tr {% for data in bio %}>
+              <td>{{ data.major }}</td>
+              <td>{{ data.admission_grade }}</td>
+              <td>{{ data.gpa_year_1 }}</td>
+              <td>{{ data.thai }}</td>
+              <td>{{ data.math }}</td>
+              <td>{{ data.sci }}</td>
+              <td>{{ data.society }}</td>
+              <td>{{ data.hygiene }}</td>
+              <td>{{ data.art }}</td>
+              <td>{{ data.career }}</td>
+              <td>{{ data.langues }}</td>
+              <td>{{ data.status }}</td>
+            </tr {% endfor %}>
+            <tr {% for data in chemi %}>
+                <td>{{ data.major }}</td>
+                <td>{{ data.admission_grade }}</td>
+                <td>{{ data.gpa_year_1 }}</td>
+                <td>{{ data.thai }}</td>
+                <td>{{ data.math }}</td>
+                <td>{{ data.sci }}</td>
+                <td>{{ data.society }}</td>
+                <td>{{ data.hygiene }}</td>
+                <td>{{ data.art }}</td>
+                <td>{{ data.career }}</td>
+                <td>{{ data.langues }}</td>
+                <td>{{ data.status }}</td>
+              </tr {% endfor %}>
+          </tbody>
+        </table>
+    </div>
+  </div>
+  <script>
+    // Get the button
+    let mybutton = document.getElementById("myBtn");   
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};    
+      function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          mybutton.style.display = "block";
+        } else {
+          mybutton.style.display = "none";
+        }
+      }  
+      // When the user clicks on the button, scroll to the top of the document
+      function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }
+  </script>
+{% endblock %}

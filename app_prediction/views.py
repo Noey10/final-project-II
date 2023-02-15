@@ -281,3 +281,42 @@ def delete_data_user_input(request):
         return render(request, 'app_prediction/show_data_input.html')
     else:
         return render(request, 'app_general/errors_page.html')
+    
+@login_required
+def predict_for_admin(request):
+    user = request.user
+    if user.is_staff == True and user.is_superuser == True:
+        return render(request, 'app_prediction/predict_for_admin.html')
+    else:
+        return render(request, 'app_general/errors_page.html')
+
+@login_required
+def predict_group_student(request):
+    user = request.user
+    if user.is_staff == True and user.is_superuser == True:
+        
+        if request.method == 'POST':
+            major = request.POST.get('major')
+            if major == 1:
+                print('DSSI')
+            elif major == 2:
+                print('ICT')
+            elif major == 3:
+                print('chemi')
+            else:
+                print('bio')
+            
+            file = request.FILES['myfile']
+            if file.name.endswith('xlsx'):
+                df = pd.read_excel(file)
+                print(df.head())
+                
+        return render(request, 'app_prediction/prediction_group_student.html')
+    else:
+        return render(request, 'app_general/errors_page.html')
+
+
+
+
+
+

@@ -8,4 +8,8 @@ urlpatterns = [
     path('result', views.result, name='result'),
     path('download_file', views.download_file, name='download_file'),
     path('delete_data_user_input', views.delete_data_user_input, name='delete_data_user_input'),    
+    path('predict_for_admin', views.predict_for_admin, name='predict_for_admin'),    
+    path('predict_group_student', views.predict_group_student, name='predict_group_student'),    
+    
+    
 ]

@@ -1,0 +1,64 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}Test upload | {% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-6">
+            <p>เพิ่มสาขา</p>
+            <a href="{% url 'add_major' %}">
+                <button class="btn btn-primary">Click</button>
+            </a>
+        </div>
+        <div class="col-6">
+            <p>ดูข้อมูลทั้งหมด</p>
+            <a href="{% url 'show_data_course' %}">
+                <button class="btn btn-primary">Click</button>
+            </a>
+        </div>
+    </div>
+    <hr>
+    <div class="container w-75">
+        {% for msg in messages %}
+            {% if msg.tags == 'success' %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% else %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="row mt-5">
+        <h1>อัปโหลดโมเดล</h1>
+        <div class="container">
+            <div class="row mt-3 mb-5">
+                <div class="row d-flex justify-content-center mt-5" style="margin-left:0px;">                        
+                    <form action="{% url 'test_upload' %}" method="POST" enctype="multipart/form-data" class="form">
+                        {% csrf_token %}
+                        <div class="row w-75 w-md-100 mb-5" style="margin-left: auto; margin-right: auto;">
+                            <label for="major">Choose a major:</label>
+                            <select id="major" name="major">
+                                <option value="1">DSSI</option>
+                                <option value="2">ICT</option>
+                                <option value="3">BIO</option>
+                                <option value="4">CHEMI</option>
+                            </select>
+                        </div>
+                        <div class="row w-75 w-md-100 mb-5" style="margin-left: auto; margin-right: auto;">
+                            <input type="file" name="myfile" required class="form-control">
+                            <div class="container d-flex justify-content-center mt-2">
+                                <button type="submit" class="btn btn-success">Upload</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
