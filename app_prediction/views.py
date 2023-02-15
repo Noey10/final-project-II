@@ -41,6 +41,7 @@ def form(request):
 @login_required
 def prediction(request):
     if request.method == 'POST':
+        
         form = UserPredictForm(request.POST)
         major = request.POST.get('major')
         # print(major)

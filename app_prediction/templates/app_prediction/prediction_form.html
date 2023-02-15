@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="container mt-3 d-flex justify-content-center">
-                <form action="{% url 'process_predict' %}" method="post" class="form w-md-50 w-sm-100">
+                <form action="{% url 'process_predict' %}" method="post" class="form w-sm-100 w-50">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <p>

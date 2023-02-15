@@ -49,7 +49,7 @@ def profile(request):
                 #update
                 extended_form.save()
                 
-            return HttpResponseRedirect(reverse('profile'))
+            return HttpResponseRedirect(reverse('app_users:profile'))
         
     else:
         form = UserProfileForm(instance=user)

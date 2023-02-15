@@ -2,7 +2,23 @@ from django.db import models
 
 # Create your models here.
 class AppliedScience(models.Model):
-    major = models.CharField( max_length=100)
+    CHOICES = [
+        ('bio', 'ชีววิทยา'),
+        ('microBio', 'จุลชีววิทยา'),
+        ('math', 'คณิตศาสตร์'),
+        ('chemi', 'เคมี'),
+        ('enviSci', 'วิทยศาสตร์สิ่งแวดล้อม'),
+        ('safety', 'อนามัยสิ่งแวดล้อมและความปลอดภัย'),
+        ('physics', 'ฟิสิกส์'),
+        ('physics', 'ฟิสิกส์ทางการแพทย์'),
+        ('physics', 'ฟิสิกส์อุตสาหกรรม'),
+        ('ICT', 'เทคโนโลยีสารสนเทศ'),
+        ('ICT', 'เทคโนโลยีและการสื่อสาร'),
+        ('DSSI', 'วิทยาการคอมพิวเตอร์'),
+        ('DSSI', 'วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'),
+        ('polymer', 'เทคโนโลยีการยางและพอลิเมอร์')
+    ]
+    major = models.CharField(choices=CHOICES, default='', max_length=100)
     admission_grade = models.CharField(max_length=20)
     gpa_year_1 = models.CharField(max_length=20)
     thai = models.CharField(max_length=20)
@@ -19,7 +35,23 @@ class AppliedScience(models.Model):
         return self.major
 
 class HealthScience(models.Model):
-    major = models.CharField(max_length=100)
+    CHOICES = [
+        ('bio', 'ชีววิทยา'),
+        ('microBio', 'จุลชีววิทยา'),
+        ('math', 'คณิตศาสตร์'),
+        ('chemi', 'เคมี'),
+        ('enviSci', 'วิทยศาสตร์สิ่งแวดล้อม'),
+        ('safety', 'อนามัยสิ่งแวดล้อมและความปลอดภัย'),
+        ('physics', 'ฟิสิกส์'),
+        ('physics', 'ฟิสิกส์ทางการแพทย์'),
+        ('physics', 'ฟิสิกส์อุตสาหกรรม'),
+        ('ICT', 'เทคโนโลยีสารสนเทศ'),
+        ('ICT', 'เทคโนโลยีและการสื่อสาร'),
+        ('DSSI', 'วิทยาการคอมพิวเตอร์'),
+        ('DSSI', 'วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'),
+        ('polymer', 'เทคโนโลยีการยางและพอลิเมอร์')
+    ]
+    major = models.CharField(choices=CHOICES, default='', max_length=100)
     admission_grade = models.CharField(max_length=20)
     gpa_year_1 = models.CharField(max_length=20)
     thai = models.CharField(max_length=20)
@@ -36,7 +68,23 @@ class HealthScience(models.Model):
         return self.major
     
 class PureScience(models.Model):
-    major = models.CharField(max_length=100)
+    CHOICES = [
+        ('bio', 'ชีววิทยา'),
+        ('microBio', 'จุลชีววิทยา'),
+        ('math', 'คณิตศาสตร์'),
+        ('chemi', 'เคมี'),
+        ('enviSci', 'วิทยศาสตร์สิ่งแวดล้อม'),
+        ('safety', 'อนามัยสิ่งแวดล้อมและความปลอดภัย'),
+        ('physics', 'ฟิสิกส์'),
+        ('physics', 'ฟิสิกส์ทางการแพทย์'),
+        ('physics', 'ฟิสิกส์อุตสาหกรรม'),
+        ('ICT', 'เทคโนโลยีสารสนเทศ'),
+        ('ICT', 'เทคโนโลยีและการสื่อสาร'),
+        ('DSSI', 'วิทยาการคอมพิวเตอร์'),
+        ('DSSI', 'วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'),
+        ('polymer', 'เทคโนโลยีการยางและพอลิเมอร์')
+    ]
+    major = models.CharField(choices=CHOICES, default='', max_length=100)
     admission_grade = models.CharField(max_length=20)
     gpa_year_1 = models.CharField(max_length=20)
     thai = models.CharField(max_length=20)
