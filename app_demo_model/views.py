@@ -284,7 +284,10 @@ def show_data_course(request):
     bio = BIO.objects.all()
     chemi = CHEMI.objects.all()
     
+    total = dssi.count()+ict.count()+bio.count()+chemi.count()
+    
     context = {
+        'total': total,
         'dssi': dssi,
         'ict': ict,
         'bio': bio,
