@@ -5,8 +5,9 @@ class UserPredictForm(forms.ModelForm):
     
     class Meta:
         model = UserPredict
-        fields = ("major", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "langues")
+        fields = ("student_id","major", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "langues")
         labels = {
+            "student_id": "รหัสนักศึกษา",
             "major": "สาขา",
             "admission_grade": "เกรดเฉลี่ยรับเข้า",
             "gpa_year_1": "เกรดเฉลี่ยชั้นปีที่ 1",
@@ -20,6 +21,7 @@ class UserPredictForm(forms.ModelForm):
             "langues": "เกรดวิชาภาษาต่างประเทศ",
         }
         widgets = {
+            "student_id": forms.widgets.TextInput(attrs={'class':'form-control', 'placeholder': 'กรุณากรอกรหัสนักศึกษา'}),
             "major": forms.Select(attrs={'class': 'form-control',}),
             "admission_grade": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
             "gpa_year_1": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
@@ -32,3 +34,9 @@ class UserPredictForm(forms.ModelForm):
             "career": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
             "langues": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),   
         }
+        
+        
+class InputFilePredictForm(forms.Form):
+    class Meta:
+        model = UserPredict
+        fields = ("major", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "langues", "status")

@@ -9,7 +9,7 @@
             <p class="text-danger mb-0">**ต้องการข้อมูลที่เป็นไฟล์ excel</p>
         </div>
         <div class="col-3 text-start">
-            <a href="{% url 'show_model' %}">
+            <a href="#">
                 <button class="btn" title="ดูข้อมูลที่ใช้สร้างโมเดล">
                     <i data-feather="eye"></i>
                 </button>
@@ -35,7 +35,7 @@
     <div class="container">
         <div class="row mt-3 mb-5">
             <div class="row d-flex justify-content-center mt-5" style="margin-left:0px;">
-                <form action="{% url 'upload_sci_model' %}" method="POST" enctype="multipart/form-data" class="form">
+                <form action="#" method="POST" enctype="multipart/form-data" class="form">
                     {% csrf_token %}
                     <input type="file" name="myfile" required class="form-control w-75 w-md-100" style="margin-left: auto; margin-right: auto;">
                     <div class="container d-flex justify-content-center mt-2">

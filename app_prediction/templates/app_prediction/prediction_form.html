@@ -2,52 +2,35 @@
 {% block site_title %}Prediction | {% endblock %}
 {% block content %}
 <div class="container">
-    {% if applied|length < 1 and health|length < 1 and pure|length < 1 %}
-        <div class="container w-50 d-flex align-items-center" style="height: 360px">
-            <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
-                <h4>ขออภัยการทำนายยังไม่พร้อมใช้งาน</h4>
-                <p>**คาดว่าจะกลับมาใช้งานได้อีกครั้งในอีกสักครู่...</p>
-                <a href="{% url 'form' %}" class="mt-3">
-                    <span><i data-feather="chevrons-left"></i></span>
-                    <span>ไปยังหน้าทำนายผลการสำเร็จการศึกษา</span>
-                </a>
+    <h2 class="text-center mt-5 mb-3">ทำนาย</h2>
+    <hr>
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-7 col-12">
+            <div class="container">
+                {% for msg in messages %}
+                    {% if msg.tags == 'success' %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ msg }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>{{ msg }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        
-    {% else %}
-        <div class="container">
-            <h2 class="text-center mt-5 mb-3">ทำนาย</h2>
-            <hr>
-            <div class="row d-flex justify-content-center">
-                <div class="col-lg-7 col-12">
-                    <div class="container">
-                        {% for msg in messages %}
-                            {% if msg.tags == 'success' %}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <strong>{{ msg }}</strong>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% else %}
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    <strong>{{ msg }}</strong>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            <div class="container mt-3 d-flex justify-content-center">
-                <form action="{% url 'process_predict' %}" method="post" class="form w-sm-100 w-50">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <p>
-                        <button type="submit" class="btn btn-primary w-100 mt-3">ทำนาย</button>
-                    </p>
-                </form>
-            </div>
-        </div>
-    {% endif %}
-    
-<div>             
+    </div>
+    <div class="container mt-3 d-flex justify-content-center">
+        <form action="{% url 'process_predict' %}" method="post" class="form w-sm-100 w-50">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p>
+                <button type="submit" class="btn btn-primary w-100 mt-3">ทำนาย</button>
+            </p>
+        </form>
+    </div>
+</div>     
 {% endblock %}

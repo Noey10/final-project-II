@@ -46,7 +46,7 @@
         {% else %}
           <table class="table">
             <thead id="titleTableCustom" class="bg-light">
-              <!--<th scope="col">วันที่ทำนาย</th>-->
+              <th scope="col">รหัสนักศึกษา</th>
               <th scope="col">สาขา</th>
               <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
               <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
@@ -62,7 +62,7 @@
             </thead>
             <tbody>
               <tr {% for i in data %}>
-                <!--<td scope="row">{{i.predict_at|date:'j/N/Y'}}</td>-->
+                <td scope="row">{{i.student_id}}</td>
                 <td>{{ i.major }}</td>
                 <td>{{ i.admission_grade }}</td>
                 <td>{{ i.gpa_year_1 }}</td>

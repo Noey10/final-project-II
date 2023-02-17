@@ -2,16 +2,22 @@
 {% block site_title %}Prediction | {% endblock %}
 {% block content %}
 <div class="container">
-    <form action="" method="POST" enctype="multipart/form-data" class="form">
+    <h3>อัปโหลดข้อมูลสำหรับทำนายผล</h3>
+    <hr>
+    <form action="{% url 'process_predict_group' %}" method="POST" enctype="multipart/form-data" class="form w-75">
         {% csrf_token %}
-        <label for="major">Choose a major:</label>
-        <select id="major" name="major">
-          <option value="1">DSSI</option>
-          <option value="2">ICT</option>
-          <option value="3">Chemi</option>
-          <option value="4">Bio</option>
-        </select>
-        <input type="file" name="myfile" required>
+        <div class="row mb-5">
+            <label for="major">Choose a major:</label>
+            <select id="major" name="major">
+            <option value="1">DSSI</option>
+            <option value="2">ICT</option>
+            <option value="3">Chemi</option>
+            <option value="4">Bio</option>
+            </select>
+        </div>
+        <div class="row mb-5">
+            <input type="file" name="myfile" required>
+        </div>
         <div class="container d-flex justify-content-center mt-2">
             <button type="submit" class="btn btn-success">Upload</button>
         </div>

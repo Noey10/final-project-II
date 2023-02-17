@@ -62,13 +62,13 @@
                                     </a>
                                 </li>
                                 <li id="selector" class="nav-item">
-                                    <a href="{% url 'upload' %}" class="nav-link">
+                                    <a href="{% url 'test_upload' %}" class="nav-link">
                                         <i data-feather="arrow-down"></i>
                                         <span class="ml-2">อัปโหลดข้อมูลโมเดล</span>
                                     </a>
                                 </li>
                                 <li id="selector" class="nav-item">
-                                    <a href="{% url 'show_model' %}" class="nav-link">
+                                    <a href="{% url 'show_data_course' %}" class="nav-link">
                                         <i data-feather="folder"></i>
                                         <span class="ml-2">แสดงข้อมูลในโมเดล</span>
                                     </a>
@@ -78,7 +78,8 @@
                                         <i data-feather="rotate-cw"></i>
                                         <span class="ml-2">ประวัติการทำนาย</span>
                                     </a>
-                                </li>
+                                </li>  
+
                             {% else %}
                                 <li id="selector" class="nav-item">
                                     <a href="{% url 'app_users:my_dashboard' %}" class="nav-link">
@@ -99,12 +100,7 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            <li id="selector" class="nav-item">
-                                <a href="{% url 'test_upload' %}" class="nav-link">
-                                    <i data-feather="monitor"></i>
-                                    <span class="ml-2">Test upload model course</span>
-                                </a>
-                            </li>                  
+                                           
                         </ul>
                     </div>
                     
