@@ -7,6 +7,9 @@ class RegisterForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = UserCreationForm.Meta.fields + ("email", )
+        widgets = {
+            
+        }
         
         
 class UserProfileForm(forms.ModelForm):

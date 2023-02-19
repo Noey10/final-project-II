@@ -32,13 +32,13 @@ def test_upload(request):
     if request.method == 'POST':
         # res = BioResource()
         branch = request.POST.get('major')
-        if branch == '1' :
+        if branch == 'DSSI' :
             res = DssiResource()
-        elif branch == '2':
+        elif branch == 'ICT':
             res = IctResource()
-        elif branch == '3':
+        elif branch == 'bio':
             res = BioResource()
-        elif branch == '4':
+        elif branch == 'chemi':
             res = ChemiResource()
         else: 
             print('error')
@@ -54,21 +54,24 @@ def test_upload(request):
             messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel หรือ csv")
             return render(request, 'app_demo_model/test_upload_course.html')
         
-        if df.dtypes['admission_grade'] == np.float64:
-            df2 = pd.DataFrame()
-            df2['major'] = df['major']
-            df2['admission_grade'] = (df['admission_grade'].apply(condition))
-            df2['gpa_year_1'] = df['gpa_year_1'].apply(condition)
-            df2['thai'] = df['thai'].apply(condition)
-            df2['math'] = df['math'].apply(condition)
-            df2['sci'] = df['sci'].apply(condition)
-            df2['society'] = df['society'].apply(condition)
-            df2['hygiene'] = df['hygiene'].apply(condition)
-            df2['art'] = df['art'].apply(condition)
-            df2['career'] = df['career'].apply(condition)
-            df2['langues'] = df['langues'].apply(condition)
-            df2['status'] = df['status']
-            df = df2
+        #ลบแถวที่มี missing value
+        df = df.dropna()
+        
+        #เช็ค column ว่าตรงกันไหม
+        col = df.columns
+        col_list =  col.to_list()
+        
+        categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
+        if col_list != categories_feature:
+            messages.info(request, "ต้องการคอลัมน์ major, admission_grade, gpa_year_1, thai, math, sci, society, hygiene, art, career, langues, status")
+            return render(request, 'app_demo_model/test_upload_course.html')
+        
+        #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด
+        for i in categories_feature:
+            # print(df.dtypes[i])
+            if df.dtypes[i] == np.float64:
+                df[i] = df[i].apply(condition)
+        # print(df.head())
         
         import_data = dataset.load(df)
         result = res.import_data(dataset, dry_run=True, raise_errors=True)
@@ -81,41 +84,64 @@ def test_upload(request):
 
 @login_required
 def show_data_course(request):
-    dssi = DSSI.objects.all()
-    ict = ICT.objects.all()
-    bio = BIO.objects.all()
-    chemi = CHEMI.objects.all()
+    searched = ''
+    pass_status = 0
+    fail_status = 0
+    total = 0
+    dssi = ''
+    ict = ''
+    bio = ''
+    chemi = ''
     
-    total = dssi.count()+ict.count()+bio.count()+chemi.count()
-    
+    if request.method =='POST':
+        searched = request.POST.get('major')
+        if searched == 'DSSI':
+            searched = 'วิทยาการคอมพิวเตอร์/วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'
+            dssi = DSSI.objects.all()
+            pass_status = DSSI.objects.filter(status__contains='Pass').count()
+            fail_status = DSSI.objects.filter(status__contains='Fail').count()
+            total = dssi.count()
+        elif searched == 'ICT':
+            searched = 'เทคโนโลยีสารสนเทศ/เทคโนโลยีสารสนเทศและการสื่อสาร'
+            ict = ICT.objects.all()
+            total = ict.count()
+            pass_status = ICT.objects.filter(status__contains='Pass').count()
+            fail_status = ICT.objects.filter(status__contains='Fail').count()
+        elif searched == 'bio':
+            searched ='ชีววิทยา'
+            bio = BIO.objects.all()
+            total = bio.count()
+            pass_status = BIO.objects.filter(status__contains='Pass').count()
+            fail_status = BIO.objects.filter(status__contains='Fail').count()
+        elif searched == 'chemi':
+            searched = 'เคมี'
+            chemi = CHEMI.objects.all()
+            total = chemi.count()
+            pass_status = CHEMI.objects.filter(status__contains='Pass').count()
+            fail_status = CHEMI.objects.filter(status__contains='Fail').count()
+        else: 
+            print('error branch')
+    else:
+        dssi = DSSI.objects.all()
+        ict = ICT.objects.all()
+        bio = BIO.objects.all()
+        chemi = CHEMI.objects.all()
+        
+        total = dssi.count()+ict.count()+bio.count()+chemi.count()
+    print('search = ', searched)
     context = {
+        'search': searched,
         'total': total,
         'dssi': dssi,
         'ict': ict,
         'bio': bio,
         'chemi': chemi,
+        'pass_status': pass_status,
+        'fail_status': fail_status,
     }
     return render(request, 'app_demo_model/show_data_course.html', context)
     
-@login_required
-def add_major(request):
-    if request.method == 'POST':
-        form = MajorForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            new_major = Major()
-            new_major.name = data['name']
-            new_major.abbreviation = data['abbreviation']
-            new_major.save()
-    else:
-        form = MajorForm()
-        
-    context = {
-        'form': form,
-    }
-    return render(request, 'app_demo_model/add_major.html', context )
-    
-    
+   
 
 
 

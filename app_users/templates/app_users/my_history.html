@@ -11,7 +11,7 @@
             <hr>
             <div class="row mt-4 mb-2">
                 <div class="col-9">
-                    <h5>ประวัติการทำนายของคุณ</h5>
+                    <h5>ผลการทำนายของคุณ</h5>
                 </div>
                 <div class="col-3">
                     <a href="{% url 'form' %}">
@@ -20,7 +20,6 @@
                         </button>
                     </a>
                 </div>
-                <!--<p class="ms-5">ทำนายทั้งหมด : <strong>{{ total }}</strong> ครั้ง</p>-->
             </div>
             <div class="row">
                 <div class="container">
@@ -33,9 +32,12 @@
                                             <p class="mt-2">วันที่ทำนาย : {{i.predict_at|date:'j/N/Y H:i'}} น.</p>
                                         </div>
                                         <!--<div class="col-2">
-                                            <button class="btn" title="predict with this data again">
-                                                <i data-feather="edit"></i>
-                                            </button>
+                                            <form action="{% url 'app_users:update_predict' i.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button class="btn" title="predict with this data again">
+                                                    <i data-feather="edit"></i>
+                                                </button>
+                                            </form>
                                         </div>-->
                                     </div>
                                     <hr class="p-0 m-0">

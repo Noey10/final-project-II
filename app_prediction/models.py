@@ -1,4 +1,5 @@
 from django.db import models
+from app_users.models import *
 
 # Create your models here.
 class UserPredict(models.Model):
@@ -24,7 +25,7 @@ class UserPredict(models.Model):
     langues = models.FloatField(max_length=10)
     status = models.CharField(max_length=10)
     predict_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey('app_users.CustomUser', default=2, on_delete=models.PROTECT, related_name="user_grade_set")
+    user = models.ForeignKey('app_users.CustomUser', default=1, on_delete=models.CASCADE, related_name="user_grade_set")
 
     def __str__(self):
         return self.major

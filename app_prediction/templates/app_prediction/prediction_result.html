@@ -30,18 +30,29 @@
                         <p class="text-center">เก่งมากๆจ้า</p>
                     </div>
                 {% endif %}
-                <div class="row w-75 mt-3">
-                    <div class="col-12 col-md-12 col-lg-6 mt-2 d-flex justify-content-end"> 
-                        <a href="{% url 'form' %}" class="text-center">
-                            <button type="submit" class="btn btn-primary">ทำนายอีกครั้ง</button>
-                        </a>
+                {% if user.is_superuser or user.is_staff %}
+                    <div class="row w-75 mt-3">
+                        <div class="col-12  mt-2 d-flex justify-content-center"> 
+                            <a href="{% url 'predict_for_admin' %}" class="text-center">
+                                <button type="submit" class="btn btn-primary">ทำนายอีกครั้ง</button>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-12 col-md-12 col-lg-6 mt-2">
-                        <a href="{% url 'app_users:my_history' %}" class="text-center">
-                            <button type="submit" class="btn btn-primary">ประวัติการทำนาย</button>
-                        </a>
+                {% else %}
+                    <div class="row w-75 mt-3">
+                        <div class="col-12 col-md-12 col-lg-6 mt-2 d-flex justify-content-end"> 
+                            <a href="{% url 'form' %}" class="text-center">
+                                <button type="submit" class="btn btn-primary">ทำนายอีกครั้ง</button>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-6 mt-2">
+                            <a href="{% url 'app_users:my_history' %}" class="text-center">
+                                <button type="submit" class="btn btn-primary">ประวัติการทำนาย</button>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
+                
             </div>
         </div>     
     <div>

@@ -15,7 +15,10 @@
       </div>
     </div>
     {% else %}
+    <div class="row">
       <h2>Dashboard</h2>
+    </div>
+      <hr>
       <div class="container">
         <div class="row">
           <div class="col-12 col-md-5 bg-light mt-5 p-3">
@@ -70,7 +73,7 @@
                       label: 'Fail',
                       data: [{% for j in status_fail %} {{ j }}, {% endfor %}],
                     }],
-                    labels: ['DSSI', 'ICT', 'Polymer', 'Environment Science', 'Safety', 'Bio', 'Chemical', 'Math', 'Micro Bio', 'Physics']
+                    labels: ['DSSI', 'ICT', 'Bio', 'Chemical']
                   },
                   options: {
                     scales: {

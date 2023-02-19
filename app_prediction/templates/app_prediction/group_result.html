@@ -2,60 +2,73 @@
 {% block site_title %}Result | {% endblock %}
 {% block content %}
 <div class="container">
-    <h5>ผลลัพธ์</h5>
-    <div class="container h-auto w-75">
-      <canvas id="donut_chart" class="w-25 h-auto"></canvas>
-      <script>
-        const ctx3 = document.getElementById("donut_chart").getContext("2d");
-        const chart = new Chart(ctx3, {
-          type: "doughnut",
-          data: {
-            labels: ['Fail', 'Pass'],
-            datasets: [
-              {
-                backgroundColor: ['#FFBBDA', '#A8D1E7'],
-                data: [{{ total_fail }}, {{ total_pass }}]
-              }
-            ],
-            hoverOffset: 4
-          },
-          options: {
-            title: {
-              display: true
-            }
-          },
-          responsive: true,
-          maintainAspectRatio: true,
-        });
-      </script>
+  <div class="row">
+    <div class="col-9">
+      <h3>ผลลัพธ์</h3>
     </div>
-    <div class="container mt-3">
-      <p>ข้อมูลทั้งหมด : <strong>{{ total }}</strong> ข้อมูล</p>
-      <p>ผลลัพธ์เป็น <strong>Pass</strong> : <strong>{{ per_pass }}%</strong></p>
-      <p>ผลลัพธ์เป็น <strong>Fail</strong> : <strong>{{ per_fail }}%</strong></p>
+    <div class="col-3">
+      <a href="{% url 'predict_for_admin' %}">
+        <button class="btn btn-outline-primary">
+          <span><i data-feather="feather"></i></span>
+          <span>ทำนายอีกครั้ง</span>
+        </button>
+      </a>
     </div>
+  </div>
+
     <hr>
-      <table class="table">     
-        <thead>
-            <tr>
-            {% for col in df.columns %}
-                <th scope="col">
-                    {{col}}
-                </th>
+    <div class ="row">
+      <div class="col-12 col-lg-6">
+        <canvas id="donut_chart" class="w-75 h-auto"></canvas>
+        <script>
+          const ctx3 = document.getElementById("donut_chart").getContext("2d");
+          const chart = new Chart(ctx3, {
+            type: "doughnut",
+            data: {
+              labels: ['Fail', 'Pass'],
+              datasets: [
+                {
+                  backgroundColor: ['#FFBBDA', '#A8D1E7'],
+                  data: [{{ total_fail }}, {{ total_pass }}]
+                }
+              ],
+              hoverOffset: 4
+            },
+            options: {
+              title: {
+                display: true
+              }
+            },
+            responsive: true,
+            maintainAspectRatio: true,
+          });
+        </script>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="row">
+          <p>ข้อมูลทั้งหมด : <strong>{{ total }}</strong> ข้อมูล</p>
+          <p>ผลลัพธ์เป็น <strong>Pass</strong> : <strong> {{ total_pass }} ข้อมูล </strong> คิดเป็น <strong> {{ per_pass }}%</strong></p>
+          <p>ผลลัพธ์เป็น <strong>Fail</strong> : <strong> {{ total_fail }} ข้อมูล </strong> คิดเป็น <strong> {{ per_fail }}%</strong></p>
+        </div>
+        <hr>
+        <div class="row" style="max-height: 400px;">
+          <h5 class="mb-3">นักศึกษาที่อาจจะไม่สำเร็จการศึกษา</h5>
+          {% if gg|length > 1 %}
+            {% for x in gg %}
+              <div class="col-12 col-lg-4">
+                <p>{{ x }}</p>
+              </div>
             {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-          {% for index, row in df.iterrows %}
-            <tr>
-              {% for cell in row %}
-                <td>
-                  {{cell}}
-                </td>
-              {% endfor %}
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          {% else %}
+            {% for x in gg %}
+              <div class="col-12">
+                <p>{{ x }}</p>
+              </div>
+            {% endfor %}
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
 </div>
 {% endblock %}

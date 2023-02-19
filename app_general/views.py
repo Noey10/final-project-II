@@ -27,55 +27,26 @@ def dashboard(request):
 
         dssi_pass = data.objects.filter(major='DSSI').filter(status='Pass').count()
         dssi_fail = data.objects.filter(major='DSSI').filter(status='Fail').count()
-        
-        polymer_pass = data.objects.filter(major='polymer').filter(status='Pass').count()
-        polymer_fail = data.objects.filter(major='polymer').filter(status='Fail').count()
-        
-        enviSci_pass = data.objects.filter(major='enviSci').filter(status='Pass').count()
-        enviSci_fail = data.objects.filter(major='enviSci').filter(status='Fail').count()
-        
-        safety_pass = data.objects.filter(major='safety').filter(status='Pass').count()
-        safety_fail = data.objects.filter(major='safety').filter(status='Fail').count()
-        
-        math_pass = data.objects.filter(major='math').filter(status='Pass').count()
-        math_fail = data.objects.filter(major='math').filter(status='Fail').count()
-        
+      
         bio_pass = data.objects.filter(major='bio').filter(status='Pass').count()
         bio_fail = data.objects.filter(major='bio').filter(status='Fail').count()
         
-        microBio_pass = data.objects.filter(major='microBio').filter(status='Pass').count()
-        microBio_fail = data.objects.filter(major='microBio').filter(status='Fail').count()
-        
         chemi_pass = data.objects.filter(major='chemi').filter(status='Pass').count()
         chemi_fail = data.objects.filter(major='chemi').filter(status='Fail').count()
-        
-        physics_pass = data.objects.filter(major='physics').filter(status='Pass').count()
-        physics_fail = data.objects.filter(major='physics').filter(status='Fail').count()
+
         #
         status_pass = [
             dssi_pass,
             ict_pass,
-            polymer_pass,
-            enviSci_pass,
-            safety_pass,
             bio_pass,
             chemi_pass,
-            math_pass,
-            microBio_pass,
-            physics_pass
         ]
         
         status_fail = [
             dssi_fail,
             ict_fail,
-            polymer_fail,
-            enviSci_fail,
-            safety_fail,
             bio_fail,
             chemi_fail,
-            math_fail,
-            microBio_fail,
-            physics_fail
         ]
         #
         admission_grade = data.objects.filter(admission_grade__lt =2.00).count()
@@ -133,8 +104,6 @@ def dashboard(request):
             career2,
             langues2,
         ]
-        # print('มากกว่า 2', subject_less_than_two)
-        # print('น้อยกว่า 2', subject_more_than_two)
         
         per_pass = 0
         per_fail = 0

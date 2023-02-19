@@ -4,23 +4,41 @@
 <div class="container">
     <h3>อัปโหลดข้อมูลสำหรับทำนายผล</h3>
     <hr>
-    <form action="{% url 'process_predict_group' %}" method="POST" enctype="multipart/form-data" class="form w-75">
-        {% csrf_token %}
-        <div class="row mb-5">
-            <label for="major">Choose a major:</label>
-            <select id="major" name="major">
-            <option value="1">DSSI</option>
-            <option value="2">ICT</option>
-            <option value="3">Chemi</option>
-            <option value="4">Bio</option>
-            </select>
-        </div>
-        <div class="row mb-5">
-            <input type="file" name="myfile" required>
-        </div>
-        <div class="container d-flex justify-content-center mt-2">
-            <button type="submit" class="btn btn-success">Upload</button>
-        </div>
-    </form>
+    <div class="container w-75">
+        {% for msg in messages %}
+            {% if msg.tags == 'success' %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% else %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="container w-75 d-flex justify-content-center mt-5">
+        <form action="{% url 'process_predict_group' %}" method="POST" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            <div class="row mb-5">
+                <label for="major">กรุณาเลือกสาขาที่คุณต้องการทำนาย</label>
+                <select id="major" name="major" class="form-select" required>
+                    <option selected disabled>สาขา</option>
+                    <option value="DSSI">วิทยาการคอมพิวเตอร์/วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์</option>
+                    <option value="ICT">เทคโนโลยีสารสนเทศ/เทคโนโลยีสารสนเทศและการสื่อสาร</option>
+                    <option value="bio">ชีววิทยา</option>
+                    <option value="chemi">เคมี</option>
+                </select>
+            </div>
+            <div class="row mb-5">
+                <input type="file" name="myfile" class="form-control" required>
+            </div>
+            <div class="container d-flex justify-content-center mt-2">
+                <button type="submit" class="btn btn-success">Upload</button>
+            </div>
+        </form>
+    </div>
 <div>             
 {% endblock %}

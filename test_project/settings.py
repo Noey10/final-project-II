@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'test_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db',
+        'NAME': 'test_db',
         'USER': 'root',
         'PASSWORD': 'jlfA4434',
         'HOST': 'localhost',
@@ -140,7 +140,12 @@ LOGIN_URL = "app_users:login"
 AUTH_USER_MODEL = "app_users.CustomUser"
 
 #Email
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = BASE_DIR / "test_inbox"
-PASSWORD_RESET_TIMEOUT = 600
-
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = BASE_DIR / "test_inbox"
+# PASSWORD_RESET_TIMEOUT = 600
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EamilBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_POST = 587
+EMAIL_USER_TLS = True
+EMAIL_HOST_USER = 'sirinya.ba.62@ubu.ac.th'
+EMAIL_HOST_PASSWORD = 'jlfA4434'

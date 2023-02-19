@@ -6,6 +6,8 @@ from django.urls import reverse
 from app_users.forms import ExtendedProfileForm, RegisterForm, UserProfileForm
 from app_prediction.models import UserPredict
 from app_users.models import CustomUser
+from app_prediction.forms import *
+from django.contrib import messages
 
 # Create your views here.
 def register(request):
@@ -14,7 +16,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return HttpResponseRedirect(reverse("dashboard"))
+            return HttpResponseRedirect(reverse("app_users:login"))
     
     else:
         form = RegisterForm()
@@ -49,6 +51,7 @@ def profile(request):
                 #update
                 extended_form.save()
                 
+            messages.success(request, "อัปเดตข้อมูลสำเร็จ")
             return HttpResponseRedirect(reverse('app_users:profile'))
         
     else:
@@ -73,7 +76,6 @@ def my_history(request):
     filter_user_id = data.objects.filter(user_id=user0).values().order_by('-predict_at')
     
     total = filter_user_id.count()
-    # Company.objects.order_by(Length('name').desc())
     
     context = {
         'filter_user_id': filter_user_id,
@@ -102,3 +104,17 @@ def my_dashboard(request):
         'user': user1,
     }
     return render(request, 'app_users/my_dashboard.html', context)
+
+@login_required
+def update_predict(request, id):
+    if request.method == 'POST':
+        data = UserPredict.objects.get(id=id)
+        form = UserPredictForm(instance=data)
+        
+    context = {
+        'form': form,
+        
+    }
+    return render(request, 'app_prediction/prediction_form.html', context)
+
+
