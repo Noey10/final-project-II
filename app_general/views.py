@@ -125,5 +125,4 @@ def dashboard(request):
         }
     else: 
         return HttpResponseRedirect(reverse('app_users:my_dashboard'))
-        # return HttpResponseRedirect(reverse('ClinicManagement:doctor-list', kwargs={}))
     return render(request, 'app_general/dashboard.html', context)
