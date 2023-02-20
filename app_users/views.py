@@ -16,7 +16,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return HttpResponseRedirect(reverse("app_users:login"))
+            return HttpResponseRedirect(reverse("login"))
     
     else:
         form = RegisterForm()
@@ -52,7 +52,7 @@ def profile(request):
                 extended_form.save()
                 
             messages.success(request, "อัปเดตข้อมูลสำเร็จ")
-            return HttpResponseRedirect(reverse('app_users:profile'))
+            return HttpResponseRedirect(reverse('profile'))
         
     else:
         form = UserProfileForm(instance=user)

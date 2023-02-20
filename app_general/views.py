@@ -124,5 +124,5 @@ def dashboard(request):
             'per_fail': per_fail,
         }
     else: 
-        return HttpResponseRedirect(reverse('app_users:my_dashboard'))
+        return HttpResponseRedirect(reverse('my_dashboard'))
     return render(request, 'app_general/dashboard.html', context)

@@ -10,23 +10,17 @@ from app_users.models import CustomUser
 from django.contrib import messages
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import sklearn.metrics as metrics
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_validate
 from tablib import Dataset
 from io import BytesIO
 from .resources import InputFilePredictResource
-from django.db.models import Q
-#######################################################
 
 # Create your views here.
 @login_required

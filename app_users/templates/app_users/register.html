@@ -10,7 +10,7 @@
               <div class="card-body p-5">
                 <h2 class="text-uppercase text-center mb-5">ลงทะเบียนเพื่อเข้าใช้งาน</h2>
 
-                <form action="{% url 'app_users:register' %}" method="post">
+                <form action="{% url 'register' %}" method="post">
                   {% csrf_token %}
                   <div class="text-danger">
                     {{ form.non_field_errors }}
@@ -52,7 +52,7 @@
                   </div>
 
                   <p class="text-center text-muted mt-5 mb-0">Have already an account? 
-                    <a href="{% url 'app_users:login' %}" class="fw-bold text-body"><u>Login here</u></a>
+                    <a href="{% url 'login' %}" class="fw-bold text-body"><u>Login here</u></a>
                   </p>
                 </form>
               </div>

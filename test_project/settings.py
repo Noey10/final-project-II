@@ -135,17 +135,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Auth
 LOGIN_REDIRECT_URL = "dashboard"
-LOGOUT_REDIRECT_URL = "app_users:login"
-LOGIN_URL = "app_users:login"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login"
 AUTH_USER_MODEL = "app_users.CustomUser"
 
 #Email
 # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 # EMAIL_FILE_PATH = BASE_DIR / "test_inbox"
 # PASSWORD_RESET_TIMEOUT = 600
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_POST = 456
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'sirinya.ba.62@ubu.ac.th'
+# EMAIL_HOST_PASSWORD = 'jlfA4434'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_POST = 587
-EMAIL_USER_TLS = True
-EMAIL_HOST_USER = 'sirinya.ba.62@ubu.ac.th'
-EMAIL_HOST_PASSWORD = 'jlfA4434'
+EMAIL_HOST_USER = 'sirinya.ba.62@ubu.ac.th' # email id
+EMAIL_HOST_PASSWORD = 'jlfA4434' #password
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
