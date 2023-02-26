@@ -1,24 +1,14 @@
 from django import forms
 from attr import fields
 from .models import *
-        
-class DssiForm(forms.Form):
+
+class BranchForm(forms.ModelForm):
     class Meta:
-        model = DSSI
-        fields = '__all__'
-    
-class IctForm(forms.Form):
-    class Meta:
-        model = ICT
-        fields = '__all__'
-    
-class BioForm(forms.Form):
-    class Meta:
-        model = BIO
-        fields = '__all__'
-    
-class ChemiForm(forms.Form):
-    class Meta:
-        model = CHEMI
+        model = Branch
         fields = '__all__'
         
+        
+class DataForm(forms.Form):
+    class Meta:
+        model = Data
+        fields = '__all__'

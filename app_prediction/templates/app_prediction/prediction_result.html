@@ -1,6 +1,6 @@
 {% extends 'app_general/components/base.html' %}
 {% load static %}
-{% block site_title %}result | {% endblock %}
+{% block site_title %}ผลลัพธ์การทำนาย{% endblock %}
 {% block content %}
     <div class="container d-flex justify-content-center align-items-center">
         <div class="card w-50 p-3 d-flex justify-content-center align-items-center" style="border: none;">
@@ -46,7 +46,7 @@
                             </a>
                         </div>
                         <div class="col-12 col-md-12 col-lg-6 mt-2">
-                            <a href="{% url 'app_users:my_history' %}" class="text-center">
+                            <a href="{% url 'my_history' %}" class="text-center">
                                 <button type="submit" class="btn btn-primary">ประวัติการทำนาย</button>
                             </a>
                         </div>

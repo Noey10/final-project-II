@@ -1,17 +1,19 @@
-from mimetypes import types_map
 from django.shortcuts import render
-import os
+from django.http import *
 from django.urls import reverse
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from .models import *
 from .resources import *
 from .forms import *
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from tablib import Dataset
 import pandas as pd
 import numpy as np
+from django.core.paginator import Paginator
+
+def check_user(user):
+    return user.is_staff
 
 def condition(x):
     if x > 3.49:
@@ -28,22 +30,16 @@ def condition(x):
         return'very poor'
 
 @login_required
-def test_upload(request):
+@user_passes_test(check_user, login_url='error_page')
+def upload(request):
+    form = BranchForm()
+    b = Branch.objects.all()
     if request.method == 'POST':
-        # res = BioResource()
-        branch = request.POST.get('major')
-        if branch == 'DSSI' :
-            res = DssiResource()
-        elif branch == 'ICT':
-            res = IctResource()
-        elif branch == 'bio':
-            res = BioResource()
-        elif branch == 'chemi':
-            res = ChemiResource()
-        else: 
-            print('error')
+        res = DataResource()       
+        branch = request.POST.get('branch')
         
         dataset = Dataset()
+        
         file = request.FILES['myfile']
        #check type file
         if file.name.endswith('csv'):
@@ -51,27 +47,41 @@ def test_upload(request):
         elif file.name.endswith('xlsx'):
             df = pd.read_excel(file)
         else :
-            messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel หรือ csv")
-            return render(request, 'app_demo_model/test_upload_course.html')
+            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+            return HttpResponseRedirect(reverse('upload'))
+        
+        #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
+        if 'branch' in df.columns.to_list():
+            df = df.drop(['branch'], axis=1)
+        else:
+            print("ok")
         
         #ลบแถวที่มี missing value
         df = df.dropna()
         
-        #เช็ค column ว่าตรงกันไหม
+        
+        data_branch = []
+        for i in range(len(df)):
+            data_branch.append(branch)
+            
+        df_branch = pd.DataFrame(data_branch, columns=['branch'])
+        
+        df = pd.concat([df_branch, df], axis=1)
+ 
+        #เช็ค column
         col = df.columns
         col_list =  col.to_list()
         
-        categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
+        categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
         if col_list != categories_feature:
-            messages.info(request, "ต้องการคอลัมน์ major, admission_grade, gpa_year_1, thai, math, sci, society, hygiene, art, career, langues, status")
-            return render(request, 'app_demo_model/test_upload_course.html')
+            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+            return HttpResponseRedirect(reverse('upload'))
         
         #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด
         for i in categories_feature:
             # print(df.dtypes[i])
             if df.dtypes[i] == np.float64:
                 df[i] = df[i].apply(condition)
-        # print(df.head())
         
         import_data = dataset.load(df)
         result = res.import_data(dataset, dry_run=True, raise_errors=True)
@@ -80,70 +90,87 @@ def test_upload(request):
         
         messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
         print('upload success.')
-    return render(request, 'app_demo_model/test_upload_course.html')
+    context = {
+        'b': b,
+        'form': form,
+    }
+    return render(request, 'app_demo_model/upload_data_model.html', context)
 
 @login_required
-def show_data_course(request):
-    searched = ''
-    pass_status = 0
-    fail_status = 0
-    total = 0
-    dssi = ''
-    ict = ''
-    bio = ''
-    chemi = ''
+@user_passes_test(check_user, login_url='error_page')
+def show(request):
+    branch = Branch.objects.all()
+    data = Data.objects.all()
+    searched=""
+    total = data.count()
+    page = Paginator(data, 10)
     
     if request.method =='POST':
-        searched = request.POST.get('major')
-        if searched == 'DSSI':
-            searched = 'วิทยาการคอมพิวเตอร์/วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'
-            dssi = DSSI.objects.all()
-            pass_status = DSSI.objects.filter(status__contains='Pass').count()
-            fail_status = DSSI.objects.filter(status__contains='Fail').count()
-            total = dssi.count()
-        elif searched == 'ICT':
-            searched = 'เทคโนโลยีสารสนเทศ/เทคโนโลยีสารสนเทศและการสื่อสาร'
-            ict = ICT.objects.all()
-            total = ict.count()
-            pass_status = ICT.objects.filter(status__contains='Pass').count()
-            fail_status = ICT.objects.filter(status__contains='Fail').count()
-        elif searched == 'bio':
-            searched ='ชีววิทยา'
-            bio = BIO.objects.all()
-            total = bio.count()
-            pass_status = BIO.objects.filter(status__contains='Pass').count()
-            fail_status = BIO.objects.filter(status__contains='Fail').count()
-        elif searched == 'chemi':
-            searched = 'เคมี'
-            chemi = CHEMI.objects.all()
-            total = chemi.count()
-            pass_status = CHEMI.objects.filter(status__contains='Pass').count()
-            fail_status = CHEMI.objects.filter(status__contains='Fail').count()
-        else: 
-            print('error branch')
-    else:
-        dssi = DSSI.objects.all()
-        ict = ICT.objects.all()
-        bio = BIO.objects.all()
-        chemi = CHEMI.objects.all()
-        
-        total = dssi.count()+ict.count()+bio.count()+chemi.count()
-    print('search = ', searched)
-    context = {
-        'search': searched,
-        'total': total,
-        'dssi': dssi,
-        'ict': ict,
-        'bio': bio,
-        'chemi': chemi,
-        'pass_status': pass_status,
-        'fail_status': fail_status,
-    }
-    return render(request, 'app_demo_model/show_data_course.html', context)
+        searched = request.POST.get('branch')
+        print('searched = ', searched)
+        if searched != None:
+            data_search = data.filter(branch__id__contains=searched)
+            total = data_search.count()
+            page = Paginator(data_search, 10)
+            
+    #Pagination
+    page_list = request.GET.get('page')
+    page = page.get_page(page_list)
     
-   
+    print(total)
+    
+    context = {
+        'branch': branch,
+        'data': data,
+        'page': page,
+        'total': total,
+        'searched': searched,
+    }
+    return render(request, 'app_demo_model/show_data.html', context)
+
+@login_required
+@user_passes_test(check_user, login_url='error_page')
+def add_branch(request):
+    if request.method == 'POST':
+        form = BranchForm(request.POST)
+        if form.is_valid():
+            form.save()
+        
+        form = BranchForm()
+        messages.success(request, "เพิ่มข้อมูลสำเร็จ")
+        return HttpResponseRedirect(reverse('upload'))
+
+@login_required
+@user_passes_test(check_user, login_url='error_page')
+def show_branch(request):
+    branch = Branch.objects.all()
+    context = {
+        'branch': branch,
+    }
+    return render(request, 'app_demo_model/show_data_branch.html', context)
+
+@login_required
+@user_passes_test(check_user, login_url='error_page')
+def delete_branch(request, id):
+    branch = Branch.objects.filter(id=id)
+    branch.delete()
+    return HttpResponseRedirect(reverse('show_branch'))
+    # return render(request, 'app_demo_model/show_data_branch.html')
 
 
+@login_required
+@user_passes_test(check_user, login_url='error_page')
+def update_branch(request, id):
+    if request.method == 'POST':
+        name = request.POST['name']
+        abbreviation = request.POST['abbreviation']
+        
+        branch = Branch.objects.get(id=id)
+        
+        branch.name = name
+        branch.abbreviation = abbreviation
+        branch.save()
+        
+    return HttpResponseRedirect(reverse('show_branch'))
 
-
-
+    

@@ -1,5 +1,5 @@
 {% extends 'app_general/components/base.html' %}
-{% block site_title %}Result | {% endblock %}
+{% block site_title %}ผลลัพธ์การทำนาย{% endblock %}
 {% block content %}
 <div class="container">
   <div class="row">
@@ -16,59 +16,61 @@
     </div>
   </div>
 
-    <hr>
-    <div class ="row">
-      <div class="col-12 col-lg-6">
-        <canvas id="donut_chart" class="w-75 h-auto"></canvas>
-        <script>
-          const ctx3 = document.getElementById("donut_chart").getContext("2d");
-          const chart = new Chart(ctx3, {
-            type: "doughnut",
-            data: {
-              labels: ['Fail', 'Pass'],
-              datasets: [
-                {
-                  backgroundColor: ['#FFBBDA', '#A8D1E7'],
-                  data: [{{ total_fail }}, {{ total_pass }}]
-                }
+  <hr>
+  <div class="row">
+    <div class="col-12 col-lg-6">
+      <canvas id="donut_chart" class="w-75 h-auto"></canvas>
+      <script>
+        const ctx3 = document.getElementById("donut_chart").getContext("2d");
+        const chart = new Chart(ctx3, {
+          type: "doughnut",
+          data: {
+            labels: ['Fail', 'Pass'],
+            datasets: [
+              {
+                backgroundColor: ['#FFBBDA', '#A8D1E7'],
+                data: [{{ total_fail }}, {{ total_pass }}]
+        }
               ],
-              hoverOffset: 4
+        hoverOffset: 4
             },
-            options: {
-              title: {
-                display: true
-              }
-            },
-            responsive: true,
-            maintainAspectRatio: true,
+        options: {
+          title: {
+            display: true
+          }
+        },
+        responsive: true,
+          maintainAspectRatio: true,
           });
-        </script>
+      </script>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="row">
+        <p>ข้อมูลทั้งหมด : <strong>{{ total }}</strong> ข้อมูล</p>
+        <p>ผลลัพธ์เป็น <strong>Pass</strong> : <strong> {{ total_pass }} ข้อมูล </strong> คิดเป็น <strong> {{ per_pass
+            }}%</strong></p>
+        <p>ผลลัพธ์เป็น <strong>Fail</strong> : <strong> {{ total_fail }} ข้อมูล </strong> คิดเป็น <strong> {{ per_fail
+            }}%</strong></p>
       </div>
-      <div class="col-12 col-lg-6">
-        <div class="row">
-          <p>ข้อมูลทั้งหมด : <strong>{{ total }}</strong> ข้อมูล</p>
-          <p>ผลลัพธ์เป็น <strong>Pass</strong> : <strong> {{ total_pass }} ข้อมูล </strong> คิดเป็น <strong> {{ per_pass }}%</strong></p>
-          <p>ผลลัพธ์เป็น <strong>Fail</strong> : <strong> {{ total_fail }} ข้อมูล </strong> คิดเป็น <strong> {{ per_fail }}%</strong></p>
+      <hr>
+      <div class="row" style="max-height: 400px;">
+        <h5 class="mb-3">นักศึกษาที่อาจจะไม่สำเร็จการศึกษา</h5>
+        {% if gg|length > 1 %}
+        {% for x in gg %}
+        <div class="col-12 col-lg-4">
+          <p>{{ x }}</p>
         </div>
-        <hr>
-        <div class="row" style="max-height: 400px;">
-          <h5 class="mb-3">นักศึกษาที่อาจจะไม่สำเร็จการศึกษา</h5>
-          {% if gg|length > 1 %}
-            {% for x in gg %}
-              <div class="col-12 col-lg-4">
-                <p>{{ x }}</p>
-              </div>
-            {% endfor %}
-          {% else %}
-            {% for x in gg %}
-              <div class="col-12">
-                <p>{{ x }}</p>
-              </div>
-            {% endfor %}
-          {% endif %}
-          
+        {% endfor %}
+        {% else %}
+        {% for x in gg %}
+        <div class="col-12">
+          <p>{{ x }}</p>
         </div>
+        {% endfor %}
+        {% endif %}
+
       </div>
     </div>
+  </div>
 </div>
 {% endblock %}

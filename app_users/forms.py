@@ -7,9 +7,6 @@ class RegisterForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = UserCreationForm.Meta.fields + ("email", )
-        widgets = {
-            
-        }
         
         
 class UserProfileForm(forms.ModelForm):
@@ -42,5 +39,5 @@ class ExtendedProfileForm(forms.ModelForm):
         }
         widgets = {
             "gender": forms.RadioSelect(choices=CHOICES),
-            "university" : forms.Textarea(attrs={"class": "form-control mt-2", "style": "height: 120px;"}),
+            "university" : forms.Textarea(attrs={"class": "form-control mt-2", "style": "height: 100px;"}),
         }

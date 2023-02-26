@@ -1,0 +1,133 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}สาขา{% endblock %}
+{% block content %}
+<div class="container">
+
+  <div class="container w-100 mt-3">
+    <div class="row">
+      <div class="col-9 d-flex align-items-center">
+        <h3>ข้อมูลสาขา</h3>
+      </div>
+      <div class="col-3 d-flex justify-content-start align-items-center">
+        <a href="{% url 'add_branch' %}" data-bs-toggle="modal" data-bs-target="#add_Branch">
+          <i data-feather="plus"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="container d-flex justify-content-center">
+    <table class="table w-75">
+      <thead class="bg-light">
+        <th scope="col">ชื่อสาขา</th>
+        <th scope="col">ตัวย่อ</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+
+      </thead>
+      <tbody>
+        {% for i in branch %}
+        <tr>
+          <td scope="row">{{ i.name }}</td>
+          <td scope="row">{{ i.abbreviation }}</td>
+          <td scope="row">
+            <a style=" text-decoration: none; color: yellow; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#update_Branch{{i.id}}">
+              <i data-feather="edit"></i>
+            </a>
+            <!--Modal update branch-->
+            <div class="modal fade" id="update_Branch{{i.id}}" tabindex="-1" aria-labelledby="update_BranchLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="update_BranchLabel">อัตเดทข้อมูลสาขา</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form action="{% url 'update_branch' i.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                      {% csrf_token %}
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <label for="name" class="col-form-label">ชื่อสาขา</label>
+                          <input type="text" class="form-control" id="name" name="name" value="{{ i.name }}" required />
+                        </div>
+                        <div class="mb-3">
+                          <label for="abbreviation" class="col-form-label">ตัวย่อ</label>
+                          <input type="text" class="form-control" id="abbreviation" name="abbreviation" value="{{ i.abbreviation }}" required />
+                        </div>
+                      </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">บันทึก</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            </td>
+            <td scope="row">
+            <a style=" text-decoration: none; color: red; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#delete_Branch{{i.id}}">
+              <i data-feather="trash"></i>
+            </a>
+            <!--Modal delete branch-->
+            <div class="modal fade" id="delete_Branch{{i.id}}" tabindex="-1" aria-labelledby="delete_BranchLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="add_BranchLabel">ลบสาขา</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <p>คุณต้องการลบ <strong> {{ i.name }} </strong></p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="{% url 'delete_branch' i.id %}" class="btn btn-danger">ลบ</a>
+                    <a class="btn btn-secondary" data-bs-dismiss="modal">ปิด</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!--Modal Add Branch-->
+  <div class="modal fade" id="add_Branch" tabindex="-1" aria-labelledby="add_BranchLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="add_BranchLabel">เพิ่มสาขา</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'add_branch' %}" method="post">
+          {% csrf_token %}
+          <div class="modal-body">
+            {{ form.non_field_errors }}
+            <div class="mb-3">
+              <label for="name" class="col-form-label">ชื่อสาขา</label>
+              <input type="text" class="form-control" id="name" name="name" required />
+              {{ form.name.errors }}
+            </div>
+            <div class="mb-3">
+              <label for="abbreviation" class="col-form-label">ตัวย่อ</label>
+              <input type="text" class="form-control" id="abbreviation" name="abbreviation" required />
+              {{ form.abbreviation.errors }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">บันทึก</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+{% endblock %}

@@ -1,8 +1,18 @@
 {% extends 'app_users/components/base.html' %}
-{% block site_title %}my dashboard | {% endblock %}
+{% block site_title %}ไม่สามารถเข้าถึงได้{% endblock %}
 {% block scripts %}{% endblock scripts %}
 {% block content %}
-    <div class="container">
-        <h1>คุณไม่มีสิทธิ์เข้าถึงหน้าเว็บนี้</h1>
+    <div class="container-fluid">
+        <div class="container mt-5">
+            <div class="row d-flex align-items-center">
+                <div class="col-auto d-flex align-items-center">
+                    <i data-feather="alert-circle"></i>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    <h2>ขออภัย คุณไม่มีสิทธิ์เข้าถึงหน้าเว็บนี้</h2>
+                </div>
+            </div>
+        </div>
+
     </div>
 {% endblock %}

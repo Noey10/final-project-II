@@ -1,4 +1,3 @@
-import http
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
@@ -6,23 +5,38 @@ from django.contrib.auth.decorators import login_required
 from .models import UserPredict
 from .forms import UserPredictForm
 from app_demo_model.models import *
-from app_users.models import CustomUser
 from django.contrib import messages
 import pandas as pd
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import LabelEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_validate
 from tablib import Dataset
 from io import BytesIO
 from .resources import InputFilePredictResource
+from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
 
 # Create your views here.
+def check_user(user):
+    return user.is_staff
+
+def condition(x):
+    if x > 3.49:
+        return 'excellent'
+    elif x > 2.99:
+        return 'very good'
+    elif x > 2.49:
+        return 'good'
+    elif x > 1.99:
+        return'medium'
+    elif x > 1.49:
+        return 'poor'
+    else:
+        return'very poor'
+
 @login_required
 def form(request):
     form = UserPredictForm()
@@ -34,12 +48,11 @@ def form(request):
 @login_required
 def prediction(request):
     if request.method == 'POST':
-        
         form = UserPredictForm(request.POST)
-        major = request.POST.get('major')
-        # print(major)
         
         #user input
+        student_id = request.POST.get('student_id')
+        branch = request.POST.get('branch')
         admission_grade = request.POST.get('admission_grade')
         gpa_year_1 = request.POST.get('gpa_year_1')
         thai = request.POST.get('thai')
@@ -51,203 +64,138 @@ def prediction(request):
         career = request.POST.get('career')
         langues = request.POST.get('langues')
         
-        #เก็บเกรดที่ input เข้ามาลงใน list
-        grade_list = [
-            admission_grade,
-            gpa_year_1,
-            thai,
-            math,
-            sci,
-            society,
-            hygiene,
-            art,
-            career,
-            langues,
-        ]
-        # print(grade_list)
+        data = Data.objects.filter(branch__id__contains=branch).values()
+        total_data = data.count()
+        if total_data > 100:
+            df_model = pd.DataFrame(data)
+        else:
+            messages.info(request, "ขออภัย สาขาที่ท่านเลือกยังไม่พร้อมให้บริการในขณะนี้")
+            return HttpResponseRedirect(reverse('form')) 
         
-        #แปลงเกรดจากทศนิยมเป็นตัวอักษร
-        new_grades = []
-        for i in grade_list:
-            if float(i) > 3.50:
-                i = 'excellent'
-            elif float(i) > 2.99:
-                i = 'very good'
-            elif float(i) > 2.49:
-                i = 'good'
-            elif float(i) > 1.99:
-                i = 'medium'
-            elif float(i) > 1.49:
-                i = 'poor'
-            elif float(i) < 1.50:
-                i = 'very poor'
-            new_grades.append(i)
-        # print(new_grades)
-        
-        #create data frame for data user input 
         my_dict = {
-            'major': major,
-            'admission_grade': new_grades[0],
-            'gpa_year_1': new_grades[1],
-            'thai': new_grades[2],
-            'math': new_grades[3],
-            'sci': new_grades[4],
-            'society': new_grades[5],
-            'hygiene': new_grades[6],
-            'art': new_grades[7],
-            'career': new_grades[8],
-            'langues': new_grades[9]
+            'student_id': student_id,
+            'branch': branch,
+            'admission_grade': float(admission_grade),
+            'gpa_year_1': float(gpa_year_1),
+            'thai': float(thai),
+            'math': float(math),
+            'sci': float(sci),
+            'society': float(society),
+            'hygiene': float(hygiene),
+            'art': float(art),
+            'career': float(career),
+            'langues': float(langues)
         }
-        df_new = pd.DataFrame([my_dict])      
+        df_input = pd.DataFrame([my_dict])        
+        
+        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+        
+        df_predict = pd.DataFrame(columns=categories_feature)
+        #จัดช่วงเกรด
+        for i in categories_feature:
+            if df_input.dtypes[i] == np.float64:
+                df_predict[i] = df_input[i].apply(condition)
+        
+        if 'student_id' in df_predict.columns.to_list():
+            df_predict = df_predict.drop(['student_id'], axis=1)
+        elif 'branch' in df_predict.columns.to_list():
+            df_predict = df_predict.drop(['branch'], axis=1)
+        else:
+            print('ok') 
+            
+        
         
         if form.is_valid():
-            user_input= form.save(commit=False)
-            user_input.user = request.user
-            result2 = ''
-            acc2 = 0
-            #โค้ดทำนาย
-            df = pd.DataFrame()
-            if major == 'DSSI':
-                print("เรียกโมเดล DSSI มาใช้จ้า")
-                dssi = DSSI.objects.all().values()
-                if not dssi.count() == 0:
-                    df = pd.DataFrame(dssi)#crate data frame             
-                else:
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('form'))
-                    
-            elif major == 'ICT':
-                print("เรียกโมเดล ICT มาใช้จ้า")
-                ict = ICT.objects.all().values()
-                if not ict.count() == 0 :
-                    df = pd.DataFrame(ict)           
-                else:
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('form'))
-            
-            elif major == 'chemi':
-                print("เรียกโมเดล CHEMI มาใช้จ้า")
-                chemi = CHEMI.objects.all().values()
-                if not chemi.count() == 0:
-                    df = pd.DataFrame(chemi)#crate data frame             
-                else: 
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('form'))
-                
-            elif major == 'bio':
-                print("เรียกโมเดล BIO มาใช้จ้า")
-                bio = BIO.objects.all().values()
-                if not bio.count() == 0:
-                    df = pd.DataFrame(bio)#crate data frame             
-                else: 
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('form'))
-            
-            # print(df.head())
-            
-            categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-            
+            user_input = form.save(commit=False)
+            user_input.user = request.user      
+                        
             #แบ่งข้อมูล X,y
-            X = df[categories_feature]
-            y = df['status']
-                    
+            X = df_model[categories_feature]
+            y = df_model['status']
+            
             categories_transforms = Pipeline(steps=[
                 ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
             ])
+            
             #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
             preprocessor = ColumnTransformer(remainder='passthrough', 
                                              transformers=[(
                                                 'catagories', categories_transforms, categories_feature 
                                             )]
             )
-            #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 6
+            
+            #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 5
             pipe = Pipeline(steps=[
                 ('prep', preprocessor),
-                ('tree', RandomForestClassifier(n_estimators=100, max_depth=6))
+                ('tree', RandomForestClassifier(n_estimators=100, max_depth=5))
             ])
 
-            cv_data = cross_validate(pipe, X, y, cv=10)#ทำ cross validation 10 ครั้ง
+            #ทำ cross validation 10 ครั้ง
+            cv_data = cross_validate(pipe, X, y, cv=10)
 
+            #วัดประสิทธิภาพ
             acc = cv_data['test_score'].mean()
             acc2 = round(acc*100, 2)
-            print('accuracy model : ', cv_data['test_score'].mean())
-
-            pipe.fit(X, y)#model
-            result = pipe.predict(df_new)#predict
+            print('accuracy model : ', acc2, "%")
+                        
+            #model
+            model = pipe.fit(X, y)
+            #predict
+            result = model.predict(df_predict)
             result2 = result[0]
-            print(result2)    
-            
             
             user_input.status = result2
             user_input.save()
             print('save success')
             form = UserPredictForm()
-        
-        branch = ''
-        if major == 'DSSI':
-            branch = 'สาขาวิทยาการคอมพิวเตอร์หรือสาขาวิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'
-        elif major == 'ICT':
-            branch = 'สาขาเทคโนโลยีสารสนเทศหรือสาขาเทคโนโลยีและการสื่อสาร'
-        elif major == 'chemi':
-            branch = 'สาขาเคมี'
-        elif major == 'bio':
-            branch = 'สาขาชีววิทยา'
-        else:
-            branch = 'ไม่มีสาขาที่ระบุ'
-                
-        grade_dict = {
-            'สาขา': branch,
-            'เกรดเฉลี่ยมัธยมตอนปลาย': grade_list[0],
-            'เกรดเฉลี่ยชั้นปีที่ 1': grade_list[1],
-            'ภาษาไทย': grade_list[2],
-            'คณิตศาสตร์': grade_list[3],
-            'วิทยาศาสตร์': grade_list[4],
-            'สังคมศึกษา ศาสนาและวัฒนธรรม': grade_list[5],
-            'สุขศึกษาและพลศึกษา': grade_list[6],
-            'ศิลปศึกษา': grade_list[7],
-            'การงานอาชีพ': grade_list[8],
-            'ภาษาต่างประเทศ': grade_list[9],
-        }
-
-    context = {
-        'result': result2, 
-        'acc': acc2,
-        'grade_dict': grade_dict,
-    }
+            
+            grade_list = {
+                'รหัสนักศึกษา': student_id,
+                'สาขา': branch,
+                'เกรดเฉลี่ยรับเข้า': admission_grade,
+                'เกรดเฉลี่ยชั้นปี 1': gpa_year_1,
+                'ภาษาไทย': thai,
+                'คณิตศาสตร์': math,
+                'วิทยาศาสตร์': sci,
+                'สังคมศึกษา': society,
+                'สุขศึกษาและพละศึกษา': hygiene,
+                'ศิลปะ': art,
+                'การงานอาชีพ': career,
+                'ภาษาต่างประเทศ': langues 
+            }
+            
+            context = {
+                'grade_dict': grade_list,
+                'result': result2,
+            }
+    
     return render(request, 'app_prediction/prediction_result.html', context)
     
-
 @login_required
+@user_passes_test(check_user, login_url='error_page')
 def information(request):
-    user = request.user
-    if user.is_staff == True and user.is_superuser == True:
-        searched=""
-        pass_status = 0
-        fail_status = 0
-        if request.method =='POST':
-            searched = request.POST['search']
-            data = UserPredict.objects.filter(student_id__contains=searched)
-        else:
-            data = UserPredict.objects.all()
-        # print(data)
-        total = data.count() 
-        print('total = ', total)
-        context={
-            'search': searched,
-            'data': data,
-            'total': total,
-        } 
-        return render(request, 'app_prediction/show_data_input.html', context)
-    else:
-        return render(request, 'app_general/errors_page.html')
-
-@login_required
-def result(request):
-    return render(request, 'app_prediction/prediction_result.html')
+    data = UserPredict.objects.all().order_by('-predict_at')
+    total = data.count()
+    
+    searched=""
+    if request.method =='POST':
+        searched = request.POST['search']
+        data = UserPredict.objects.filter(student_id__contains=searched).order_by('-predict_at')
+        total = data.count()
+    
+    #Pagination
+    page = Paginator(data, 11)
+    page_list = request.GET.get('page')
+    page = page.get_page(page_list)
+    
+    print('total = ', total)
+    context={
+        'search': searched,
+        'data': data,
+        'total': total,
+        'page': page,
+    } 
+    return render(request, 'app_prediction/show_data_input.html', context)
 
 @login_required
 def download_file(request):
@@ -272,222 +220,175 @@ def download_file(request):
         )
         res['Content-Disposition'] = f'attachment; filename={filename}'
         return res
-
-@login_required    
-def delete_data_user_input(request):
-    user = request.user
-    if user.is_staff == True and user.is_superuser == True:
-        data_input = UserPredict.objects.all()
-        data_input.delete()
-        return render(request, 'app_prediction/show_data_input.html')
-    else:
-        return render(request, 'app_general/errors_page.html')
-    
+  
 @login_required
-def predict_for_admin(request):
-    user = request.user
-    if user.is_staff == True and user.is_superuser == True:         
-        return render(request, 'app_prediction/predict_for_admin.html')
-    else:
-        return render(request, 'app_general/errors_page.html')
-
-def condition(x):
-    if x > 3.49:
-        return 'excellent'
-    elif x > 2.99:
-        return 'very good'
-    elif x > 2.49:
-        return 'good'
-    elif x > 1.99:
-        return'medium'
-    elif x > 1.49:
-        return 'poor'
-    else:
-        return'very poor'
+@user_passes_test(check_user, login_url='error_page')    
+def predict_for_admin(request): 
+    return render(request, 'app_prediction/predict_for_admin.html')
 
 @login_required
+@user_passes_test(check_user, login_url='error_page')   
 def predict_group_student(request):
-    user = request.user
-    if user.is_staff == True and user.is_superuser == True:
-        return render(request, 'app_prediction/prediction_group_student.html')
-    else:
-        return render(request, 'app_general/errors_page.html')
+    b = Branch.objects.all()
+    context = {
+        'b': b,
+    }
+    return render(request, 'app_prediction/prediction_group_student.html', context)
     
 @login_required
 def process_predict_group(request):
-    user = request.user
-    if user.is_staff == True and user.is_superuser == True:
+    if request.method == 'POST':
+        branch = request.POST.get('branch')
+        if branch != None:
+            data = Data.objects.filter(branch__id__contains=branch).values()
+            if data.count() > 100:
+                df_model = pd.DataFrame(data)
+            else:
+                messages.info(request, "ขออภัย สาขาที่ท่านเลือกยังไม่พร้อมให้บริการในขณะนี้")
+                return HttpResponseRedirect(reverse('predict_group_student'))   
+        else:
+            messages.info(request, "กรุณาตรวจสอบการเลือกสาขาที่จะทำนาย")
+            return HttpResponseRedirect(reverse('predict_group_student'))
         
-        if request.method == 'POST':
-            major = request.POST.get('major')
-            if major == 'DSSI':
-                print("เรียกโมเดล DSSI มาใช้จ้า")
-                data = DSSI.objects.all().values()#read data in Applied Science
-                if not data.count() == 0:
-                    df = pd.DataFrame(data)#crate data frame             
-                else:
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('predict_group_student'))
-            elif major == 'ICT':
-                print("เรียกโมเดล ICT มาใช้จ้า")
-                data = ICT.objects.all().values()
-                if not data.count() == 0:
-                    df = pd.DataFrame(data)            
-                else:
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('predict_group_student'))
-            elif major == 'bio':
-                print("เรียกโมเดล bio มาใช้จ้า")
-                data = CHEMI.objects.all().values()
-                if not data.count() == 0:
-                    df = pd.DataFrame(data)       
-                else:
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('predict_group_student'))
-            elif major == 'chemi':
-                print("เรียกโมเดล Chemi มาใช้จ้า")
-                data = BIO.objects.all().values()
-                if not data.count() == 0:
-                    df = pd.DataFrame(data)        
-                else:
-                    messages.info(request, 'สาขาที่คุณเลือกยังไม่พร้อมให้บริการในขณะนี้')
-                    form = UserPredictForm()
-                    return HttpResponseRedirect(reverse('predict_group_student'))
+        
+        #รับไฟล์
+        file = request.FILES['myfile']
+        if file.name.endswith('csv'):
+            df_input = pd.read_csv(file)
+        elif file.name.endswith('xlsx'):
+            df_input = pd.read_excel(file)
+        else :
+            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+            return HttpResponseRedirect(reverse('predict_group_student'))
+        
+        #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
+        if 'branch' in df_input.columns.to_list():
+            df_input = df_input.drop(['branch'], axis=1)
+        else:
+            print('ok')
+                   
+        #จัดช่วงเกรด
+        df_predict = pd.DataFrame(columns=df_input.columns.to_list())
+        for i in df_input.columns.to_list():
+            if df_input.dtypes[i] == np.float64:
+                df_predict[i] = df_input[i].apply(condition)
+            elif df_input.dtypes[i] == np.int64:
+                df_predict[i] = df_input[i].apply(condition)
+            elif df_input.dtypes[i] == np.object_:
+                df_predict[i] = df_input[i]
             else:
-                print('error')
-                messages.info(request, 'โมเดลการทำนายมีปัญหา')
-                form = UserPredictForm()
-                return HttpResponseRedirect(reverse('predict_group_student'))
+                print('error process')
             
-            file = request.FILES['myfile']
-            if file.name.endswith('csv'):
-                df_input = pd.read_csv(file)
-            elif file.name.endswith('xlsx'):
-                df_input = pd.read_excel(file)
-            else :
-                messages.info(request, "ต้องการไฟล์ของข้อมูลที่เป็น excel หรือ csv")
-                return render(request, 'app_prediction/prediction_group_student.html')
-            
-            col = df_input.columns
-            col_list =  col.to_list()
-            
-            categories_feature = ['major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-            feature = ['student_id', 'major', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-            
-            if col_list != categories_feature and col_list != feature:
-                messages.info(request, "ต้องการคอลัมน์ student_id, major, admission_grade, gpa_year_1, thai, math, sci, society, hygiene, art, career, langues")
-                return render(request, 'app_prediction/prediction_group_student.html')
-            
-            #จัดเกรดให้เป็นช่วง                  
-            df2 = pd.DataFrame(columns=feature)
-            if col_list == categories_feature:
-                for i in categories_feature:
-                    print('equal categories feature')
-                    if df_input.dtypes[i] == np.float64:
-                        df2[i] = df_input[i].apply(condition)
-                    elif df_input.dtypes[i] == np.int64:
-                        df2[i] = df_input[i]
-                    elif df_input.dtypes[i] == np.object_:
-                        df2[i] = df_input[i]
-                    else:
-                        print('error process')
-            elif col_list == feature:
-                print('equal feature')
-                for i in feature:
-                    if df_input.dtypes[i] == np.float64:
-                        df2[i] = df_input[i].apply(condition)
-                    elif df_input.dtypes[i] == np.int64:
-                        df2[i] = df_input[i]
-                    elif df_input.dtypes[i] == np.object_:
-                        df2[i] = df_input[i]
-                    else:
-                        print('error process')
-            else:
-                print('process covert grade error')
-                        
-            #แบ่งข้อมูล X,y
-            X = df[categories_feature]
-            y = df['status']
-                    
-            categories_transforms = Pipeline(steps=[
-                ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
-            ])
-            #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
-            preprocessor = ColumnTransformer(remainder='passthrough', 
-                                             transformers=[(
-                                                'catagories', categories_transforms, categories_feature 
-                                            )]
-            )
-            
-            #ทำ pipeline steps
-            pipe = Pipeline(steps=[
-                ('prep', preprocessor),
-                ('tree', RandomForestClassifier(n_estimators=100, max_depth=6))
-            ])
-            cv_data = cross_validate(pipe, X, y.values.ravel(), cv=10)#ทำ cross validation 10 ครั้ง
+        #ถ้ามีคอลัมน์ student_id ให้ลบออกไปก่อน
+        if 'student_id' in df_predict.columns.to_list():
+            df_predict = df_predict.drop(['student_id'], axis=1)
+        else:
+            print('ok') 
+        
+        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']        
+        # เช็คคอลัมน์ว่าครบตามที่จะใช้ทำนายหรือไม่
+        if df_predict.columns.to_list() != categories_feature:
+            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+            return HttpResponseRedirect(reverse('predict_group_student'))
 
-            acc = cv_data['test_score'].mean()
-            acc2 = round(acc*100, 2)
-            print('accuracy model : ', cv_data['test_score'].mean())
-
-            pipe.fit(X, y.values.ravel())#model
-            result = pipe.predict(df2)#predict
-            # print(result)
-            df_result = pd.DataFrame(result, columns=['status'])
+        #แบ่งข้อมูล X,y
+        X = df_model[categories_feature]
+        y = df_model['status']
+        
+        categories_transforms = Pipeline(steps=[
+            ('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))
+        ])
+        
+        #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
+        preprocessor = ColumnTransformer(remainder='passthrough', 
+                                         transformers=[(
+                                            'catagories', categories_transforms, categories_feature 
+                                        )]
+        )
+        
+        #ทำ pipeline steps
+        pipe = Pipeline(steps=[
+            ('prep', preprocessor),
+            ('tree', RandomForestClassifier(n_estimators=100, max_depth=5))
+        ])
+        
+        #ทำ cross validation 10 ครั้ง
+        cv_data = cross_validate(pipe, X, y.values.ravel(), cv=10)
+        
+        #วัดประสิทธิภาพ
+        acc = cv_data['test_score'].mean()
+        acc2 = round(acc*100, 2)
+        print('accuracy model : ', acc2)
+        
+        #model
+        model = pipe.fit(X, y.values.ravel())
+        
+        #predict
+        result = model.predict(df_predict)
+        
+        #สร้าง DataFrame ให้ผลลัพธ์
+        df_result = pd.DataFrame(result, columns=['status'])
+        
+        #สร้าง DataFrame ให้ branch ที่รับมาจาก input เพื่อบันทึกลงดาต้าเบส
+        data_branch = []
+        for i in range(len(df_input)):
+            data_branch.append(branch)
             
-            new = pd.concat([df_input, df_result], axis=1)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+        df_branch = pd.DataFrame(data_branch, columns=['branch'])
+        
+        df_save = pd.concat([df_branch, df_input, df_result], axis=1)
+        print(df_save.head())
+        
+        dataset = Dataset()
+        res = InputFilePredictResource()
+        
+         #บันทึกข้อมูลลงฐานข้อมูล
+        import_data = dataset.load(df_save)
+        result = res.import_data(dataset, dry_run=True, raise_errors=True)
+        if not result.has_errors():
+            res.import_data(dataset, dry_run=False)
+        print('process success.')
+        total = len(df_save)
+        print(total)
+        
+        #filter ข้อมูลตามสถานะ
+        filt_pass = df_save['status'].str.contains('Pass')
+        filt_fail = df_save['status'].str.contains('Fail')
+        total_pass = len(df_save[filt_pass])
+        total_fail = len(df_save[filt_fail])
+        
+        #คำนวนเปอร์เซ็นต์
+        per_pass = round((total_pass/total)*100, 2)
+        per_fail = round((total_fail/total)*100, 2)
+        
+        #ฟิลเตอร์ข้อมูลรหัสนักศึกษาที่มีสถานะเป็น Fail
+        if 'student_id' in df_save:
+            slt_df = df_save[df_save['status'] == 'Fail'] 
+            student = slt_df['student_id']
+            student_list = student.values.tolist()
+        else:
+            student_list = ['ไม่สามารถระบบุได้ เนื่องจากคุณไม่ได้เพิ่มรหัสนักศึกษา']
+        
+    context = {
+            'df': df_save,
+            'total': total,
+            'total_pass': total_pass,
+            'total_fail': total_fail,
+            'per_pass': per_pass,
+            'per_fail': per_fail,
+            'gg': student_list,
             
-            dataset = Dataset()
-            res = InputFilePredictResource()
-            
-            #บันทึกข้อมูลลงฐานข้อมูล
-            import_data = dataset.load(new)
-            result = res.import_data(dataset, dry_run=True, raise_errors=True)
-            if not result.has_errors():
-                res.import_data(dataset, dry_run=False)
-            print('process success.')
-            total = len(new)
-            print(total)
-            
-            #filter ข้อมูลตามสถานะ
-            filt_pass = new['status'].str.contains('Pass')
-            filt_fail = new['status'].str.contains('Fail')
-            total_pass = len(new[filt_pass])
-            total_fail = len(new[filt_fail])
-            
-            #คำนวนเปอร์เซ็นต์
-            per_pass = round((total_pass/total)*100, 2)
-            per_fail = round((total_fail/total)*100, 2)
-            
-            if 'student_id' in new:
-                slt_df = new[new['status'] == 'Fail'] 
-                # print(slt_df)
-                student = slt_df['student_id']
-                student_list = student.values.tolist()
-            else:
-                student_list = ['ไม่สามารถระบบุได้ เนื่องจากคุณไม่ได้เพิ่มรหัสนักศึกษา']
-            #ฟิลเตอร์ข้อมูลรหัสนักศึกษาที่มีสถานะเป็น Fail
-                
-                
-            
-            context = {
-                'df': new,
-                'total': total,
-                'total_pass': total_pass,
-                'total_fail': total_fail,
-                'per_pass': per_pass,
-                'per_fail': per_fail,
-                'gg': student_list,
-                
-            }
-            
+        }
+        
     return render(request, 'app_prediction/group_result.html', context)
-    
 
-
+@login_required
+@user_passes_test(check_user, login_url='error_page')    
+def delete_data_user_input(request):
+    data_input = UserPredict.objects.all()
+    data_input.delete()
+    return render(request, 'app_prediction/show_data_input.html')
+  
 
 
 

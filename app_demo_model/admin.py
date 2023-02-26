@@ -4,7 +4,7 @@ from .models import *
 # Register your models here.
 # class ScienceModelAdmin(admin.ModelAdmin):
 #     list_display = [
-#         'major',
+#         'branch',
 #         'admission_grade',
 #         'gpa_year_1',
 #         'thai',
@@ -17,7 +17,7 @@ from .models import *
 #         'langues',
 #         'status',
 #     ]
-#     search_fields = ['major']
+#     search_fields = ['branch']
 #     list_filter = ['status']
     
 # admin.site.register(AppliedScience, ScienceModelAdmin)

@@ -1,5 +1,5 @@
 {% extends 'app_general/components/base.html' %}
-{% block site_title %}profile | {% endblock %}
+{% block site_title %}โปรไฟล์{% endblock %}
 {% block content %}
     <div class="container">
         <div class="container w-75">
@@ -18,14 +18,14 @@
             {% endfor %}
         </div>
         <div class="d-flex justify-content-center">
-            <div class="card p-5 mt-3" style="width: 580px;"> 
+            <div class="card p-5 mt-3 shadow" style="width: 580px;"> 
                 <h1 class="text-center">สวัสดี!! คุณ {{ user.username }}</h1>
                 <div class="row d-flex align-items-center">
                     <div class="col">
                         <h2>ข้อมูลผู้ใช้</h2>
                     </div>
                     <div class="col d-flex justify-content-end">
-                        <a href="{% url 'password_change' %}">reset password</a>
+                        <a href="{% url 'password_change' %}">เปลี่ยนรหัสผ่าน ?</a>
                     </div>
                 </div>
                 <form action="{% url 'profile' %}" method="post" class="form">
@@ -57,7 +57,7 @@
                         {{ extended_form.university.errors }}
                     </div>
                     <div class="form-field mt-3 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary col-6">Update profile</button>
+                        <button type="submit" class="btn btn-primary col-6 shadow">Update profile</button>
                     </div>
                     
                 </form>

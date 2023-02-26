@@ -1,0 +1,119 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}อัปโหลดข้อมูล{% endblock %}
+{% block content %}
+<div class="container"> 
+    <div class="container w-100 mt-3">
+        <div class="row d-flex align-items-center">
+            <div class="col-6">
+                <h3>อัปโหลดข้อมูลสำหรับสร้างโมเดล</h3>
+            </div>
+            <div class="col-6">
+                <div class="row d-flex justify-content-end ">
+                    <div class="col-auto d-flex justify-content-end">
+                        <a href="{% url 'show' %}">
+                            <button class="btn btn-primary shadow" title="ดูข้อมูลโมเดล">
+                                <i data-feather="hard-drive"></i>
+                            </button>
+                        </a>
+                    </div>
+                    <div class="col-auto d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#add_Branch" title="เพิ่มสาขา">
+                            <i data-feather="plus"></i>
+                        </button>
+                    </div>
+                    <div class="col-auto d-flex justify-content-end">
+                        <a href="{% url 'show_branch' %}">
+                            <button class="btn btn-primary shadow" title="ดูข้อมูลสาขา">
+                                <i data-feather="layers"></i>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <div class="row mt-3 mb-5">
+            <div class="container w-75">
+                {% for msg in messages %}
+                    {% if msg.tags == 'success' %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ msg }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ msg }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="row d-flex justify-content-center mt-5" style="margin-left:0px;">                        
+                <form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data" class="form">
+                    {% csrf_token %}
+                    <div class="row w-75 w-md-100 mb-5" style="margin-left: auto; margin-right: auto;">
+                        <label for="branch">กรุณาเลือกสาขาที่คุณต้องการอัปโหลดข้อมูล:</label>
+                        <select id="branch" name="branch" required class="form-select">
+                            <option selected disabled>สาขา</option>
+                            {% for i in b %}
+                                <option value="{{ i.id }}">{{ i.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row w-75 w-md-100 mb-5" style="margin-left: auto; margin-right: auto;">
+                        <input type="file" name="myfile" required class="form-control">
+                        <div class="container d-flex justify-content-center mt-2">
+                            <button type="submit" class="btn btn-success shadow">อัปโหลด</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <h5>ข้อกำหนดในการอัปโหลดข้อมูล</h5>
+                <p>
+                    1. ต้องการไฟล์ข้อมูลที่เป็นชนิด xlsx หรือ csv <br>
+                    2. ต้องการคอลัมน์ branch, admission_grade, gpa_year_1, thai, math, sci, society, hygiene, art, career, langues, status
+                </p>
+            </div>
+            
+            <!--Modal-->
+            <div class="modal fade" id="add_Branch" tabindex="-1" aria-labelledby="add_BranchLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="add_BranchLabel">เพิ่มสาขา</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                        
+                    <form action="{% url 'add_branch' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            {{ form.non_field_errors }}
+                            <div class="mb-3">
+                                <label for="name" class="col-form-label">ชื่อสาขา</label>
+                                <input type="text" class="form-control" id="name" name="name" required />
+                                {{ form.name.errors }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="abbreviation" class="col-form-label">ตัวย่อ</label>
+                                <input type="text" class="form-control" id="abbreviation" name="abbreviation" required />
+                                {{ form.abbreviation.errors }}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                        </div>
+                    </form>
+                        
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 {% extends 'app_general/components/base.html' %}
-{% block site_title %}Prediction | {% endblock %}
+{% block site_title %}ทำนาย{% endblock %}
 {% block content %}
 <div class="container">
     <h3>อัปโหลดข้อมูลสำหรับทำนายผล</h3>
@@ -19,17 +19,16 @@
             {% endif %}
         {% endfor %}
     </div>
-    <div class="container w-75 d-flex justify-content-center mt-5">
-        <form action="{% url 'process_predict_group' %}" method="POST" enctype="multipart/form-data" class="form">
+    <div class="container d-flex justify-content-center mt-5">
+        <form action="{% url 'process_predict_group' %}" method="POST" enctype="multipart/form-data" class="form w-75">
             {% csrf_token %}
             <div class="row mb-5">
-                <label for="major">กรุณาเลือกสาขาที่คุณต้องการทำนาย</label>
-                <select id="major" name="major" class="form-select" required>
+                <label for="branch">กรุณาเลือกสาขาที่คุณต้องการทำนาย</label>
+                <select id="branch" name="branch" class="form-select" required>
                     <option selected disabled>สาขา</option>
-                    <option value="DSSI">วิทยาการคอมพิวเตอร์/วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์</option>
-                    <option value="ICT">เทคโนโลยีสารสนเทศ/เทคโนโลยีสารสนเทศและการสื่อสาร</option>
-                    <option value="bio">ชีววิทยา</option>
-                    <option value="chemi">เคมี</option>
+                    {% for i in b %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="row mb-5">
@@ -39,6 +38,13 @@
                 <button type="submit" class="btn btn-success">Upload</button>
             </div>
         </form>
+    </div>
+    <div class="row">
+        <h5>ข้อกำหนดในการอัปโหลดข้อมูล</h5>
+        <p>
+            1. ต้องการไฟล์ข้อมูลที่เป็นชนิด xlsx หรือ csv <br>
+            2. ต้องการคอลัมน์ branch, admission_grade, gpa_year_1, thai, math, sci, society, hygiene, art, career, langues, status
+        </p>
     </div>
 <div>             
 {% endblock %}

@@ -4,7 +4,7 @@ from .models import UserPredict
 # Register your models here.
 class UserPredictAdmin(admin.ModelAdmin):
     list_display = [
-        'major',
+        'branch',
         'admission_grade',
         'gpa_year_1',
         'thai',
@@ -19,7 +19,7 @@ class UserPredictAdmin(admin.ModelAdmin):
         'predict_at',
         'user',
     ]
-    search_fields = ['major']
+    search_fields = ['branch']
     list_filter = ['status']
 
 admin.site.register(UserPredict, UserPredictAdmin)

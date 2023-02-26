@@ -1,5 +1,5 @@
 {% extends 'app_general/components/base.html' %}
-{% block site_title %}Dashboard | {% endblock %}
+{% block site_title %}แดชบอร์ด{% endblock %}
 {% block scripts %}{% endblock scripts %}
 {% block content %}
   <div class="container">
@@ -73,49 +73,7 @@
                       label: 'Fail',
                       data: [{% for j in status_fail %} {{ j }}, {% endfor %}],
                     }],
-                    labels: ['DSSI', 'ICT', 'Bio', 'Chemical']
-                  },
-                  options: {
-                    scales: {
-                      y: {
-                        beginAtZero: true
-                      }
-                    }
-                  },
-                  responsive: true,
-                  maintainAspectRatio: true,
-                });
-              </script>
-            </div>
-            <div class="row">
-              <p>กราฟสรุปผลการเรียน</p>
-              <canvas id="chart"></canvas>
-              <script>
-                const ctx2 = document.getElementById('chart');
-                new Chart(ctx2, {
-                  data: {
-                    datasets: [{
-                      type: 'bar',
-                      label: 'เกรดมากว่า 2',
-                      data: [{% for k in subject_more_than_two %} {{ k }}, {% endfor %}]
-                    }, 
-                    {
-                      type: 'bar',
-                      label: 'เกรดน้อยกว่า 2',
-                      data: [{% for l in subject_less_than_two %} {{ l }}, {% endfor %}],
-                    }],
-                    labels: [
-                      'เกรดเฉลี่ยมัธยมตอนปลาย',
-                      'เกรดเฉลี่ยชั้นปีที่1',
-                      'ภาษาไทย',
-                      'คณิตศาสตร์',
-                      'วิทยาศาสตร์',
-                      'สังคมศึกษา',
-                      'สุขศึกษาและพละศึกษา',
-                      'ศิลปศึกษา',
-                      'การงานอาชีพ',
-                      'ภาษาต่างประเทศ',
-                    ]
+                    labels: [{% for m in branch %} '{{ m }}', {% endfor %}]
                   },
                   options: {
                     scales: {

@@ -1,129 +1,145 @@
 {% extends 'app_general/components/base.html' %}
 {% load static %}
-{% block site_title %}my history | {% endblock %}
+{% block site_title %}ประวัติการทำนาย{% endblock %}
 {% block content %}
+<div class="container">
     <div class="container">
-        <div class="container">
-            <button onclick="topFunction()" id="myBtn" title="Go to top">
-                <i data-feather="arrow-up"></i>
-            </button>
-            <h2 class="mt-3">Hello!!  <strong class="text-uppercase">{{ user.username }}</strong></h2>
-            <hr>
-            <div class="row mt-4 mb-2">
-                <div class="col-9">
-                    <h5>ผลการทำนายของคุณ</h5>
-                </div>
-                <div class="col-3">
-                    <a href="{% url 'form' %}">
-                        <button class="btn btn-primary" title="predict">
-                            <i data-feather="feather"></i> ทำนายผลอีกครั้ง
-                        </button>
-                    </a>
-                </div>
+        <div class="row mb-2">
+            <div class="col-9">
+                <h5>ประวัติผลการทำนายของคุณ</h5>
             </div>
-            <div class="row">
-                <div class="container">
-                    <div class="row">
-                        {% for i in filter_user_id %}
-                            <div class="col-12 col-md-6 d-flex justify-content-center mt-3">
-                                <div class="card w-75 w-md-100 w-sm-100 shadow">
-                                    <div class="row m-0 ps-3 pt-3">
-                                        <div class="col-10 ">
-                                            <p class="mt-2">วันที่ทำนาย : {{i.predict_at|date:'j/N/Y H:i'}} น.</p>
-                                        </div>
-                                        <!--<div class="col-2">
-                                            <form action="{% url 'app_users:update_predict' i.id %}" method="post">
-                                                {% csrf_token %}
-                                                <button class="btn" title="predict with this data again">
-                                                    <i data-feather="edit"></i>
-                                                </button>
-                                            </form>
-                                        </div>-->
-                                    </div>
-                                    <hr class="p-0 m-0">
-                                    <div class="row m-0 pt-2 d-flex justify-content-center">
-                                        <table class="table w-75 w-sm-100 w-md-100">
-                                            <tr class="mb-2">
-                                                <td>สาขาวิชา :</td>
-                                                <td>{{ i.major }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>เกรดเฉลี่ยที่รับเข้า :</td>
-                                                <td>{{ i.admission_grade }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>เกรดเฉลี่ยชั้นปีที่ 1 :</td>
-                                                <td>{{ i.gpa_year_1 }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาภาษาไทย :</td>
-                                                <td>{{ i.thai }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาคณิตศาสตร์ :</td>
-                                                <td>{{ i.math }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาวิทยาศาสตร์ :</td>
-                                                <td>{{ i.sci }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาสังคม ศาสนาและวัฒนธรรม :</td>
-                                                <td>{{ i.society }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาสุขศึกษาและพละศึกษา :</td>
-                                                <td>{{ i.hygiene }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาศิลปศึกษา :</td>
-                                                <td>{{ i.art }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาการงาน :</td>
-                                                <td>{{ i.career }}</td>
-                                            </tr>
-                                            <tr class="mb-2">
-                                                <td>วิชาภาษาต่างประเทศ :</td>
-                                                <td>{{ i.langues }}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="row m-2 p-0">
-                                        {% if i.status == 'Pass' %}
-                                            <h6 id="statusPass" class="p-3" style="background-color: #C4FAF8;"><strong>ผลการทำนาย : สำเร็จการศึกษา</strong></h6>
-                                        {% else %}
-                                            <h6 id="statusFail" class="p-3" style="background-color: #FFCCF9;"><strong>ผลการทำนาย : มีโอกาสที่จะไม่สำเร็จการศึกษา</strong></h6>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+            <div class="col-3">
+                <a href="{% url 'form' %}">
+                    <button class="btn btn-primary" title="predict">
+                        <i data-feather="feather"></i> ทำนายผลอีกครั้ง
+                    </button>
+                </a>
             </div>
         </div>
+        <hr>
+        <div class="row" >
+            <div class="container d-flex justify-content-center">
+                <table class="table table-hover w-75">
+                    <thead class="bg-light">
+                        <th scope="col">วันที่ทำนาย</th>
+                        <th scope="col">รหัสนักศึกษา</th>
+                        <th scope="col">สาขา</th>
+                        <th scope="col">ผลการทำนาย</th>
+                        <th scope="col"></th>
+
+                    </thead>
+                    <tbody>
+                        {% for i in page %}
+                        <tr style="max-height: 25px;">
+                            <td>
+                                <p>{{ i.predict_at|date:'j/N/Y | H:i' }}</p>
+                            </td>
+                            <td>
+                                <p>{{ i.student_id }}</p>
+                            </td>
+                            <td>
+                                <p>{{ i.branch.name }}</p>
+                            </td>
+                            {% if i.status == 'Pass' %}
+                            <td class="text-success fw-bold">
+                                <p>สำเร็จการศึกษา</p>
+                            </td>
+                            {% else %}
+                            <td class="text-danger fw-bold">
+                                <p>ไม่สำเร็จการศึกษา</p>
+                            </td>
+                            {% endif %}
+                            <td>
+                                <a href="{% url 'history_item' i.id %}" class="btn btn-light text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{i.id}}" title="ดูรายละเอียด">
+                                    <i data-feather="file"></i>
+                                </button>
+
+                                <!-- Modal detail history item -->
+                                <div class="modal fade" id="exampleModal{{i.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content text-dark">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">รายละเอียดข้อมูล</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <p>วันที่ทำนาย</p>
+                                                        <p>รหัสนักศึกษา</p>
+                                                        <p>สาขา</p>
+                                                        <p>เกรดเฉลี่ยรับเข้า</p>
+                                                        <p>เกรดเฉลี่ยชั้นปีที่ 1</p>
+                                                        <p>ภาษาไทย</p>
+                                                        <p>คณิตศาสตร์</p>
+                                                        <p>วิทยาศาสตร์</p>
+                                                        <p>สังคมศึกษา</p>
+                                                        <p>สุขศึกษา</p>
+                                                        <p>ศิลปะ</p>
+                                                        <p>การงานอาชีพ</p>
+                                                        <p>ภาษาต่างประเทศ</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p>{{ i.predict_at|date:'j/N/Y | H:i' }}</p>
+                                                        <p>{{ i.student_id }}</p>
+                                                        <p>{{ i.branch.name }}</p>
+                                                        <p>{{ i.admission_grade }}</p>
+                                                        <p>{{ i.gpa_year_1 }}</p>
+                                                        <p>{{ i.thai }}</p>
+                                                        <p>{{ i.math }}</p>
+                                                        <p>{{ i.sci}}</p>
+                                                        <p>{{ i.society }}</p>
+                                                        <p>{{ i.hygiene }}</p>
+                                                        <p>{{ i.art }}</p>
+                                                        <p>{{ i.career }}</p>
+                                                        <p>{{ i.langues }}</p>
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="modal-footer text-center">
+                                                {% if i.status == 'Pass' %}
+                                                    <div class="container shadow">
+                                                        <h4 class="text-success"> <strong>สำเร็จการศึกษา</strong> </h4>
+                                                    </div>
+                                                {% else%}
+                                                    <div class="container shadow">
+                                                        <h4 class="text-danger"> <strong>ไม่สำเร็จการศึกษา</strong> </h4>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {% if total > 8 or total == 8 %}
+        <div class="container  mb-5 d-flex justify-content-center">
+
+            {% if page.has_previous %}
+              <a href="?page=1" class="ms-2 me-2">&laquo First</a>
+              <a href="?page={{ page.previous_page_number }}" class="ms-2 me-2">Previous</a>
+            {% endif %}
+            Page {{ page.number }} of {{ page.paginator.num_pages }}
+            {% if page.has_next %}
+              <a href="?page={{ page.next_page_number }}" class="ms-2 me-2">next</a>
+              <a href="?page={{ page.paginator.num_pages }}" class="ms-2 me-2">Last &raquo</a>
+            {% endif %}
+  
+        </div>
+        {% else %}
+        {% endif %}
     </div>
-    <script>
-        // Get the button
-        let mybutton = document.getElementById("myBtn");
-        
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function() {scrollFunction()};
-        
-        function scrollFunction() {
-          if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            mybutton.style.display = "block";
-          } else {
-            mybutton.style.display = "none";
-          }
-        }
-        
-        // When the user clicks on the button, scroll to the top of the document
-        function topFunction() {
-          document.body.scrollTop = 0;
-          document.documentElement.scrollTop = 0;
-        }
-    </script>
+</div>
+
 
 {% endblock %}
