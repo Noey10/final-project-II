@@ -8,7 +8,7 @@
       <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
           <h4>Hello Admin</h4>
           <p>**ขณะนี้ยังไม่มีการทำนายผล</p>
-          <a href="{% url 'form' %}" class="mt-3">
+          <a href="{% url 'predict_for_admin' %}" class="mt-3">
               <span><i data-feather="chevrons-left"></i></span>
               <span>ไปยังหน้าทำนายผลการสำเร็จการศึกษา</span>
           </a>
@@ -73,7 +73,7 @@
                       label: 'Fail',
                       data: [{% for j in status_fail %} {{ j }}, {% endfor %}],
                     }],
-                    labels: [{% for m in branch %} '{{ m }}', {% endfor %}]
+                    labels: [{% for m in branch %} '{{ m.abbreviation }}', {% endfor %}]
                   },
                   options: {
                     scales: {

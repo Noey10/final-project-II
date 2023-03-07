@@ -37,59 +37,62 @@ def upload(request):
     if request.method == 'POST':
         res = DataResource()       
         branch = request.POST.get('branch')
-        
-        dataset = Dataset()
-        
-        file = request.FILES['myfile']
-       #check type file
-        if file.name.endswith('csv'):
-            df = pd.read_csv(file)
-        elif file.name.endswith('xlsx'):
-            df = pd.read_excel(file)
-        else :
-            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+        if branch == None:
+            messages.info(request, "กรุณาเลือกสาขาวิชาที่ท่านต้องการอัปโหลดข้อมูล")
             return HttpResponseRedirect(reverse('upload'))
         
-        #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
-        if 'branch' in df.columns.to_list():
-            df = df.drop(['branch'], axis=1)
         else:
-            print("ok")
         
-        #ลบแถวที่มี missing value
-        df = df.dropna()
-        
-        
-        data_branch = []
-        for i in range(len(df)):
-            data_branch.append(branch)
+            dataset = Dataset()
+            file = request.FILES['myfile']
+            #check type file
+            if file.name.endswith('csv'):
+                df = pd.read_csv(file)
+            elif file.name.endswith('xlsx'):
+                df = pd.read_excel(file)
+            else :
+                messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+                return HttpResponseRedirect(reverse('upload'))
             
-        df_branch = pd.DataFrame(data_branch, columns=['branch'])
-        
-        df = pd.concat([df_branch, df], axis=1)
- 
-        #เช็ค column
-        col = df.columns
-        col_list =  col.to_list()
-        
-        categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
-        if col_list != categories_feature:
-            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
-            return HttpResponseRedirect(reverse('upload'))
-        
-        #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด
-        for i in categories_feature:
-            # print(df.dtypes[i])
-            if df.dtypes[i] == np.float64:
-                df[i] = df[i].apply(condition)
-        
-        import_data = dataset.load(df)
-        result = res.import_data(dataset, dry_run=True, raise_errors=True)
-        if not result.has_errors():
-            res.import_data(dataset, dry_run=False)
-        
-        messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
-        print('upload success.')
+            #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
+            if 'branch' in df.columns.to_list():
+                df = df.drop(['branch'], axis=1)
+            else:
+                print("ok")
+            
+            #ลบแถวที่มี missing value
+            df = df.dropna()
+            
+            data_branch = []
+            for i in range(len(df)):
+                data_branch.append(branch)
+                
+            df_branch = pd.DataFrame(data_branch, columns=['branch'])
+            
+            df = pd.concat([df_branch, df], axis=1)
+    
+            #เช็ค column
+            col = df.columns
+            col_list =  col.to_list()
+            
+            categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
+            if col_list != categories_feature:
+                messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+                return HttpResponseRedirect(reverse('upload'))
+            
+            #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด
+            for i in categories_feature:
+                # print(df.dtypes[i])
+                if df.dtypes[i] == np.float64:
+                    df[i] = df[i].apply(condition)
+            
+            import_data = dataset.load(df)
+            result = res.import_data(dataset, dry_run=True, raise_errors=True)
+            if not result.has_errors():
+                res.import_data(dataset, dry_run=False)
+            
+            messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
+            print('upload success.')
     context = {
         'b': b,
         'form': form,
@@ -101,19 +104,10 @@ def upload(request):
 def show(request):
     branch = Branch.objects.all()
     data = Data.objects.all()
-    searched=""
     total = data.count()
-    page = Paginator(data, 10)
-    
-    if request.method =='POST':
-        searched = request.POST.get('branch')
-        print('searched = ', searched)
-        if searched != None:
-            data_search = data.filter(branch__id__contains=searched)
-            total = data_search.count()
-            page = Paginator(data_search, 10)
-            
+          
     #Pagination
+    page = Paginator(data, 10)     
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
     
@@ -124,7 +118,6 @@ def show(request):
         'data': data,
         'page': page,
         'total': total,
-        'searched': searched,
     }
     return render(request, 'app_demo_model/show_data.html', context)
 
@@ -135,10 +128,11 @@ def add_branch(request):
         form = BranchForm(request.POST)
         if form.is_valid():
             form.save()
-        
+
         form = BranchForm()
-        messages.success(request, "เพิ่มข้อมูลสำเร็จ")
-        return HttpResponseRedirect(reverse('upload'))
+        messages.success(request, "เพิ่มข้อมูลสาขาสำเร็จ")
+        # return HttpResponseRedirect(reverse('upload'))
+        return HttpResponseRedirect(request.headers.get("referer"))
 
 @login_required
 @user_passes_test(check_user, login_url='error_page')
@@ -157,7 +151,6 @@ def delete_branch(request, id):
     return HttpResponseRedirect(reverse('show_branch'))
     # return render(request, 'app_demo_model/show_data_branch.html')
 
-
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def update_branch(request, id):
@@ -170,7 +163,7 @@ def update_branch(request, id):
         branch.name = name
         branch.abbreviation = abbreviation
         branch.save()
-        
+    messages.success(request, "อัปเดตข้อมูลสาขาสำเร็จ")
     return HttpResponseRedirect(reverse('show_branch'))
 
     

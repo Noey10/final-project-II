@@ -16,7 +16,6 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
             messages.success(request, "ลงทะเบียนเข้าใช้งานสำเร็จแล้ว")
     
     else:
@@ -80,7 +79,6 @@ def my_dashboard(request):
     }
     return render(request, 'app_users/my_dashboard.html', context)
 
-
 @login_required
 def my_history(request):
     user0 = request.user.id
@@ -101,7 +99,7 @@ def my_history(request):
     
     return render(request, 'app_users/my_history.html', context)
 
-
+@login_required
 def history_item(request, id):
     data = UserPredict.objects.filter(id=id)
     print(data)
@@ -111,7 +109,3 @@ def history_item(request, id):
     
     return render(request, 'app_users/my_history.html', context)
 
-    
-    
-    
-    

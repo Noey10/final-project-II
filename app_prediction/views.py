@@ -49,7 +49,6 @@ def form(request):
 def prediction(request):
     if request.method == 'POST':
         form = UserPredictForm(request.POST)
-        
         #user input
         student_id = request.POST.get('student_id')
         branch = request.POST.get('branch')
@@ -89,8 +88,8 @@ def prediction(request):
         df_input = pd.DataFrame([my_dict])        
         
         categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
-        
         df_predict = pd.DataFrame(columns=categories_feature)
+        
         #จัดช่วงเกรด
         for i in categories_feature:
             if df_input.dtypes[i] == np.float64:
@@ -103,8 +102,6 @@ def prediction(request):
         else:
             print('ok') 
             
-        
-        
         if form.is_valid():
             user_input = form.save(commit=False)
             user_input.user = request.user      
@@ -119,9 +116,9 @@ def prediction(request):
             
             #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
             preprocessor = ColumnTransformer(remainder='passthrough', 
-                                             transformers=[(
-                                                'catagories', categories_transforms, categories_feature 
-                                            )]
+                transformers=[(
+                    'catagories', categories_transforms, categories_feature 
+                )]
             )
             
             #ทำ pipeline และทำ decision tree กำหนดความลึกเป็น 5
@@ -163,11 +160,13 @@ def prediction(request):
                 'การงานอาชีพ': career,
                 'ภาษาต่างประเทศ': langues 
             }
+        else:
+            form = UserPredictForm()
             
-            context = {
-                'grade_dict': grade_list,
-                'result': result2,
-            }
+        context = {
+            'grade_dict': grade_list,
+            'result': result2,
+        }
     
     return render(request, 'app_prediction/prediction_result.html', context)
     
@@ -198,24 +197,24 @@ def information(request):
     return render(request, 'app_prediction/show_data_input.html', context)
 
 @login_required
+@user_passes_test(check_user, login_url='error_page')
 def download_file(request):
     data = UserPredict.objects.all().values()
     df = pd.DataFrame(data)
     df = df.drop('predict_at', axis=1)
     df = df.drop('user_id', axis=1)
    
-    
     with BytesIO() as b:
         with pd.ExcelWriter(b) as writer:
-            # You can add multiple Dataframes to an excel file
-            # Using the sheet_name attribute
+            
+            #ตั้งชื่อ sheet
             df.to_excel(writer, sheet_name="DATA 1", index=False)
-    
+            
+        #ตั้งชื่อ file
         filename = "dataset.xlsx"
     
-        # imported from django.http
         res = HttpResponse(
-            b.getvalue(), # Gives the Byte string of the Byte Buffer object
+            b.getvalue(),
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
         res['Content-Disposition'] = f'attachment; filename={filename}'
@@ -249,7 +248,6 @@ def process_predict_group(request):
         else:
             messages.info(request, "กรุณาตรวจสอบการเลือกสาขาที่จะทำนาย")
             return HttpResponseRedirect(reverse('predict_group_student'))
-        
         
         #รับไฟล์
         file = request.FILES['myfile']
@@ -301,9 +299,9 @@ def process_predict_group(request):
         
         #เตรียมข้อมูล เอา col ที่เป็น เป็นสตริงมาทำ One hot encoder
         preprocessor = ColumnTransformer(remainder='passthrough', 
-                                         transformers=[(
-                                            'catagories', categories_transforms, categories_feature 
-                                        )]
+            transformers=[(
+                'catagories', categories_transforms, categories_feature 
+            )]
         )
         
         #ทำ pipeline steps
