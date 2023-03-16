@@ -1,0 +1,82 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}้เพิ่มอาจารย์{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row d-flex align-items-center">
+        <div class="col-auto">
+            <a href="{% url 'view_teacher' %}">
+                <i data-feather="chevron-left"></i>
+            </a>
+        </div>
+        <div class="col-auto">
+            <span>
+                <h3>เพิ่มข้อมูลอาจารย์</h3>
+            </span>
+        </div>
+    </div>
+    <hr>
+    <div class="container d-flex justify-content-center">
+        <form class="form w-50" action="{% url 'add_teacher' %}" method="post">
+            <div class="container">
+                {% csrf_token %}
+                {{ form.none_field_errors }}
+               
+                <div class="form-field mb-2">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    <p class="text-danger">
+                        {{ form.username.errors }}
+                    </p>
+                </div>
+                <div class="form-field mb-2">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                    <p class="text-danger">
+                        {{ form.first_name.errors }}
+                    </p>
+                </div>
+                <div class="form-field mb-2">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                    <p class="text-danger">
+                        {{ form.last_name.errors }}
+                    </p>
+                </div>
+                <div class="form-field mb-2">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    <p class="text-danger">
+                        {{ form.email.errors }}
+                    </p>
+                </div>
+                <div class="form-field mb-2">
+                    {{ form.branch.label_tag }}
+                    {{ form.branch }}
+                    <p class="text-danger">
+                        {{ form.branch.errors }}
+                    </p>
+                </div>
+                <div class="form-field mb-2">
+                    {{ form.password1.label_tag }}
+                    <input id="id_password" name="password1" type="password" class="form-control">
+                    <p class="text-danger">
+                        {{ form.password1.errors }}
+                    </p>
+                </div>
+                <div class="form-field mb-2">
+                    {{ form.password2.label_tag }}
+                    <input id="id_password" name="password2" type="password" class="form-control">
+                    <p class="text-danger">
+                        {{ form.password2.errors }}
+                    </p>
+                </div>
+            </div>
+            <div class="container d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">submit</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

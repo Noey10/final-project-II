@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import UserPredict
 from .forms import UserPredictForm
+from app_users.models import User
 from app_demo_model.models import *
 from django.contrib import messages
 import pandas as pd
@@ -18,10 +19,19 @@ from io import BytesIO
 from .resources import InputFilePredictResource
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
+import time
 
 # Create your views here.
 def check_user(user):
-    return user.is_staff
+    return user.is_staff or user.is_teacher
+
+@login_required
+def form(request):
+    form = UserPredictForm()
+    context={
+        'form': form,
+    } 
+    return render(request, 'app_prediction/prediction_form.html', context)
 
 def condition(x):
     if x > 3.49:
@@ -38,15 +48,8 @@ def condition(x):
         return'very poor'
 
 @login_required
-def form(request):
-    form = UserPredictForm()
-    context={
-        'form': form,
-    } 
-    return render(request, 'app_prediction/prediction_form.html', context)
-
-@login_required
 def prediction(request):
+    t_start = time.time()
     if request.method == 'POST':
         form = UserPredictForm(request.POST)
         #user input
@@ -64,12 +67,7 @@ def prediction(request):
         langues = request.POST.get('langues')
         
         data = Data.objects.filter(branch__id__contains=branch).values()
-        total_data = data.count()
-        if total_data > 100:
-            df_model = pd.DataFrame(data)
-        else:
-            messages.info(request, "ขออภัย สาขาที่ท่านเลือกยังไม่พร้อมให้บริการในขณะนี้")
-            return HttpResponseRedirect(reverse('form')) 
+        df_model = pd.DataFrame(data)
         
         my_dict = {
             'student_id': student_id,
@@ -101,7 +99,7 @@ def prediction(request):
             df_predict = df_predict.drop(['branch'], axis=1)
         else:
             print('ok') 
-            
+        
         if form.is_valid():
             user_input = form.save(commit=False)
             user_input.user = request.user      
@@ -133,39 +131,47 @@ def prediction(request):
             #วัดประสิทธิภาพ
             acc = cv_data['test_score'].mean()
             acc2 = round(acc*100, 2)
-            print('accuracy model : ', acc2, "%")
+            print('accuracy : ', acc2, "%")
                         
             #model
             model = pipe.fit(X, y)
+            
             #predict
             result = model.predict(df_predict)
-            result2 = result[0]
+            probability = model.predict_proba(df_predict)
+            covert_pro = np.around(probability * 100, 2)
             
+            result2 = result[0]
             user_input.status = result2
+            user_input.probability_fail = covert_pro[0, 0]
+            user_input.probability_pass = covert_pro[0, 1]
             user_input.save()
             print('save success')
             form = UserPredictForm()
             
+            branch_name = Branch.objects.get(id=branch)
+            
             grade_list = {
-                'รหัสนักศึกษา': student_id,
-                'สาขา': branch,
+                'สาขา': branch_name,
                 'เกรดเฉลี่ยรับเข้า': admission_grade,
                 'เกรดเฉลี่ยชั้นปี 1': gpa_year_1,
                 'ภาษาไทย': thai,
                 'คณิตศาสตร์': math,
                 'วิทยาศาสตร์': sci,
                 'สังคมศึกษา': society,
-                'สุขศึกษาและพละศึกษา': hygiene,
+                'สุขศึกษา': hygiene,
                 'ศิลปะ': art,
                 'การงานอาชีพ': career,
                 'ภาษาต่างประเทศ': langues 
             }
         else:
             form = UserPredictForm()
-            
+        t_end = time.time()
+        print('time run : ', t_end-t_start)
         context = {
             'grade_dict': grade_list,
             'result': result2,
+            'probability': covert_pro,
         }
     
     return render(request, 'app_prediction/prediction_result.html', context)
@@ -173,14 +179,31 @@ def prediction(request):
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def information(request):
-    data = UserPredict.objects.all().order_by('-predict_at')
-    total = data.count()
-    
+    user = request.user
+    user_admin = request.user.is_superuser
+    user_teacher = request.user.is_teacher
+    item = UserPredict
     searched=""
-    if request.method =='POST':
-        searched = request.POST['search']
-        data = UserPredict.objects.filter(student_id__contains=searched).order_by('-predict_at')
+    if user.is_superuser or user.is_staff == True:
+        # data = item.objects.all().order_by('-predict_at')
+        data = item.objects.filter(user_id=user_teacher) | item.objects.filter(user_id=user_admin)
+        data = data.order_by('-predict_at')
         total = data.count()
+        if request.method =='POST':
+            searched = request.POST['search']
+            data = data.filter(student_id__contains=searched).order_by('-predict_at')
+            total = data.count()
+        
+    else:
+        branch = request.user.branch
+        id_branch = Branch.objects.get(abbreviation=branch)
+        data = item.objects.filter(branch_id=id_branch, user_id=user_teacher) | item.objects.filter(branch_id=id_branch, user_id=user_admin)
+        data = data.order_by('-predict_at')
+        total = data.count()
+        if request.method =='POST':
+            searched = request.POST['search']
+            data = data.filter(student_id__contains=searched).order_by('-predict_at')
+            total = data.count()
     
     #Pagination
     page = Paginator(data, 11)
@@ -199,7 +222,19 @@ def information(request):
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def download_file(request):
-    data = UserPredict.objects.all().values()
+    user = request.user
+    if user.is_teacher == True:
+        user_branch = user.branch
+        print(user_branch)
+        branch = Branch.objects.get(abbreviation=user_branch)
+        print(branch)
+        data = UserPredict.objects.filter(branch_id=branch).values()
+        # print(data)
+    
+    else:
+        data = UserPredict.objects.all().values()
+        # print(data)
+        
     df = pd.DataFrame(data)
     df = df.drop('predict_at', axis=1)
     df = df.drop('user_id', axis=1)
@@ -228,7 +263,12 @@ def predict_for_admin(request):
 @login_required
 @user_passes_test(check_user, login_url='error_page')   
 def predict_group_student(request):
-    b = Branch.objects.all()
+    user = request.user
+    if user.is_teacher:
+        user_branch = user.branch
+        b = Branch.objects.filter(abbreviation=user_branch)
+    else:
+        b = Branch.objects.all()
     context = {
         'b': b,
     }
@@ -236,15 +276,19 @@ def predict_group_student(request):
     
 @login_required
 def process_predict_group(request):
+    t_start = time.time()
+    user = request.user
     if request.method == 'POST':
-        branch = request.POST.get('branch')
+        if user.is_teacher == True:
+            user_branch = user.branch
+            branch = Branch.objects.filter(abbreviation=user_branch).values_list('id', flat=True)
+            print('teacher branch = ',branch)
+        else:
+            branch = request.POST.get('branch')
+            
         if branch != None:
             data = Data.objects.filter(branch__id__contains=branch).values()
-            if data.count() > 100:
-                df_model = pd.DataFrame(data)
-            else:
-                messages.info(request, "ขออภัย สาขาที่ท่านเลือกยังไม่พร้อมให้บริการในขณะนี้")
-                return HttpResponseRedirect(reverse('predict_group_student'))   
+            df_model = pd.DataFrame(data) 
         else:
             messages.info(request, "กรุณาตรวจสอบการเลือกสาขาที่จะทำนาย")
             return HttpResponseRedirect(reverse('predict_group_student'))
@@ -253,8 +297,18 @@ def process_predict_group(request):
         file = request.FILES['myfile']
         if file.name.endswith('csv'):
             df_input = pd.read_csv(file)
+            check_nan = df_input.isna().sum().sum()
+            if check_nan != 0 :
+                # nan_rows  = df_input[df_input.isna().any(axis=1)]
+                messages.info(request, "ข้อมูลของท่านมีค่าว่างระบบไม่สามารถประวลผลได้ กรุณาตรวจสอบข้อมูลของท่านอีกครั้ง")
+                return HttpResponseRedirect(reverse('predict_group_student'))
         elif file.name.endswith('xlsx'):
             df_input = pd.read_excel(file)
+            check_nan = df_input.isna().sum().sum()
+            if check_nan != 0 :
+                # nan_rows  = df_input[df_input.isna().any(axis=1)]
+                messages.info(request, "ข้อมูลของท่านมีค่าว่างระบบไม่สามารถประวลผลได้ กรุณาตรวจสอบข้อมูลของท่านอีกครั้ง")
+                return HttpResponseRedirect(reverse('predict_group_student'))
         else :
             messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
             return HttpResponseRedirect(reverse('predict_group_student'))
@@ -262,8 +316,6 @@ def process_predict_group(request):
         #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
         if 'branch' in df_input.columns.to_list():
             df_input = df_input.drop(['branch'], axis=1)
-        else:
-            print('ok')
                    
         #จัดช่วงเกรด
         df_predict = pd.DataFrame(columns=df_input.columns.to_list())
@@ -274,14 +326,10 @@ def process_predict_group(request):
                 df_predict[i] = df_input[i].apply(condition)
             elif df_input.dtypes[i] == np.object_:
                 df_predict[i] = df_input[i]
-            else:
-                print('error process')
             
         #ถ้ามีคอลัมน์ student_id ให้ลบออกไปก่อน
         if 'student_id' in df_predict.columns.to_list():
             df_predict = df_predict.drop(['student_id'], axis=1)
-        else:
-            print('ok') 
         
         categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']        
         # เช็คคอลัมน์ว่าครบตามที่จะใช้ทำนายหรือไม่
@@ -316,7 +364,7 @@ def process_predict_group(request):
         #วัดประสิทธิภาพ
         acc = cv_data['test_score'].mean()
         acc2 = round(acc*100, 2)
-        print('accuracy model : ', acc2)
+        print('accuracy : ', acc2)
         
         #model
         model = pipe.fit(X, y.values.ravel())
@@ -324,8 +372,13 @@ def process_predict_group(request):
         #predict
         result = model.predict(df_predict)
         
+        #ดูความน่าจะเป็นของผลลัพธ์        
+        probability = model.predict_proba(df_predict)
+        
         #สร้าง DataFrame ให้ผลลัพธ์
         df_result = pd.DataFrame(result, columns=['status'])
+        df_like = pd.DataFrame(probability, columns=['probability_fail', 'probability_pass'])
+        df_probability = np.around(df_like*100, 2)#convert to percentage
         
         #สร้าง DataFrame ให้ branch ที่รับมาจาก input เพื่อบันทึกลงดาต้าเบส
         data_branch = []
@@ -334,9 +387,8 @@ def process_predict_group(request):
             
         df_branch = pd.DataFrame(data_branch, columns=['branch'])
         
-        df_save = pd.concat([df_branch, df_input, df_result], axis=1)
-        print(df_save.head())
-        
+        df_save = pd.concat([df_branch, df_input, df_result, df_probability], axis=1)
+                      
         dataset = Dataset()
         res = InputFilePredictResource()
         
@@ -347,8 +399,7 @@ def process_predict_group(request):
             res.import_data(dataset, dry_run=False)
         print('process success.')
         total = len(df_save)
-        print(total)
-        
+                   
         #filter ข้อมูลตามสถานะ
         filt_pass = df_save['status'].str.contains('Pass')
         filt_fail = df_save['status'].str.contains('Fail')
@@ -359,25 +410,26 @@ def process_predict_group(request):
         per_pass = round((total_pass/total)*100, 2)
         per_fail = round((total_fail/total)*100, 2)
         
-        #ฟิลเตอร์ข้อมูลรหัสนักศึกษาที่มีสถานะเป็น Fail
-        if 'student_id' in df_save:
-            slt_df = df_save[df_save['status'] == 'Fail'] 
-            student = slt_df['student_id']
-            student_list = student.values.tolist()
-        else:
-            student_list = ['ไม่สามารถระบบุได้ เนื่องจากคุณไม่ได้เพิ่มรหัสนักศึกษา']
+        #แสดงผล
+        df_show = df_save.drop(columns=['branch'])
+        df_show2 = df_show.to_dict('records')
+        # branch_name = Branch.objects.get(id=branch)
+        # pass_status = df_show2.objects.filter(status='Pass').count()
         
+        print(type(df_show2))
+        # print(branch_name)
+        
+    t_end = time.time()
+    print('time run : ', t_end-t_start)
     context = {
-            'df': df_save,
-            'total': total,
-            'total_pass': total_pass,
-            'total_fail': total_fail,
-            'per_pass': per_pass,
-            'per_fail': per_fail,
-            'gg': student_list,
-            
+        'df': df_show2,
+        'total': total,
+        'total_pass': total_pass,
+        'total_fail': total_fail,
+        'per_pass': per_pass,
+        'per_fail': per_fail,
+        # 'branch': branch_name,
         }
-        
     return render(request, 'app_prediction/group_result.html', context)
 
 @login_required

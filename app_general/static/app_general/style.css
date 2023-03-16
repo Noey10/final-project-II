@@ -1,0 +1,63 @@
+* {
+    font-family: 'Sarabun', sans-serif;
+}
+
+#selector {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#selector:hover {
+    background-color: #fff;
+    border-radius: 25px;
+    color: #000;
+}
+
+.nav-link.active {
+    background-color: #fff;
+    border-radius: 25px;
+    color: #000;
+}
+
+#titleTableCustom{
+    font-size: 14px;
+}
+
+#textCustom{
+    font-size: 16px;
+}
+
+h6 #statusPass {
+    border-radius: 15px;
+    background-color: #C4FAF8;
+}
+
+h6 #statusFail {
+    border-radius: 15px;
+    background-color: #FFCCF9;
+}
+
+#add {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#add form {
+    margin: auto;
+    margin-top: 15px;
+}
+
+#edit {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#edit form {
+    margin: auto;
+    margin-top: 15px;
+}
+
+.mySlides {
+    display:none;
+}

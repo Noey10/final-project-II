@@ -3,7 +3,7 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from app_users.forms import ExtendedProfileForm, RegisterForm, UserProfileForm
+from app_users.forms import *
 from app_prediction.models import UserPredict
 from app_prediction.forms import *
 from app_demo_model.models import *
@@ -109,3 +109,43 @@ def history_item(request, id):
     
     return render(request, 'app_users/my_history.html', context)
 
+@login_required
+def add_teacher(request):
+    form = TeacherForm()
+    if request.method == 'POST':
+        form = TeacherForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_teacher = True
+            user.save()
+            return HttpResponseRedirect(reverse('view_teacher'))
+        
+    context = {
+        'form': form,
+    }
+    return render(request, 'app_users/add_teacher.html', context)
+
+
+def view_teacher(request):
+    form = TeacherForm()
+    teacher = User.objects.filter(is_teacher=True)
+    teacher_total = teacher.count()
+    
+    #Pagination
+    page = Paginator(teacher, 10)
+    page_list = request.GET.get('page')
+    page = page.get_page(page_list)
+    
+    context = {
+        'form' : form,
+        'teacher': teacher,
+        'teacher_total': teacher_total,
+        'page': page,
+    }
+    return render(request, 'app_users/teacher.html', context)
+
+def delete_teacher(request, id):
+    teacher = User.objects.filter(id=id)
+    teacher.delete()
+    return HttpResponseRedirect(reverse('view_teacher'))
+    

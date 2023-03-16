@@ -1,0 +1,130 @@
+.progress:hover {
+    cursor: pointer;
+}
+
+.container-skill {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.container-skill .skill {
+    position: relative;
+
+}
+
+.container-skill .skill .outer {
+    height: 160px;
+    width: 160px;
+    border-radius: 50%;
+    padding: 20px;
+    box-shadow: 6px 6px 10px -1px rgba(0 0 0 /.15),
+                -6px -6px 10px -1px rgba(255 255 255 / .7);
+}
+
+.container-skill .skill .outer .inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    box-shadow: inset 4px 4px 6px -1px rgba(0 0 0/ .2),
+                inset -4px -4px 6px -1px rgba(255 255 255 / .7),
+                -.5px -.5px 0px rgba(255 255 255 / 1),
+                .5px .5px 0px rgba(0 0 0 /.15),
+                0px 12px 10px -10px rgba(0 0 0 / 0.05);
+}
+
+.container-skill .skill .outer .inner .number {
+    font-weight: 800;
+}
+
+.container-skill .skill:nth-child(1) .outer .inner .number {
+    color: #5AA469;
+}
+
+circle {
+    fill: none;
+    stroke-width: 20px;
+    stroke-dasharray: 472;
+    stroke-dashoffset: 472;
+    transition: 2s linear;
+}
+
+.container-skill svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.container-skill .skill:nth-child(1) circle {
+    stroke: #5AA469;
+}
+
+.skill-container {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.skill-container .skill {
+    position: relative;
+
+}
+
+.skill-container .skill .outer {
+    height: 160px;
+    width: 160px;
+    border-radius: 50%;
+    padding: 20px;
+    box-shadow: 6px 6px 10px -1px rgba(0 0 0 /.15),
+                -6px -6px 10px -1px rgba(255 255 255 / .7);
+}
+
+.skill-container .skill .outer .inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    box-shadow: inset 4px 4px 6px -1px rgba(0 0 0/ .2),
+                inset -4px -4px 6px -1px rgba(255 255 255 / .7),
+                -.5px -.5px 0px rgba(255 255 255 / 1),
+                .5px .5px 0px rgba(0 0 0 /.15),
+                0px 12px 10px -10px rgba(0 0 0 / 0.05);
+}
+
+.skill-container .skill .outer .inner .number {
+    font-weight: 800;
+}
+
+.skill-container .skill:nth-child(1) .outer .inner .number {
+    color: #EF4B4B;
+}
+
+.skill-container svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.skill-container .skill:nth-child(1) circle {
+    stroke: #EF4B4B;
+}
+
+.customCard .card {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, rgba(255,153,153,1) 6%, rgba(255,153,153,1) 6%, rgba(255,235,204,1) 36%, rgba(254,243,212,1) 60%, rgba(251,255,226,1) 100%);
+    border: none;
+}
+
+

@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'test_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_db',
+        'NAME': 'new',
         'USER': 'root',
         'PASSWORD': 'jlfA4434',
         'HOST': 'localhost',
@@ -137,7 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_URL = "login"
-AUTH_USER_MODEL = "app_users.CustomUser"
+AUTH_USER_MODEL = "app_users.User"
 
 #Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

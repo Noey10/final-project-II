@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from .models import *
+from app_users.models import *
 from .resources import *
 from .forms import *
 from django.contrib import messages
@@ -13,7 +14,7 @@ import numpy as np
 from django.core.paginator import Paginator
 
 def check_user(user):
-    return user.is_staff
+    return user.is_staff or user.is_teacher
 
 def condition(x):
     if x > 3.49:
@@ -32,17 +33,25 @@ def condition(x):
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def upload(request):
+    user = request.user
     form = BranchForm()
     b = Branch.objects.all()
     if request.method == 'POST':
-        res = DataResource()       
-        branch = request.POST.get('branch')
+        res = DataResource()
+        
+        if user.is_teacher == True:
+            user_branch = user.branch
+            # print('branch : ', user_branch)
+            #filter เอา id ของสาขาวิชาเพื่อไปเติมในคอลัมน์ branch_id
+            branch = Branch.objects.filter(abbreviation=user_branch).values_list('id', flat=True)
+            # print('branch :', branch)
+        else:
+            branch = request.POST.get('branch')
+            
         if branch == None:
             messages.info(request, "กรุณาเลือกสาขาวิชาที่ท่านต้องการอัปโหลดข้อมูล")
             return HttpResponseRedirect(reverse('upload'))
-        
         else:
-        
             dataset = Dataset()
             file = request.FILES['myfile']
             #check type file
@@ -102,16 +111,26 @@ def upload(request):
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def show(request):
+    user = request.user
+    
     branch = Branch.objects.all()
     data = Data.objects.all()
     total = data.count()
-          
+    
+    if user.is_teacher == True:
+        print('teacher')
+        user = user.branch
+        print(user)
+        branch = Branch.objects.get(abbreviation=user)
+        print(branch)
+        data = Data.objects.filter(branch_id=branch)
+        total = data.count()
+        
     #Pagination
     page = Paginator(data, 10)     
     page_list = request.GET.get('page')
     page = page.get_page(page_list)
     
-    print(total)
     
     context = {
         'branch': branch,

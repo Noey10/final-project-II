@@ -23,13 +23,17 @@
         <form action="{% url 'process_predict_group' %}" method="POST" enctype="multipart/form-data" class="form w-75">
             {% csrf_token %}
             <div class="row mb-5">
-                <label for="branch">กรุณาเลือกสาขาที่คุณต้องการทำนาย</label>
-                <select id="branch" name="branch" class="form-select" required>
-                    <option selected disabled>สาขา</option>
-                    {% for i in b %}
-                        <option value="{{ i.id }}">{{ i.name }}</option>
-                    {% endfor %}
-                </select>
+                {% if user.is_superuser or user.is_staff %}
+                    <label for="branch">กรุณาเลือกสาขาที่คุณต้องการทำนาย</label>
+                    <select id="branch" name="branch" class="form-select" required>
+                        <option selected disabled>สาขา</option>
+                        {% for i in b %}
+                            <option value="{{ i.id }}">{{ i.name }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                {% endif %}
+                
             </div>
             <div class="row mb-5">
                 <input type="file" name="myfile" class="form-control" required>
