@@ -1,0 +1,59 @@
+.customCardProfile {
+    width: 420px;
+    min-height: 480px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    background: linear-gradient(90deg, rgba(131,58,180,0.2) 0%, rgba(246,124,124,0.2) 50%, rgba(252,176,69,0.2) 100%);
+}
+
+.customCardProfile .custom {
+    /* height: 100%; */
+    margin-top: 18px;
+    /* background-color: aqua; */
+}
+
+.customCardProfile .custom .row {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.customCardProfile .icon-edit {
+    text-align: end;
+}
+
+.customCardProfile .icon-edit a{
+    text-decoration: none;
+}
+
+.customCardProfile .custom .row table {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    margin: 10px;
+    text-align: start;
+    /* background-color: yellow; */
+}
+
+.customCardProfile .custom .row .icon {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    /* background-color: green; */
+}
+.customCardProfile .custom .row .icon img {
+    width: 80px;
+    height: auto;
+    border-radius: 50%;
+    border: 1px solid #fff;
+}
+
+.customCardProfile .custom .row .footer-card {
+    display: flex;
+    align-items: end;
+    margin-top: 35px;
+}

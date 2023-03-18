@@ -13,12 +13,15 @@
                     <div class="emoji">
                         <span>&#128543;</span>
                     </div>
-                    <h3>มีแนวโน้มที่จะไม่สำเร็จการศึกษา</h3>
+                    <h3 class="text-danger">มีแนวโน้มที่จะไม่สำเร็จการศึกษา</h3>
                     <table class="table">
                         <tr>
-                            <td>ความน่าจะเป็น</td>
+                            <td>โอกาสที่จะสำเร็จการศึกษา</td>
+
+                            <td>โอกาสที่จะไม่สำเร็จการศึกษา</td>
                         </tr>
                         <tr>
+                            <td>{{ probability.0.1 }}&#37;</td>
                             <td>{{ probability.0.0 }}&#37;</td>
                         </tr>
                     </table>
@@ -35,13 +38,15 @@
                     <div class="emoji">
                         <span>&#128512;</span>
                     </div>
-                    <h3>มีแนวโน้มที่จะสำเร็จการศึกษา</h3>
+                    <h3 class="text-success">มีแนวโน้มที่จะสำเร็จการศึกษา</h3>
                     <table class="table">
                         <tr>
-                            <td>ความน่าจะเป็น</td>
+                            <td>โอกาสที่จะสำเร็จการศึกษา</td>
+                            <td>โอกาสที่จะไม่สำเร็จการศึกษา</td>
                         </tr>
                         <tr>
-                            <td>{{ probability.0.1 }}&#37;</td>
+                            <td>{{  probability.0.1  }}&#37;</td>
+                            <td>{{  probability.0.0  }}&#37;</td>
                         </tr>
                     </table>
                 </div> 

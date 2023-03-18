@@ -23,16 +23,16 @@ class UserPredictForm(forms.ModelForm):
         widgets = {
             "student_id": forms.widgets.TextInput(attrs={'class':'form-control', 'placeholder': 'กรุณากรอกรหัสนักศึกษา'}),
             "branch": forms.Select(attrs={'class': 'form-select',}),
-            "admission_grade": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "gpa_year_1": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "thai": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "math": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "sci": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "society": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "hygiene": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "art": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "career": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "langues": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),   
+            "admission_grade": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "gpa_year_1": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "thai": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "math": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "sci": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "society": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "hygiene": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "art": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "career": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
+            "langues": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),   
         }
         
         

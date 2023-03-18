@@ -1,0 +1,74 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}โปรไฟล์{% endblock %}
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center w-100 h-100">
+        <div class="customCardProfile shadow">
+            <div class="custom">
+                <div class="row">
+                    <div class="icon">
+                        <!-- <img src="{% static 'app_general/img/profile.gif' %}" alt="img"> -->
+                        <img src="{% static 'app_general/img/user_profile.png' %}" alt="img">
+                    </div>
+                    <h5 class="text-uppercase p-3">
+                        Your Profile <strong>{{ user.username }}</strong> 
+                    </h5>
+                </div>
+                <hr>
+                <div class="row text-start">
+                    <form action="{% url 'update_profile' %}" method="post" class="form"> 
+                        {% csrf_token %}
+                        {{ form.none_field_errors }}
+                        <div>
+                            {{ form.username.label_tag }}
+                            <!-- {{ form.username }} -->
+                            <input type="text" name="username" value="{{ user.username }}" class="form-control">
+                            <p class="text-danger">
+                                {{ form.username.errors }}
+                            </p>
+                        </div>
+                        <div>
+                            {{ form.first_name.label_tag }}
+                            <!-- {{ form.last_name }} -->
+                            <input type="text" name="first_name" value="{{ user.first_name }}" class="form-control">
+                            <p class="text-danger">
+                                {{ form.first_name.errors }}
+                            </p>
+                        </div>
+                        <div>
+                            {{ form.last_name.label_tag }}
+                            <!-- {{ form.last_name }} -->
+                            <input type="text" name="last_name" value="{{ user.last_name }}" class="form-control">
+                            <p class="text-danger">
+                                {{ form.last_name.errors }}
+                            </p>
+                        </div>
+                        <div>
+                            {{ form.email.label_tag }}
+                            <!-- {{ form.email }} -->
+                            <input type="email" name="email" value="{{ user.email }}" class="form-control">
+                            <p class="text-danger">
+                                {{ form.email.errors }}
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="footer-card">
+                            
+                                <div class="col-12 col-md-6 col-lg-6">
+                                    <a href="{% url 'profile' %}" class="btn btn-primary">กลับ</a> 
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-6">
+                                    <button type="submit"  class="btn btn-primary">อัปเดต</button> 
+                                </div>
+                            
+                            </div>
+                        </div>
+
+                    </form>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}

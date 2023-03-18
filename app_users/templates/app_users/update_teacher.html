@@ -1,0 +1,87 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}แก้ไขข้อมูลอาจารย์{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col-auto">
+                <a href="{% url 'view_teacher' %}">
+                    <i data-feather="chevron-left"></i>
+                </a>
+            </div>
+            <div class="col-auto">
+                <span>
+                    <h3>แก้ไขข้อมูลอาจารย์ <strong>{{ user_fil.first_name}} {{ user_fil.last_name }}</strong> </h3>
+                </span>
+            </div>
+        </div>
+        <hr>
+        <div class="container d-flex justify-content-center">
+            <div class="customFormUpdateTeacher">
+                <form action="{% url 'update_teacher' id %}" class="form" method="post">
+                    {% csrf_token %}
+                    {{ form.none_field_errors }}
+                    <div>
+                        {{ form.username.label_tag }}
+                        <!-- {{ form.username }} -->
+                        <input type="text" name="username" value="{{ user_fil.username }}" class="form-control">
+                        <p class="text-danger">
+                            {{ form.username.errors }}
+                        </p>
+                    </div>
+                    <div>
+                        {{ form.title.label_tag }}
+                        <!-- {{ form.title }} -->
+                        <input type="text" name="title" value="{{ user_fil.title }}" class="form-control">
+                        <p class="text-danger">
+                            {{ form.title.errors }}
+                        </p>
+                    </div>
+                    <div>
+                        {{ form.first_name.label_tag }}
+                        <!-- {{ form.first_name }} -->
+                        <input type="text" name="first_name" value="{{ user_fil.first_name }}" class="form-control">
+                        <p class="text-danger">
+                            {{ form.first_name.errors }}
+                        </p>
+                    </div>
+                    <div>
+                        {{ form.last_name.label_tag }}
+                        <!-- {{ form.last_name }} -->
+                        <input type="text" name="last_name" value="{{ user_fil.last_name }}" class="form-control">
+                        <p class="text-danger">
+                            {{ form.last_name.errors }}
+                        </p>
+                    </div>
+                    <div>
+                        {{ form.branch.label_tag }}
+                        <!-- {{ form.branch }} -->
+                        <!-- <input type="text" name="branch" value="{{ user.branch }}" class="form-control"> -->
+                        <select class="form-select" name="branch">
+                            <!--<option value="{{ user_fil.branch.id }}" >{{ user_fil.branch.id }}</option>-->
+                            {% for i in branch %}
+                                {% if user_fil.branch.id == i.id %}
+                                    <option selected value="{{ i.id }}">{{ i.name }}</option>
+                                {% else %}
+                                    <option value="{{ i.id }}">{{ i.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <p class="text-danger">
+                            {{ form.branch.errors }}
+                        </p>
+                    </div>
+                    <div>
+                        {{ form.email.label_tag }}
+                        <!-- {{ form.email }} -->
+                        <input type="text" name="email" value="{{ user_fil.email }}" class="form-control">
+                        <p class="text-danger">
+                            {{ form.email.errors }}
+                        </p>
+                    </div>
+                    <button class="btn btn-outline-primary" type="submit">อัปเดต</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

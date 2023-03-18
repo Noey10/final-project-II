@@ -2,182 +2,199 @@
 {% load static %}
 {% block site_title %}ข้อมูลการทำนาย{% endblock %}
 {% block content %}
-  <div class="container text-center">
-    <div class="row mt-3 d-flex align-items-center">
-      <div class="col-12 col-lg-5 text-start">
-        <h3>ข้อมูลที่นำเข้ามาทำนายผลการศึกษา</h3>
-      </div>
-      <div class="col-12 col-lg-4">
-        <form action="{% url 'information' %}" method="post" class="form">
-          {% csrf_token %}
-          <div class="row">
-            <div class="col-12 col-lg-10">
-              <input type="text" name="search" placeholder="ค้นหารหัสนักศึกษา" class="form-control" />
-            </div>
-            <div class="col-12 col-lg-2">
-              <button type="submit" class="btn btn-outline-primary">
-                ค้นหา
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-12 col-lg-3 text-end">
-        <span class="me-2">
-          <strong style="font-size: 18px;">total : {{ total }}</strong>
-        </span>
-        {% if total > 1 %}
-          <span class="me-2">
-            <a href="{% url 'download_file' %}" style="text-decoration: none;">
-              <button class="btn shadow" title="download">
-                <i data-feather="download"></i>
-              </button>
-            </a>
-          </span>
-        {% else %}
-        {% endif %}
-        
-        <!--<span class="me-2">
-          <a href="{% url 'delete_data_user_input' %}" style="text-decoration: none;">
-            <button class="btn shadow" title="delete data">
-              <i data-feather="trash"></i>
-            </button>
-          </a>
-        </span>-->
-      </div>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-5">
+      <h3>ข้อมูลที่นำเข้ามาทำนายผลการศึกษา</h3>
     </div>
-      <hr class="mt-3 mb-3">
-            
-      <div class="container-fluid">
-          {% if search %}
-            <div class="container w-50">
-              <div class="row">
-                <div class="col-9">
-                  <h5 class="mb-3">คุณกำลังค้นหา <strong>{{ search }}</strong> </h5>
-                </div>
-                <div class="col-3 text-start">
-                  <a href="{% url 'information' %}" class="text-danger">
-                    <i data-feather="x"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-            {% if total < 1 %}
-              <div class="container w-50 d-flex align-items-center" style="height: 360px">
-                <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
-                  <span class="text-warning mb-2">  
-                    <i data-feather="alert-triangle" style="width: 50px; height: auto;"></i>
-                  </span>
-                  <span>
-                    <h4>ไม่มีข้อมูลที่คุณค้นหา</h4>
-                  </span>
-                </div>
-              </div>
-            {% else %}
-              <div class="container" style="height: 500px; overflow-y: hidden;">
-                <table class="table">
-                  <thead id="titleTableCustom" class="bg-light">
-                    <th scope="col">รหัสนักศึกษา</th>
-                    <th scope="col">สาขา</th>
-                    <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
-                    <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
-                    <th scope="col">ภาษาไทย</th>
-                    <th scope="col">คณิตศาสตร์</th>
-                    <th scope="col">วิทยาศาสตร์</th>
-                    <th scope="col">สังคมศึกษา</th>
-                    <th scope="col">สุขศึกษา</th>
-                    <th scope="col">ศิลปศึกษา</th>
-                    <th scope="col">การงาน</th>
-                    <th scope="col">ภาษาต่างประเทศ</th>
-                    <th scope="col">ผลการทำนาย</th>
-                  </thead>
-                  <tbody>
-                    {% for i in page %}
-                      <tr>
-                        <td scope="row">{{i.student_id}}</td>
-                        <td>{{ i.branch.abbreviation }}</td>
-                        <td>{{ i.admission_grade }}</td>
-                        <td>{{ i.gpa_year_1 }}</td>
-                        <td>{{ i.thai }}</td>
-                        <td>{{ i.math }}</td>
-                        <td>{{ i.sci }}</td>
-                        <td>{{ i.society }}</td>
-                        <td>{{ i.hygiene }}</td>
-                        <td>{{ i.art }}</td>
-                        <td>{{ i.career }}</td>
-                        <td>{{ i.langues }}</td>
-                        <td>{{ i.status }}</td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            {% endif %}
-            
-          {% else %}
-            {% if total < 1 %}
-              <div class="container w-50 d-flex align-items-center" style="height: 360px">
-                <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
-                  <h4>ขณะนี้ยังไม่มีการนำเข้าข้อมูล</h4>
-                  <a href="{% url 'predict_for_admin' %}" class="mt-3">
-                      <span><i data-feather="chevrons-left"></i></span>
-                      <span>ไปยังหน้าทำนายผลการสำเร็จการศึกษา</span>
-                  </a>
-                </div>
-              </div>
-            {% else %}
-              <div class="container" style="height: 500px;">
-                <table class="table">
-                  <thead id="titleTableCustom" class="bg-light">
-                    <th scope="col">รหัสนักศึกษา</th>
-                    <th scope="col">สาขา</th>
-                    <th scope="col">เกรดเฉลี่ยที่รับเข้า</th>
-                    <th scope="col">เกรดเฉลี่ยชั้นปีที่ 1</th>
-                    <th scope="col">ภาษาไทย</th>
-                    <th scope="col">คณิตศาสตร์</th>
-                    <th scope="col">วิทยาศาสตร์</th>
-                    <th scope="col">สังคมศึกษา</th>
-                    <th scope="col">สุขศึกษา</th>
-                    <th scope="col">ศิลปศึกษา</th>
-                    <th scope="col">การงาน</th>
-                    <th scope="col">ภาษาต่างประเทศ</th>
-                    <th scope="col">ผลการทำนาย</th>
-                  </thead>
-                  <tbody>
-                    <tr {% for i in page %}>
-                      <td scope="row">{{i.student_id}}</td>
-                      <td>{{ i.branch.abbreviation }}</td>
-                      <td>{{ i.admission_grade }}</td>
-                      <td>{{ i.gpa_year_1 }}</td>
-                      <td>{{ i.thai }}</td>
-                      <td>{{ i.math }}</td>
-                      <td>{{ i.sci }}</td>
-                      <td>{{ i.society }}</td>
-                      <td>{{ i.hygiene }}</td>
-                      <td>{{ i.art }}</td>
-                      <td>{{ i.career }}</td>
-                      <td>{{ i.langues }}</td>
-                      <td>{{ i.status }}</td>
-                    </tr {% endfor %}>
-                  </tbody>
-                </table>
-              </div>
-              <div class="container mt-3 mb-3">
-
-                {% if page.has_previous %}
-                  <a href="{% url 'information' %}?page=1">&laquo First</a>
-                  <a href="{% url 'information' %}?page={{ page.previous_page_number }}">Previous</a>
-                {% endif %}
-                Page {{ page.number }} of {{ page.paginator.num_pages }}
-                {% if page.has_next %}
-                  <a href="{% url 'information' %}?page={{ page.next_page_number }}">next</a>
-                  <a href="{% url 'information' %}?page={{ page.paginator.num_pages }}">Last &raquo</a>
-                {% endif %}
-              </div>
-            {% endif %}
-          {% endif %}
-      </div>
-      
+    <div class="col-12 col-lg-7 d-flex justify-content-end pe-5">
+      <!-- <form action="{% url 'information' %}" method="post" class="form w-50 ">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-12 col-lg-10">
+            <input type="text" name="search" placeholder="ค้นหารหัสนักศึกษา" class="form-control" />
+          </div>
+          <div class="col-12 col-lg-2">
+            <button type="submit" class="btn btn-outline-primary">
+              ค้นหา
+            </button>
+          </div>
+        </div>
+      </form> -->
+      <p>
+        <strong>ข้อมูลทั้งหมด : {{ total }} ข้อมูล</strong>
+      </p>
     </div>
   </div>
+  <hr>
+  <div class="container-fluid">
+    {% if total <= 0 %} 
+      <div class="container w-50 d-flex align-items-center" style="height: 360px">
+        <div class="card bg-light shadow w-100 text-center p-5" style="height: 180px;">
+          <h3>ขณะนี้ยังไม่มีการนำเข้าข้อมูล</h4>
+          <a href="{% url 'predict_for_admin' %}" class="mt-3">
+            <span><i data-feather="chevrons-left"></i></span>
+            <span>ไปยังหน้าทำนายผลการสำเร็จการศึกษา</span>
+          </a>
+        </div>
+      </div>
+    {% else %}
+      {% if user.superuser == True %}
+        <!-- <div class="row bg-danger">
+          <div class="col-12 col-lg-3">
+            <button class="btn btn-outline-primary">BIOLOGY</button>
+          </div>
+          <div class="col-12 col-lg-3">
+            <button class="btn btn-outline-primary">CHEMICAL</button>
+          </div>
+          <div class="col-12 col-lg-3">
+            <button class="btn btn-outline-primary">DSSI</button>
+          </div>
+          <div class="col-12 col-lg-3">
+            <button class="btn btn-outline-primary">ICT</button>
+          </div>
+        </div> -->
+      {% endif %}
+        <div class="row mt-2">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">วันที่ทำนาย</th>
+                <th scope="col">รหัสนักศึกษา</th>
+                <th scope="col">สาขาวิชา</th>
+                <th scope="col">ผลการทำนาย</th>
+                <th scope="col">ความน่าจะเป็น</th>
+                <th scope="col"></th>
+              </tr>
+
+            </thead>
+            <tbody>
+              {% for i in page %}
+              <tr>
+                <td>{{ i.predict_at|date:'j N Y' }}</td>
+                <td>{{ i.student_id }}</td>
+                <td>{{ i.branch.name }}</td>
+                {% if i.status == 'Pass' %}
+                <th>มีแนวโน้มสำเร็จการศึกษา</th>
+                <td>{{ i.probability_pass }}&#37;</td>
+                {% else %}
+                <th>มีแนวโน้มไม่สำเร็จการศึกษา</th>
+                <td>{{ i.probability_fail }}&#37;</td>
+                {% endif %}
+                <td>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal{{i.id}}" title="ดูรายละเอียด">
+                    <i data-feather="file-text"></i>
+                  </a>
+                  <!-- Modal detail predict item -->
+                  <div class="modal fade" id="exampleModal{{i.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content text-dark">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">รายละเอียดข้อมูล</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row d-flex justify-content-center">
+                                  <table class="table w-75" style="font-size: 14px;">
+                                    <tr>
+                                      <td>วันที่ทำนาย</td>
+                                      <td>{{ i.predict_at|date:'j N Y | H:i' }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>รหัสนักศึกษา</td>
+                                      <td>{{ i.student_id }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>สาขาวิชา</td>
+                                      <td>{{ i.branch.name }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>เกรดรับเข้า</td>
+                                      <td>{{ i.admission_grade }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>เกรดปีที่1</td>
+                                      <td>{{ i.gpa_year_1 }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>ภาษาไทย</td>
+                                      <td>{{ i.thai }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>คณิตศาสตร์</td>
+                                      <td>{{ i.math }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>วิทยาศาสตร์</td>
+                                      <td>{{ i.sci}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>สังคมศึกษา</td>
+                                      <td>{{ i.society }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>สุขศึกษา</td>
+                                      <td>{{ i.hygiene }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>ศิลปะ</td>
+                                      <td>{{ i.art }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>การงานอาชีพ</td>
+                                      <td>{{ i.career }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>ภาษาต่างประเทศ</td>
+                                      <td>{{ i.langues }}</td>
+                                    </tr>
+                                    <!-- <tr>
+                                      <td>ความน่าจะเป็น</td>
+                                      {% if i.status == 'Pass' %}
+                                        <td>{{ i.probability_pass }}&#37;</td>
+                                      {% else %}
+                                        <td>{{ i.probability_fail }}&#37;</td>
+                                      {% endif %}
+                                    </tr> -->
+                                  </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer text-center">
+                                {% if i.status == 'Pass' %}
+                                    <div class="container">
+                                        <h4 class="text-success"> <strong>มีแนวโน้มสำเร็จการศึกษา {{ i.probability_pass }}&#37;</strong> </h4>
+                                    </div>
+                                {% else%}
+                                    <div class="container">
+                                        <h4 class="text-danger"> <strong>มีแนวโน้มไม่สำเร็จการศึกษา {{ i.probability_fail }} &#37;</strong> </h4>
+                                    </div>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="row w-100 sticky-bottom d-flex justify-content-center">
+          <div class="container mb-2 text-center">
+            {% if page.has_previous %}
+            <a href="{% url 'information' %}?page=1">&laquo First</a>
+            <a href="{% url 'information' %}?page={{ page.previous_page_number }}">Previous</a>
+            {% endif %}
+            Page {{ page.number }} of {{ page.paginator.num_pages }}
+            {% if page.has_next %}
+            <a href="{% url 'information' %}?page={{ page.next_page_number }}">next</a>
+            <a href="{% url 'information' %}?page={{ page.paginator.num_pages }}">Last &raquo</a>
+            {% endif %}
+          </div>
+        </div>
+    {% endif %}
+    
+  </div>
+</div>
 {% endblock %}

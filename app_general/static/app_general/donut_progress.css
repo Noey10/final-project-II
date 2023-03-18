@@ -118,13 +118,6 @@ circle {
     stroke: #EF4B4B;
 }
 
-.customCard .card {
-    margin: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: radial-gradient(circle, rgba(255,153,153,1) 6%, rgba(255,153,153,1) 6%, rgba(255,235,204,1) 36%, rgba(254,243,212,1) 60%, rgba(251,255,226,1) 100%);
-    border: none;
-}
+
 
 

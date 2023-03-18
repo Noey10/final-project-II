@@ -1,0 +1,63 @@
+
+.container-skill-amount {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.container-skill-amount .skill {
+    position: relative;
+
+}
+
+.container-skill-amount .skill .outer {
+    height: 160px;
+    width: 160px;
+    border-radius: 50%;
+    padding: 20px;
+    box-shadow: 6px 6px 10px -1px rgba(0 0 0 /.15),
+                -6px -6px 10px -1px rgba(255 255 255 / .7);
+}
+
+.container-skill-amount .skill .outer .inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    box-shadow: inset 4px 4px 6px -1px rgba(0 0 0/ .2),
+                inset -4px -4px 6px -1px rgba(255 255 255 / .7),
+                -.5px -.5px 0px rgba(255 255 255 / 1),
+                .5px .5px 0px rgba(0 0 0 /.15),
+                0px 12px 10px -10px rgba(0 0 0 / 0.05);
+}
+
+.container-skill-amount .skill .outer .inner .number {
+    font-weight: 800;
+}
+
+.container-skill-amount .skill:nth-child(1) .outer .inner .number {
+    color: #7286D3;
+}
+
+.container-skill-amount svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.container-skill-amount .skill:nth-child(1) circle {
+    stroke: #7286D3;
+}
+
+.customCradChartLeft {
+    /* background-color: red; */
+    padding: 25px;
+}
+
+/* .customDetailRight {
+    background-color: greenyellow;
+} */

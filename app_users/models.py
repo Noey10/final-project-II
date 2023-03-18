@@ -3,19 +3,23 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 CHOICES = [
-    ('bio', 'ชีววิทยา'),
-    ('chemi', 'เคมี'),
-    ('DSSI', 'วิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์'),
-    ('ICT', 'เทคโนโลยีสารสนเทศและการสื่อสาร'),
+    ('นาย', 'นาย'),
+    ('นางสาว', 'นางสาว'),
+    ('นาง', 'นาง'),
+    ('อาจารย์', 'อาจารย์'),
+    ('ผศ.', 'ผู้ช่วยศาสตราจารย์'),
+    ('รศ.', 'รองศาสตราจารย์'),
+    ('ศ.', 'ศาสตราจารย์'),
 ]
 class User(AbstractUser):
     email = models.EmailField(unique=True, verbose_name="อีเมล")
     is_teacher = models.BooleanField(default=False, blank=True, null=True, verbose_name="อาจารย์")
-    branch = models.CharField(default='bio', max_length=100, choices=CHOICES, blank=True, null=True, verbose_name="สาขาวิชา")
+    title = models.CharField(choices=CHOICES, max_length=50, blank=True, null=True, verbose_name="คำนำหน้าชื่อ")
+    branch = models.ForeignKey('app_demo_model.Branch', on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name="สาขาวิชา")
     
 
-class Profile(models.Model):
-    gender = models.CharField(max_length=15, default="")
-    university = models.TextField(default="")
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+# class Profile(models.Model):
+#     gender = models.CharField(max_length=15, default="")
+#     university = models.TextField(default="")
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
     

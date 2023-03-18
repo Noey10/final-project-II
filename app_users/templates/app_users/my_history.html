@@ -25,6 +25,7 @@
                         <th scope="col">รหัสนักศึกษา</th>
                         <th scope="col">สาขา</th>
                         <th scope="col">ผลการทำนาย</th>
+                        <th scope="col">ความน่าจะเป็น</th>
                         <th scope="col"></th>
 
                     </thead>
@@ -32,7 +33,7 @@
                         {% for i in page %}
                         <tr style="max-height: 25px;">
                             <td>
-                                <p>{{ i.predict_at|date:'j/N/Y | H:i' }}</p>
+                                <p>{{ i.predict_at|date:'j N Y | H:i' }}</p>
                             </td>
                             <td>
                                 <p>{{ i.student_id }}</p>
@@ -50,9 +51,15 @@
                             </td>
                             {% endif %}
                             <td>
+                                {% if i.probability_pass > i.probability_fail %}
+                                {{ i.probability_pass }}&#37;
+                                {% else %}
+                                {{ i.probability_fail }}&#37;
+                                {% endif %}
+                            <td>
                                 <a href="{% url 'history_item' i.id %}" class="btn btn-light text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{i.id}}" title="ดูรายละเอียด">
                                     <i data-feather="file"></i>
-                                </button>
+                                </a>
 
                                 <!-- Modal detail history item -->
                                 <div class="modal fade" id="exampleModal{{i.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -64,48 +71,100 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
-                                                    <div class="col-6">
-                                                        <p>วันที่ทำนาย</p>
-                                                        <p>รหัสนักศึกษา</p>
-                                                        <p>สาขา</p>
-                                                        <p>เกรดเฉลี่ยรับเข้า</p>
-                                                        <p>เกรดเฉลี่ยชั้นปีที่ 1</p>
-                                                        <p>ภาษาไทย</p>
-                                                        <p>คณิตศาสตร์</p>
-                                                        <p>วิทยาศาสตร์</p>
-                                                        <p>สังคมศึกษา</p>
-                                                        <p>สุขศึกษา</p>
-                                                        <p>ศิลปะ</p>
-                                                        <p>การงานอาชีพ</p>
-                                                        <p>ภาษาต่างประเทศ</p>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <p>{{ i.predict_at|date:'j/N/Y | H:i' }}</p>
-                                                        <p>{{ i.student_id }}</p>
-                                                        <p>{{ i.branch.name }}</p>
-                                                        <p>{{ i.admission_grade }}</p>
-                                                        <p>{{ i.gpa_year_1 }}</p>
-                                                        <p>{{ i.thai }}</p>
-                                                        <p>{{ i.math }}</p>
-                                                        <p>{{ i.sci}}</p>
-                                                        <p>{{ i.society }}</p>
-                                                        <p>{{ i.hygiene }}</p>
-                                                        <p>{{ i.art }}</p>
-                                                        <p>{{ i.career }}</p>
-                                                        <p>{{ i.langues }}</p>
-                                                        
-                                                    </div>
+                                                    <table class="table w-100" style="border: #fff;">
+                                                        <tr>
+                                                            <th class="ps-4">วันที่ทำนาย</th>
+                                                            <td>
+                                                                {{ i.predict_at|date:'j N Y | H:i' }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">รหัสนักศึกษา</th>
+                                                            <td>
+                                                                {{ i.student_id }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">สาขาวิชา</th>
+                                                            <td>
+                                                                {{ i.branch.name }}
+                                                            </td>
+                                                    
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">เกรดรับเข้า</th>
+                                                            <td>
+                                                                {{ i.admission_grade }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">เกรดปีที่ 1</th>
+                                                            <td>
+                                                                {{ i.gpa_year_1 }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">ภาษาไทย</th>
+                                                            <td>
+                                                                {{ i.thai }}
+                                                            </td>
+                                                    
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">คณิตศาสตร์</th>
+                                                            <td>
+                                                                {{ i.math }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">วิทยาศาสตร์</th>
+                                                            <td>
+                                                                {{ i.sci}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">สังคมศึกษา</th>
+                                                            <td>
+                                                                {{ i.society }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">สุขศึกษา</th>
+                                                            <td>
+                                                                {{ i.hygiene }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">ศิลปะ</th>
+                                                            <td>
+                                                                {{ i.art }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">การงานอาชีพ</th>
+                                                            <td>
+                                                                {{ i.career }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="ps-4">ภาษาต่างประเทศ</th>
+                                                            <td>
+                                                                {{ i.langues }}
+                                                            </td>
+                                                        </tr>
+                                                    
+                                                    </table>
                                                 </div>
                                                 
                                             </div>
                                             <div class="modal-footer text-center">
                                                 {% if i.status == 'Pass' %}
                                                     <div class="container shadow">
-                                                        <h4 class="text-success"> <strong>สำเร็จการศึกษา</strong> </h4>
+                                                        <h4 class="text-success"> <strong>สำเร็จการศึกษา {{ i.probability_pass }} &#37;</strong> </h4>
                                                     </div>
                                                 {% else%}
                                                     <div class="container shadow">
-                                                        <h4 class="text-danger"> <strong>ไม่สำเร็จการศึกษา</strong> </h4>
+                                                        <h4 class="text-danger"> <strong>ไม่สำเร็จการศึกษา {{ i.probability_fail }} &#37;</strong> </h4>
                                                     </div>
                                                 {% endif %}
                                                 

@@ -1,66 +1,56 @@
 {% extends 'app_general/components/base.html' %}
+{% load static %}
 {% block site_title %}โปรไฟล์{% endblock %}
 {% block content %}
-    <div class="container">
-        <div class="container w-75">
-            {% for msg in messages %}
-                {% if msg.tags == 'success' %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>{{ msg }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="container d-flex justify-content-center align-items-center w-100 h-100">
+        <div class="customCardProfile shadow">
+            <div class="custom w-75">
+                <div class="row">
+                    <div class="icon">
+                        <!-- <img src="{% static 'app_general/img/profile.gif' %}" alt="img"> -->
+                        <img src="{% static 'app_general/img/user_profile.png' %}" alt="img">
                     </div>
-                {% else %}
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>{{ msg }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="d-flex justify-content-center">
-            <div class="card p-5 mt-3 shadow" style="width: 580px;"> 
-                <h1 class="text-center">สวัสดี!! คุณ {{ user.username }}</h1>
-                <div class="row d-flex align-items-center">
-                    <div class="col">
-                        <h2>ข้อมูลผู้ใช้</h2>
-                    </div>
-                    <div class="col d-flex justify-content-end">
-                        <a href="{% url 'password_change' %}">เปลี่ยนรหัสผ่าน ?</a>
+                    <h5 class="text-uppercase p-3">
+                        ข้อมูลของคุณ <strong>{{ user.username }}</strong> 
+                    </h5>
+                </div>
+                <hr>
+                <div class="row">
+                    <table class="table">
+                        <tr>
+                            <td style="width: 40%">ชื่อผู้ใช้</td>
+                            <td>{{ user.username }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 40%">ชื่อ</td>
+                            <td>{{ user.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 40%">นามสกุล</td>
+                            <td>{{ user.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 40%">อีเมล</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 40%">สาขาวิชา</td>
+                            <td>{{ user.branch.name }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="footer-card">
+                    
+                        <div class="col-12 col-md-6 col-lg-6">
+                            <a href="{% url 'update_profile' %}" class="btn btn-primary">แก้ไขข้อมูล?</a> 
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6">
+                            <a href="{% url 'password_change' %}" class="btn btn-primary">เปลี่ยนรหัสผ่าน?</a> 
+                        </div>
+                    
                     </div>
                 </div>
-                <form action="{% url 'profile' %}" method="post" class="form">
-                    {% csrf_token %}
-                    {{ form.non_fields_errors }}
-                    <div class="form-field">
-                        {{ form.first_name.label_tag }}
-                        {{ form.first_name }}
-                        {{ form.first_name.errors }}
-                    </div>
-                    <div class="form-field">
-                        {{ form.last_name.label_tag }}
-                        {{ form.last_name }}
-                        {{ form.last_name.errors }}
-                    </div>
-                    <div class="form-field">
-                        {{ form.email.label_tag }}
-                        {{ form.email }}
-                        {{ form.email.errors }}
-                    </div>
-                    <div class="form-field">
-                        {{ extended_form.gender.label_tag }}
-                        {{ extended_form.gender }}
-                        {{ extended_form.gender.errors }}
-                    </div>
-                    <div class="form-field">
-                        {{ extended_form.university.label_tag }}
-                        {{ extended_form.university }}
-                        {{ extended_form.university.errors }}
-                    </div>
-                    <div class="form-field mt-3 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary col-6 shadow">Update profile</button>
-                    </div>
-                    
-                </form>
             </div>
         </div>
     </div>

@@ -40,10 +40,10 @@ def upload(request):
         res = DataResource()
         
         if user.is_teacher == True:
-            user_branch = user.branch
-            # print('branch : ', user_branch)
-            #filter เอา id ของสาขาวิชาเพื่อไปเติมในคอลัมน์ branch_id
-            branch = Branch.objects.filter(abbreviation=user_branch).values_list('id', flat=True)
+            user_branch = user.branch_id
+            branch_fil = Branch.objects.filter(id=user_branch).values('id')
+            for i in branch_fil:
+                branch = i['id']
             # print('branch :', branch)
         else:
             branch = request.POST.get('branch')
@@ -63,42 +63,42 @@ def upload(request):
                 messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
                 return HttpResponseRedirect(reverse('upload'))
             
-            #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
-            if 'branch' in df.columns.to_list():
-                df = df.drop(['branch'], axis=1)
-            else:
-                print("ok")
+        #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
+        if 'branch' in df.columns.to_list():
+            df = df.drop(['branch'], axis=1)
+        else:
+            print("ok")
             
-            #ลบแถวที่มี missing value
-            df = df.dropna()
+        #ลบแถวที่มี missing value
+        df = df.dropna()
             
-            data_branch = []
-            for i in range(len(df)):
-                data_branch.append(branch)
+        data_branch = []
+        for i in range(len(df)):
+            data_branch.append(branch)
                 
-            df_branch = pd.DataFrame(data_branch, columns=['branch'])
-            
-            df = pd.concat([df_branch, df], axis=1)
+        df_branch = pd.DataFrame(data_branch, columns=['branch'])
+           
+        df = pd.concat([df_branch, df], axis=1)
     
-            #เช็ค column
-            col = df.columns
-            col_list =  col.to_list()
+        #เช็ค column
+        col = df.columns
+        col_list =  col.to_list()
             
-            categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
-            if col_list != categories_feature:
-                messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
-                return HttpResponseRedirect(reverse('upload'))
+        categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
+        if col_list != categories_feature:
+            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+            return HttpResponseRedirect(reverse('upload'))
             
-            #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด
-            for i in categories_feature:
-                # print(df.dtypes[i])
-                if df.dtypes[i] == np.float64:
-                    df[i] = df[i].apply(condition)
+        #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด
+        for i in categories_feature:
+            # print(df.dtypes[i])
+            if df.dtypes[i] == np.float64:
+                df[i] = df[i].apply(condition)
             
-            import_data = dataset.load(df)
-            result = res.import_data(dataset, dry_run=True, raise_errors=True)
-            if not result.has_errors():
-                res.import_data(dataset, dry_run=False)
+        import_data = dataset.load(df)
+        result = res.import_data(dataset, dry_run=True, raise_errors=True)
+        if not result.has_errors():
+            res.import_data(dataset, dry_run=False)
             
             messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
             print('upload success.')
@@ -112,30 +112,36 @@ def upload(request):
 @user_passes_test(check_user, login_url='error_page')
 def show(request):
     user = request.user
-    
     branch = Branch.objects.all()
     data = Data.objects.all()
     total = data.count()
     
     if user.is_teacher == True:
         print('teacher')
-        user = user.branch
+        user = user.branch_id
         print(user)
-        branch = Branch.objects.get(abbreviation=user)
+        branch = Branch.objects.get(id=user)
         print(branch)
         data = Data.objects.filter(branch_id=branch)
         total = data.count()
-        
+    
+    if request.method == 'POST':
+        branch = request.POST['branch']
+        print(branch)
+        data = Data.objects.filter(branch_id=branch)
+        print(data)
+        total = data.count()
+    
     #Pagination
-    page = Paginator(data, 10)     
-    page_list = request.GET.get('page')
-    page = page.get_page(page_list)
+    # page = Paginator(data, 10)
+    # page_list = request.GET.get('page')
+    # page = page.get_page(page_list)
     
     
     context = {
         'branch': branch,
         'data': data,
-        'page': page,
+        # 'page': page,
         'total': total,
     }
     return render(request, 'app_demo_model/show_data.html', context)

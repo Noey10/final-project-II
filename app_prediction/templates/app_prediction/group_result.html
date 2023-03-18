@@ -7,244 +7,172 @@
   </div>
   <hr>
   <div class="container">
-    <!--Slide 1-->
-    <div class="mySlides">
-      <div class="row mb-2">
-        <div class="col-4">
+    <div class="container w-100">
+      <div class="row">
+        <div class="col-12 col-md-12 col-lg-6">
           <p>
             <strong>ข้อมูลทั้งหมด {{ total }} ข้อมูล</strong> <br>
             ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา {{ total_pass }} ข้อมูล <br>
             ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา {{ total_fail }} ข้อมูล
           </p>
         </div>
-        <div class="col-8 text-center">
-          <div class="container text-center d-flex justify-content-end">
-            <button class="btn shadow" onclick="plusDivs(1)" style="background: #AAC4FF; color: #FFF;">
-              <span>แสดงผลแบบแบ่งตามผลการทำนาย</span>
-              <span><i data-feather="columns"></i></span>
-            </button>
-            <button class="btn shadow ms-3" onclick="plusDivs(-1)" style="background: #AAC4FF; color: #FFF;">
-              <span>แสดงผลแบบตารางรายละเอียด</span>
-              <span><i data-feather="file-text"></i></span>
-            </button>
+        <div class="col-12 col-md-12 col-lg-6 d-flex justify-content-end">
+          <div class="w-50">
+            <select class="form-select" name="predictResult" id="predictResult" onchange="leaveChange(this)">
+            <option value="1">ข้อมูลทั้งหมด</option>
+            <option value="2">ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา</option>
+            <option value="3">ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา</option>
+          </select>
           </div>
         </div>
       </div>
+    </div>
+    <!--Slide 1-->
+    <div class="mySlides">
       <div class="customResultTable">
         <p class="m-3">
           <strong>แสดงผลแบบรายบุคคล</strong>
         </p>
         <div class="row">
-          <table class="table w-50 shadow">
+          <table class="table w-75 shadow"  id="myTable">
             <thead class="bg-light">
               <tr>
                 <th scope="col">รหัสนักศึกษา</th>
-                <th scope="col">ผลการทำนาย</th>
-                <th scope="col">ความน่าจะเป็น</th>
+                <th scope="col">โอกาสที่จะสำเร็จการศึกษา</th>
+                <th scope="col">โอกาสที่จะไม่สำเร็จการศึกษา</th>
+                <th scope="col">ผลลัพธ์</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="overview">
               {% for i in df %}
                 <tr>
                   <td>{{ i.student_id }}</td>
-                  <td>
+                  <td>{{ i.probability_pass}}&#37;</td>
+                  <td>{{ i.probability_fail }}&#37;</td>
+                  <th>
                     {% if i.status == 'Pass' %}
                     มีแนวโน้มสำเร็จการศึกษา
                     {% else %}
                     มีแนวโน้มไม่สำเร็จการศึกษา
                     {% endif %}
-                  </td>
-                  <td>
-                    {% if i.probability_pass > i.probability_fail %}
-                      {{ i.probability_pass }}&#37;
-                      {% else %}
-                      {{ i.probability_fail }}&#37;
-                    {% endif %}
-                  </td>
+                  </th>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
+      <!-- <div class="container d-flex justify-content-center">
+        <div id="pagination-container">
+          <button class="btn btn-primary" id="prev-btn">&lt;</button>
+          <span id="page-num"></span>
+          <button  class="btn btn-primary" id="next-btn">&gt;</button>
+        </div>
+      </div> -->
+      
     </div>
     <!--Slide 2-->
     <div class="mySlides">
-      <div class="row mb-2">
-        <div class="col-4">
-          <p>
-            <strong>ข้อมูลทั้งหมด {{ total }} ข้อมูล</strong>
-          </p>
-        </div>
-        <div class="col-8 text-center">
-          <div class="container text-center d-flex justify-content-end">
-            <button class="btn shadow" onclick="plusDivs(-1)" style="background: #AAC4FF; color: #FFF;">
-              <span>แสดงผลแบบรายบุคคล</span>
-              <span><i data-feather="list"></i></span>
-            </button>
-            <button class="btn shadow ms-3" onclick="plusDivs(1)" style="background: #AAC4FF; color: #FFF;">
-              <span>แสดงผลแบบตารางรายละเอียด</span>
-              <span><i data-feather="file-text"></i></span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="customTableResultStatus">
-        <p class="text-title m-3">
-          <strong>แสดงผลแบบแบ่งตามผลการทำนาย</strong>
+      <div class="customResultTable">
+        <p class="m-3">
+          <strong>ข้อมูลนักศึกษาที่มีแนวโน้มสำเร็จการศึกษา</strong>
         </p>
         <div class="row">
-          <div class="col-12 col-lg-6 p-3 success">
-            <div class="customCardResult shadow">
-              <p>ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา จำนวน <span>{{ total_pass }} ข้อมูล</p>
-              <table class="table">
-                <thead class="bg-light">
-                  <tr>
-                    <td>รหัสนักศึกษา</td>
-                    <td>ผลการทำนาย</td>
-                    <td>ความน่าจะเป็น</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for i in df %}
-                  <tr>
-                    {% if i.status == 'Pass' %}
-                    <td>{{ i.student_id }}</td>
-                    <td>มีแนวโน้มสำเร็จการศึกษา</td>
-                    <td>{{ i.probability_pass }}&#37;</td>
-                    {% endif %}
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            
-          </div>
-          <div class="col-12 col-lg-6 p-3 danger">
-            <div class="customCardResult shadow">
-              <p>ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา จำนวน <span>{{ total_fail }} ข้อมูล</span>  </p>      
-              <table class="table">
-                <thead class="bg-light">
-                  <tr>
-                    <td>รหัสนักศึกษา</td>
-                    <td>ผลการทำนาย</td>
-                    <td>ความน่าจะเป็น</td>
-                  </tr>
-                </thead>
-                <tbody>
-                {% for i in df %}
-                  <tr>
-                  {% if i.status == 'Fail' %}
-                    <td>{{ i.student_id }}</td>
-                    <td>มีแนวโน้มไม่สำเร็จการศึกษา</td>
-                    <td>{{ i.probability_fail }}&#37;</td>
-                  {% endif %}
-                  </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <table class="table w-75 shadow">
+            <thead class="bg-light">
+              <tr>
+                <th scope="col">รหัสนักศึกษา</th>
+                <th scope="col">โอกาสที่จะสำเร็จการศึกษา</th>
+                <th scope="col">โอกาสที่จะไม่สำเร็จการศึกษา</th>
+                <th scope="col">ผลลัพธ์</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in df %}
+              {% if i.status == 'Pass' %}
+                <tr>
+                  <td>{{ i.student_id }}</td>
+                  <td>{{ i.probability_pass}}&#37;</td>
+                  <td>{{ i.probability_fail }}&#37;</td>
+                  <th>
+                    มีแนวโน้มสำเร็จการศึกษา
+                  </th>
+                </tr>
+              {% endif %}
+                
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
     <!--Slide 3-->
     <div class="mySlides">
-      <div class="row mb-2">
-        <div class="col-4">
-          <p>
-            <strong>ข้อมูลทั้งหมด {{ total }} ข้อมูล</strong> <br>
-            ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา {{ total_pass }} ข้อมูล <br>
-            ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา {{ total_fail }} ข้อมูล
-          </p>
-        </div>
-        <div class="col-8 text-center">
-          <div class="container text-center d-flex justify-content-end">
-            <button class="btn shadow" onclick="plusDivs(-1)" style="background: #AAC4FF; color: #FFF;">
-              <span>แสดงผลแบบแบ่งตามผลการทำนาย</span>
-              <span><i data-feather="columns"></i></span>
-            </button>
-            <button class="btn shadow ms-3" onclick="plusDivs(-2)" style="background: #AAC4FF; color: #FFF;">
-              <span>แสดงผลแบบรายบุคคล</span>
-              <span><i data-feather="list"></i></span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="customTableResult">
+      <div class="customResultTable">
         <p class="m-3">
-          <strong>แสดงผลแบบตารางรายละเอียดการทำนาย</strong>
+          <strong>ข้อมูลนักศึกษาที่มีแนวโน้มไม่สำเร็จการศึกษา</strong>
         </p>
-        <table class="table shadow">
-          <thead class="bg-light">
-            <tr>
-              <td scope="col">รหัสนักศึกษา</td>
-              <td scope="col">เกรดรับเข้า</td>
-              <td scope="col">เกรดปีที่1</td>
-              <td scope="col">ภาษาไทย</td>
-              <td scope="col">คณิตศาสตร์</td>
-              <td scope="col">วิทยาศาสตร์</td>
-              <td scope="col">สังคมศึกษา</td>
-              <td scope="col">สุขศึกษา</td>
-              <td scope="col">ศิลปะ</td>
-              <td scope="col">การงาน</td>
-              <td scope="col">ภาษาต่างประเทศ</td>
-              <td scope="col">ผลการทำนาย</td>
-              <td scope="col">ความน่าจะเป็น</td>
-            </tr>
-          </thead>
-          <tbody>
-            {% for i in df %}
-            <tr>
-              <td>{{ i.student_id }}</td>
-              <td>{{ i.admission_grade }}</td>
-              <td>{{ i.gpa_year_1 }}</td>
-              <td>{{ i.thai }}</td>
-              <td>{{ i.math }}</td>
-              <td>{{ i.sci }}</td>
-              <td>{{ i.society }}</td>
-              <td>{{ i.hygiene }}</td>
-              <td>{{ i.art }}</td>
-              <td>{{ i.career }}</td>
-              <td>{{ i.langues }}</td>
-              {% if i.status == 'Pass' %}
-              <th scope="row" class="success">มีแนวโน้มสำเร็จการศึกษา</th>
-              {% else %}
-                <th scope="row" class="danger">มีแนวโน้มไม่สำเร็จการศึกษา</th>
+        <div class="row">
+          <table class="table w-75 shadow">
+            <thead class="bg-light">
+              <tr>
+                <th scope="col">รหัสนักศึกษา</th>
+                <th scope="col">โอกาสที่จะสำเร็จการศึกษา</th>
+                <th scope="col">โอกาสที่จะไม่สำเร็จการศึกษา</th>
+                <th scope="col">ผลลัพธ์</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in df %}
+              {% if i.status == 'Fail' %}
+                <tr>
+                  <td>{{ i.student_id }}</td>
+                  <td>{{ i.probability_pass}}&#37;</td>
+                  <td>{{ i.probability_fail }}&#37;</td>
+                  <th>
+                    มีแนวโน้มไม่สำเร็จการศึกษา
+                  </th>
+                </tr>
               {% endif %}
-              </th>
-              <td>
-                {% if i.probability_pass > i.probability_fail %}
-                  {{ i.probability_pass }}&#37;
-                {% else %}
-                {{ i.probability_fail }}&#37;
-                {% endif %}
-              </td>              
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+                
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
   <script>
-    var slideIndex = 1;
-    showDivs(slideIndex);
+    var x = document.getElementsByClassName("mySlides");
+    x[0].style.display = "block";
 
-    function plusDivs(n) {
-      showDivs(slideIndex += n);
+    function leaveChange(data) {
+
+     switch (data.value) {
+      case "1": 
+        x[0].style.display = "block";
+        x[1].style.display = "none";
+        x[2].style.display = "none";
+      break;
+      case "2":
+        x[0].style.display = "none";
+        x[1].style.display = "block";
+        x[2].style.display = "none";
+      break;
+      case "3":
+        x[0].style.display = "none";
+        x[1].style.display = "none";
+        x[2].style.display = "block";
+      break;
+      default:
+        x[0].style.display = "block";
+      break;
+     }
     }
 
-    function showDivs(n) {
-      var i;
-      var x = document.getElementsByClassName("mySlides");
-      if (n > x.length) { slideIndex = 1 }
-      if (n < 1) { slideIndex = x.length }
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-      }
-      x[slideIndex - 1].style.display = "block";
-    }
+    $(document).ready(function () {
+      $('#myTable').DataTable();
+  });
   </script>
 </div>
 {% endblock %}

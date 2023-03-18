@@ -10,7 +10,7 @@
           <h3>ข้อมูลที่ใช้สำหรับสร้างโมเดลการทำนาย</h3>
         </div>
         <div class="col-12 col-lg-6 d-flex justify-content-end pe-3">
-          <h5>total = {{ total }}</h5>
+          <h5>ข้อมูลทั้งหมด : {{ total }} ข้อมูล</h5>
         </div>
       </div>
     </div>
@@ -27,12 +27,12 @@
           </div>
         </div>
       {% else %}
-      <div class="container" style="max-height: 500px;">
-        <table class="table">
-          <thead class="bg-light">
+      <div class="container" style="min-height: 500px;">
+        <table class="table" id="myTable">
+          <thead class="bg-light" style="font-size: 14px;">
             <th scope="col">สาขา</th>
-            <th scope="col">เกรดเฉลี่ยรับเข้า</th>
-            <th scope="col">เกรดเฉลี่ยชั้นปีที่1</th>
+            <th scope="col">เกรดรับเข้า</th>
+            <th scope="col">เกรดปีที่1</th>
             <th scope="col">ภาษาไทย</th>
             <th scope="col">คณิตศาสตร์</th>
             <th scope="col">วิทยาศาสตร์</th>
@@ -44,7 +44,7 @@
             <th scope="col">สถานะ</th>              
           </thead>
           <tbody>
-            {% for data in page %}
+            {% for data in data %}
                 <tr>
                   <td>{{ data.branch.abbreviation }}</td>
                   <td>{{ data.admission_grade }}</td>
@@ -62,23 +62,14 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
-      <div class="container d-flex justify-content-center">
-
-        {% if page.has_previous %}
-          <a href="?page=1" class="ms-2 me-2">&laquo First</a>
-          <a href="?page={{ page.previous_page_number }}" class="ms-2 me-2">Previous</a>
-        {% endif %}
-        Page {{ page.number }} of {{ page.paginator.num_pages }}
-        {% if page.has_next %}
-          <a href="?page={{ page.next_page_number }}" class="ms-2 me-2">next</a>
-          <a href="?page={{ page.paginator.num_pages }}" class="ms-2 me-2">Last &raquo</a>
-        {% endif %}
-
-      </div>
-          
+      </div>          
       {% endif %}
     </div>
 
+    <script>
+      $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+    </script>
   </div>
 {% endblock %}

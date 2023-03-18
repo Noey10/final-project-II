@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponseRedirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse
 from app_users.forms import *
+from .models import User
 from app_prediction.models import UserPredict
 from app_prediction.forms import *
 from app_demo_model.models import *
@@ -11,6 +13,9 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 
 # Create your views here.
+def check_admin(user):
+    return user.is_superuser or user.is_staff
+
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -27,46 +32,32 @@ def register(request):
 @login_required
 def profile(request):
     user = request.user
-    if request.method == "POST":
-        form = UserProfileForm(request.POST, instance=user)
-        is_new_profile = False
-        
-        try:
-            #update
-            extended_form = ExtendedProfileForm(request.POST, instance=user.profile)
-        except:
-            #create
-            extended_form = ExtendedProfileForm(request.POST)
-            is_new_profile = True
-            
-        if form.is_valid() and extended_form.is_valid():
-            form.save()
-            
-            if is_new_profile:
-                #create
-                profile = extended_form.save(commit=False)
-                profile.user = user
-                profile.save()
-            else:
-                #update
-                extended_form.save()
-                
-            messages.success(request, "อัปเดตข้อมูลสำเร็จ")
-            return HttpResponseRedirect(reverse('profile'))
-        
-    else:
-        form = UserProfileForm(instance=user)
-        try:
-            extended_form = ExtendedProfileForm(instance=user.profile)
-        except:
-            extended_form = ExtendedProfileForm()
-        
+    print('user = ', user)
+    form = TeacherForm()
+    fil_user = User.objects.filter(username=user)
+    print('fil user = ', fil_user)    
     context = {
-        "form": form,
-        "extended_form": extended_form
+        'form': form,
     }
-    
     return render(request, "app_users/profile.html", context)
+
+@login_required
+def update_profile(request):
+    user = request.user
+    print(user)
+    print('user = ', user)
+    form = UpdateProfileForm()
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('profile'))
+        else:
+            form = UpdateProfileForm(request.POST, instance=user)
+    context = {
+        'form': form,
+    }
+    return render(request, 'app_users/update_profile.html', context)
 
 @login_required
 def my_dashboard(request):
@@ -111,6 +102,7 @@ def history_item(request, id):
 
 @login_required
 def add_teacher(request):
+    branch = Branch.objects.all().values()
     form = TeacherForm()
     if request.method == 'POST':
         form = TeacherForm(request.POST)
@@ -122,9 +114,36 @@ def add_teacher(request):
         
     context = {
         'form': form,
+        'branch': branch,
     }
     return render(request, 'app_users/add_teacher.html', context)
 
+@login_required
+@user_passes_test(check_admin, login_url='error_page')
+def update_teacher(request, id):
+    user_fil = User.objects.get(id=id)
+    form = UpdateTeacherForm()
+    branch = Branch.objects.all()
+    if request.method == 'POST':
+        form = UpdateTeacherForm(request.POST, instance=user_fil)
+        # username = request.POST['username']
+        # title = request.POST['title']
+        # first_name = request.POST['first_name']
+        # last_name = request.POST['last_name']
+        # branch_teacher = request.POST['branch']
+        # email = request.POST['email']
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('view_teacher'))
+        else:
+            form = UpdateTeacherForm(request.POST, instance=user_fil)
+    context = {
+        'id': id,
+        'form': form,
+        'user_fil': user_fil,
+        'branch': branch,
+    }
+    return render(request, 'app_users/update_teacher.html', context)
 
 def view_teacher(request):
     form = TeacherForm()
