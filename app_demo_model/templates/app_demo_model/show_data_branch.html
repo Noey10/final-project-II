@@ -9,11 +9,11 @@
       <div class="col-9 d-flex align-items-center">
         <h3>ข้อมูลสาขา</h3>
       </div>
-      <div class="col-3 d-flex justify-content-start align-items-center">
+      <!-- <div class="col-3 d-flex justify-content-start align-items-center">
         <a href="{% url 'add_branch' %}" data-bs-toggle="modal" data-bs-target="#add_Branch">
           <i data-feather="plus"></i>
         </a>
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -38,20 +38,20 @@
       <thead class="bg-light">
         <th scope="col">ชื่อสาขา</th>
         <th scope="col">ตัวย่อ</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
+        <!-- <th scope="col"></th>
+        <th scope="col"></th> -->
       </thead>
       <tbody>
         {% for i in branch %}
         <tr>
           <td scope="row">{{ i.name }}</td>
           <td scope="row">{{ i.abbreviation }}</td>
-          <td scope="row">
-            <a style=" text-decoration: none; color: green; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#update_Branch{{i.id}}">
+          <!-- <td scope="row"> -->
+            <!-- <a style=" text-decoration: none; color: green; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#update_Branch{{i.id}}">
               <i data-feather="edit"></i>
-            </a>
+            </a> -->
             <!--Modal update branch-->
-            <div class="modal fade" id="update_Branch{{i.id}}" tabindex="-1" aria-labelledby="update_BranchLabel" aria-hidden="true">
+            <!-- <div class="modal fade" id="update_Branch{{i.id}}" tabindex="-1" aria-labelledby="update_BranchLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -79,15 +79,15 @@
                   </form>
                 </div>
               </div>
-            </div>
-            </td>
-            <td scope="row">
-            <a style=" text-decoration: none; color: red; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#delete_Branch{{i.id}}">
+            </div> -->
+            <!-- </td> -->
+            <!-- <td scope="row"> -->
+            <!-- <a style=" text-decoration: none; color: red; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#delete_Branch{{i.id}}">
               <i data-feather="trash"></i>
-            </a>
+            </a> -->
             
             <!--Modal delete branch-->
-            <div class="modal fade" id="delete_Branch{{i.id}}" tabindex="-1" aria-labelledby="delete_BranchLabel" aria-hidden="true">
+            <!-- <div class="modal fade" id="delete_Branch{{i.id}}" tabindex="-1" aria-labelledby="delete_BranchLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -104,8 +104,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </td>
+            </div> -->
+          <!-- </td> -->
         </tr>
         {% endfor %}
       </tbody>
