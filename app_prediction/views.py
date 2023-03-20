@@ -187,6 +187,7 @@ def information(request):
     item = UserPredict
     
     print('user = ', user)
+    t_start = time.time()
     if user.is_superuser or user.is_staff == True:
         data = item.objects.filter(user_id=user_teacher) | item.objects.filter(user_id=user_admin)
         data = data.order_by('-predict_at')
@@ -201,6 +202,8 @@ def information(request):
         total = data.count()    
     
     print('total = ', total)
+    t_end = time.time()
+    print('time run = ', t_end-t_start)
     context={
         'data': data,
         'total': total,

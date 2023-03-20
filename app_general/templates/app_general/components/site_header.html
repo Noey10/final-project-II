@@ -2,7 +2,7 @@
 <nav class="navbar navbar-light shadow" style="background: #EEE">
     <div id="logoGoToDashboard" class="navbar-brand ms-3 d-flex align-items-center">
         <div>
-            <img src="{% static 'app_general/img/ezgif.com-crop.gif' %}" width="40" height="40" class="d-inline-block align-top" alt="">
+            <img src="{% static 'app_general/img/ezgif.com-crop.gif' %}" width="40" height="40" class="d-inline-block align-top" alt="img">
         </div>
         <div class="ms-2 d-flex align-items-center">
             <h4 style="margin-top: auto; margin-bottom: auto;">ระบบทำนายการสำเร็จการศึกษา</h4>
@@ -11,7 +11,7 @@
     {% if user.is_authenticated %}
         <div class="d-flex justify-content-end align-items-center">
             <a class="me-3" href="{% url 'profile' %}">
-                <button class="btn btn-outline-primary shadow" title="ข้อมูลผุ้ใช้งาน">
+                <button class="btn btn-outline-primary shadow" title="ข้อมูลผู้ใช้งาน">
                     <!-- <img src="{% static 'app_general/img/user.png' %}" alt="img" style="width: 20px; height: auto;"> -->
                     <!-- <span class="material-symbols-outlined text-primary">group</span> -->
                     <i data-feather="smile"></i>

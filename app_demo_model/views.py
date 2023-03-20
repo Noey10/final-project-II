@@ -12,6 +12,7 @@ from tablib import Dataset
 import pandas as pd
 import numpy as np
 from django.core.paginator import Paginator
+import time
 
 def check_user(user):
     return user.is_staff or user.is_teacher
@@ -111,10 +112,12 @@ def upload(request):
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def show(request):
+    t_start = time.time()
     user = request.user
     branch = Branch.objects.all()
     data = Data.objects.all()
     total = data.count()
+    
     
     if user.is_teacher == True:
         print('teacher')
@@ -124,7 +127,9 @@ def show(request):
         print(branch)
         data = Data.objects.filter(branch_id=branch)
         total = data.count()
-    
+        
+    t_end = time.time()
+    print('time run = ', t_end-t_start)
     context = {
         'branch': branch,
         'data': data,
