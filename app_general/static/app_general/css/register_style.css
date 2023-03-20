@@ -1,0 +1,81 @@
+.customRegisterLayout {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;  */
+    /* /* background-color: #AEC2B6; */
+}
+
+
+.customRegisterLayout .customCardRegister {
+    width: 420px;
+    height: auto;
+    background-color: #aec2b662;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.customRegisterLayout .customCardRegister .cardHeader {
+    text-align: center;
+    /* margin-top: 25px; */
+}
+
+.customRegisterLayout .customCardRegister .cardHeader img {
+    width: 100px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    margin-top: 20px;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent {
+    width: 360px;
+    margin: auto;
+    text-align: start;
+}
+
+
+.customRegisterLayout .customCardRegister .row .cardContent .formInput {
+    margin: 10px;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formInput .form-outline {
+    margin-bottom: 5px;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formInput .form-outline label {
+    padding: 0;
+    margin: 0;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formInput .form-control {
+    background-color: #fff;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formButton {
+    display: flex;
+    justify-content: center;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formButton button {
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formFooter {
+    padding-left: 15px;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formFooter p {
+    color: #393f81;
+    padding-bottom: 5px;
+    margin-top: 5px;
+}
+
+.customRegisterLayout .customCardRegister .row .cardContent .formFooter p a {
+    color: #393f81;
+}

@@ -1,0 +1,19 @@
+.mySlides {
+    width: 100%;
+}
+
+/* Slides 3 */
+.customResultTable {
+    width: 100%;
+    /* background-color: brown; */
+}
+
+.customResultTable .row {
+    display: flex;
+    justify-content: center;
+}
+
+.customResultTable p {
+    text-align: center;
+    margin-top: 25px;
+}

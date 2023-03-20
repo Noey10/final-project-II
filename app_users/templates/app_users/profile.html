@@ -33,23 +33,25 @@
                             <td style="width: 40%">อีเมล</td>
                             <td>{{ user.email }}</td>
                         </tr>
-                        <tr>
-                            <td style="width: 40%">สาขาวิชา</td>
-                            <td>{{ user.branch.name }}</td>
-                        </tr>
+                        {% if user.isteacher %}
+                            <tr>
+                                <td style="width: 40%">สาขาวิชา</td>
+                                <td>{{ user.branch.name }}</td>
+                            </tr>
+                        {% else %}
+                        {% endif %}
+                        
                     </table>
                 </div>
                 <div class="row">
-                    <div class="footer-card">
                     
-                        <div class="col-12 col-md-6 col-lg-6">
+                        <div class="col-6">
                             <a href="{% url 'update_profile' %}" class="btn btn-primary">แก้ไขข้อมูล?</a> 
                         </div>
-                        <div class="col-12 col-md-6 col-lg-6">
+                        <div class="col-6">
                             <a href="{% url 'password_change' %}" class="btn btn-primary">เปลี่ยนรหัสผ่าน?</a> 
                         </div>
                     
-                    </div>
                 </div>
             </div>
         </div>

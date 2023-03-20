@@ -29,52 +29,125 @@
                 </div>
             </div>
             <div class="row">
-                <table class="table shadow">
-                    <thead class="bg-light">
-                        <th scope="col" style="width: 15%;">ชื่อผู้ใช้</th>
-                        <th scope="col" style="width:35%;">ชื่อ-นามสกุล</th>
-                        <th scope="col" style="width: 18%;">อีเมล</th>
-                        <th scope="col" style="width:24%;">สาขาวิชา</th>
-                        <th scope="col" style="width:8%;">ตัวเลือก</th>
-                    </thead>
-                    <tbody>
-                        {% for i in teacher %}
-                          <tr>
-                            <td>{{ i.username }}</td>
-                            <td>{{ i.title }} {{ i.first_name }} {{ i.last_name }}</td>
-                            <td>{{ i.email }}</td>
-                            <td>{{ i.branch.name }}</td>
-                            <td class="text-center">
-                                <a href="{% url 'update_teacher' id=i.id %}" class="text-decoration-none">
-                                    <i data-feather="edit"></i>
-                                </a>
-                                <a href="#" class="text-danger text-decoration-none" title="ลบอาจารย์" data-bs-toggle="modal" data-bs-target="#delete_Teacher{{i.id}}">
-                                    <i data-feather="trash"></i>
-                                </a>
-                                <!--Modal delete branch-->
-                                <div class="modal fade" id="delete_Teacher{{i.id}}" tabindex="-1" aria-labelledby="delete_TeacherLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <p class="modal-title" id="add_TeacherLabel">คุณต้องการลบ <strong> {{ i.first_name }} {{ i.last_name }} </strong> ?</p>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>การลบอาจจะทำให้ข้อมูลการทำนายในสาขานี้ถูกลบไปด้วย</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                            <a href="{% url 'delete_teacher' i.id %}" class="btn btn-danger">ลบ</a>
-                                            <a class="btn btn-secondary" data-bs-dismiss="modal">ปิด</a>
+                {% if teacher_total < 10 %}
+                    <table class="table shadow">
+                        <thead class="bg-light">
+                            <th scope="col" style="width: 15%;">ชื่อผู้ใช้</th>
+                            <th scope="col" style="width:35%;">ชื่อ-นามสกุล</th>
+                            <th scope="col" style="width: 18%;">อีเมล</th>
+                            <th scope="col" style="width:24%;">สาขาวิชา</th>
+                            <th scope="col" style="width:8%;">ตัวเลือก</th>
+                        </thead>
+                        <tbody>
+                            {% for i in teacher %}
+                            <tr>
+                                <td>{{ i.username }}</td>
+                                <td>{{ i.title }} {{ i.first_name }} {{ i.last_name }}</td>
+                                <td>{{ i.email }}</td>
+                                <td>{{ i.branch.name }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'update_teacher' id=i.id %}" class="text-decoration-none">
+                                        <i data-feather="edit"></i>
+                                    </a>
+                                    <a href="#" class="text-danger text-decoration-none" title="ลบอาจารย์" data-bs-toggle="modal" data-bs-target="#delete_Teacher{{i.id}}">
+                                        <i data-feather="trash"></i>
+                                    </a>
+                                    <!--Modal delete branch-->
+                                    <div class="modal fade" id="delete_Teacher{{i.id}}" tabindex="-1" aria-labelledby="delete_TeacherLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <p class="modal-title" id="add_TeacherLabel">คุณต้องการลบ <strong> {{ i.first_name }} {{ i.last_name }} </strong> ?</p>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>การลบอาจจะทำให้ข้อมูลการทำนายในสาขานี้ถูกลบไปด้วย</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <a href="{% url 'delete_teacher' i.id %}" class="btn btn-danger">ลบ</a>
+                                                <a class="btn btn-secondary" data-bs-dismiss="modal">ปิด</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                          </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <table class="table shadow" id="myTable">
+                        <thead class="bg-light">
+                            <th scope="col" style="width: 15%;">ชื่อผู้ใช้</th>
+                            <th scope="col" style="width:35%;">ชื่อ-นามสกุล</th>
+                            <th scope="col" style="width: 18%;">อีเมล</th>
+                            <th scope="col" style="width:24%;">สาขาวิชา</th>
+                            <th scope="col" style="width:8%;">ตัวเลือก</th>
+                        </thead>
+                        <tbody>
+                            {% for i in teacher %}
+                            <tr>
+                                <td>{{ i.username }}</td>
+                                <td>{{ i.title }} {{ i.first_name }} {{ i.last_name }}</td>
+                                <td>{{ i.email }}</td>
+                                <td>{{ i.branch.name }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'update_teacher' id=i.id %}" class="text-decoration-none">
+                                        <i data-feather="edit"></i>
+                                    </a>
+                                    <a href="#" class="text-danger text-decoration-none" title="ลบอาจารย์" data-bs-toggle="modal" data-bs-target="#delete_Teacher{{i.id}}">
+                                        <i data-feather="trash"></i>
+                                    </a>
+                                    <!--Modal delete branch-->
+                                    <div class="modal fade" id="delete_Teacher{{i.id}}" tabindex="-1" aria-labelledby="delete_TeacherLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <p class="modal-title" id="add_TeacherLabel">คุณต้องการลบ <strong> {{ i.first_name }} {{ i.last_name }} </strong> ?</p>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>การลบอาจจะทำให้ข้อมูลการทำนายในสาขานี้ถูกลบไปด้วย</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <a href="{% url 'delete_teacher' i.id %}" class="btn btn-danger">ลบ</a>
+                                                <a class="btn btn-secondary" data-bs-dismiss="modal">ปิด</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+              $('#myTable').DataTable(
+                {
+                  language:{
+                      "emptyTable": "ไม่มีข้อมูลในตาราง",
+                      "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                      "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 รายการ",
+                      "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+                      "lengthMenu": "แสดง _MENU_ รายการ",
+                      "loadingRecords": "กำลังโหลด...",
+                      "processing": "กำลังประมวลผล...",
+                      "search": "ค้นหา:",
+                      "zeroRecords": "ไม่พบรายการที่ตรงกับการค้นหา",
+                      "paginate": {
+                        "first": "หน้าแรก",
+                        "last": "หน้าสุดท้าย",
+                        "next": "ถัดไป",
+                        "previous": "ก่อนหน้า"
+                      }
+                  }
+              }
+              );
+          });
+        </script>
     </div>
 {% endblock %}

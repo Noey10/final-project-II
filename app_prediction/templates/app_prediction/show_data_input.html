@@ -5,22 +5,9 @@
 <div class="container">
   <div class="row">
     <div class="col-12 col-lg-5">
-      <h3>ข้อมูลที่นำเข้ามาทำนายผลการศึกษา</h3>
+      <h3>ข้อมูลการทำนาย</h3>
     </div>
     <div class="col-12 col-lg-7 d-flex justify-content-end pe-5">
-      <!-- <form action="{% url 'information' %}" method="post" class="form w-50 ">
-        {% csrf_token %}
-        <div class="row">
-          <div class="col-12 col-lg-10">
-            <input type="text" name="search" placeholder="ค้นหารหัสนักศึกษา" class="form-control" />
-          </div>
-          <div class="col-12 col-lg-2">
-            <button type="submit" class="btn btn-outline-primary">
-              ค้นหา
-            </button>
-          </div>
-        </div>
-      </form> -->
       <p>
         <strong>ข้อมูลทั้งหมด : {{ total }} ข้อมูล</strong>
       </p>
@@ -39,24 +26,8 @@
         </div>
       </div>
     {% else %}
-      {% if user.superuser == True %}
-        <!-- <div class="row bg-danger">
-          <div class="col-12 col-lg-3">
-            <button class="btn btn-outline-primary">BIOLOGY</button>
-          </div>
-          <div class="col-12 col-lg-3">
-            <button class="btn btn-outline-primary">CHEMICAL</button>
-          </div>
-          <div class="col-12 col-lg-3">
-            <button class="btn btn-outline-primary">DSSI</button>
-          </div>
-          <div class="col-12 col-lg-3">
-            <button class="btn btn-outline-primary">ICT</button>
-          </div>
-        </div> -->
-      {% endif %}
         <div class="row mt-2">
-          <table class="table">
+          <table class="table" id="myTable">
             <thead>
               <tr>
                 <th scope="col">วันที่ทำนาย</th>
@@ -69,7 +40,7 @@
 
             </thead>
             <tbody>
-              {% for i in page %}
+              {% for i in data %}
               <tr>
                 <td>{{ i.predict_at|date:'j N Y' }}</td>
                 <td>{{ i.student_id }}</td>
@@ -148,14 +119,6 @@
                                       <td>ภาษาต่างประเทศ</td>
                                       <td>{{ i.langues }}</td>
                                     </tr>
-                                    <!-- <tr>
-                                      <td>ความน่าจะเป็น</td>
-                                      {% if i.status == 'Pass' %}
-                                        <td>{{ i.probability_pass }}&#37;</td>
-                                      {% else %}
-                                        <td>{{ i.probability_fail }}&#37;</td>
-                                      {% endif %}
-                                    </tr> -->
                                   </table>
                                 </div>
                             </div>
@@ -180,21 +143,32 @@
             </tbody>
           </table>
         </div>
-        <div class="row w-100 sticky-bottom d-flex justify-content-center">
-          <div class="container mb-2 text-center">
-            {% if page.has_previous %}
-            <a href="{% url 'information' %}?page=1">&laquo First</a>
-            <a href="{% url 'information' %}?page={{ page.previous_page_number }}">Previous</a>
-            {% endif %}
-            Page {{ page.number }} of {{ page.paginator.num_pages }}
-            {% if page.has_next %}
-            <a href="{% url 'information' %}?page={{ page.next_page_number }}">next</a>
-            <a href="{% url 'information' %}?page={{ page.paginator.num_pages }}">Last &raquo</a>
-            {% endif %}
-          </div>
-        </div>
     {% endif %}
-    
   </div>
+  <script>
+    $(document).ready(function () {
+      $('#myTable').DataTable(
+        {
+          language:{
+              "emptyTable": "ไม่มีข้อมูลในตาราง",
+              "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+              "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 รายการ",
+              "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+              "lengthMenu": "แสดง _MENU_ รายการ",
+              "loadingRecords": "กำลังโหลด...",
+              "processing": "กำลังประมวลผล...",
+              "search": "ค้นหา:",
+              "zeroRecords": "ไม่พบรายการที่ตรงกับการค้นหา",
+              "paginate": {
+                "first": "หน้าแรก",
+                "last": "หน้าสุดท้าย",
+                "next": "ถัดไป",
+                "previous": "ก่อนหน้า"
+              }
+          }
+        }
+      );
+    });
+  </script>
 </div>
 {% endblock %}

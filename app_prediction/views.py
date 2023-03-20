@@ -187,15 +187,10 @@ def information(request):
     item = UserPredict
     
     print('user = ', user)
-    # searched=""
     if user.is_superuser or user.is_staff == True:
         data = item.objects.filter(user_id=user_teacher) | item.objects.filter(user_id=user_admin)
         data = data.order_by('-predict_at')
         total = data.count()
-        # if request.method =='POST':
-        #     searched = request.POST['search']
-        #     data = data.filter(student_id__contains=searched).order_by('-predict_at')
-        #     total = data.count()
         
     else:
         branch = request.user.branch_id
@@ -203,35 +198,15 @@ def information(request):
         id_branch = Branch.objects.get(id=branch)
         data = item.objects.filter(branch_id=id_branch, user_id=user_teacher) | item.objects.filter(branch_id=id_branch, user_id=user_admin)
         data = data.order_by('-predict_at')
-        total = data.count()
-        # if request.method =='POST':
-        #     searched = request.POST['search']
-        #     data = data.filter(student_id__contains=searched).order_by('-predict_at')
-        #     total = data.count()
-    
-    
-    #Pagination
-    page = Paginator(data, 10)
-    page_list = request.GET.get('page')
-    page = page.get_page(page_list)
+        total = data.count()    
     
     print('total = ', total)
     context={
-        # 'search': searched,
         'data': data,
         'total': total,
-        'page': page,
     } 
     return render(request, 'app_prediction/show_data_input.html', context)
 
-@login_required
-@user_passes_test(check_user, login_url='error_page')
-def filter_information(request, id):
-   data = UserPredict.objects.filter(id=id)
-   context = {
-       'data': data
-   }
-   return render(request, 'app_prediction/show_data_input.html', context)
     
 @login_required
 @user_passes_test(check_user, login_url='error_page')
@@ -407,12 +382,12 @@ def process_predict_group(request):
         total = total_fail = len(df_save)
        
         #บันทึกข้อมูลลงฐานข้อมูล
-        # dataset = Dataset()
-        # res = InputFilePredictResource()
-        # import_data = dataset.load(df_save)
-        # result = res.import_data(dataset, dry_run=True, raise_errors=True)
-        # if not result.has_errors():
-        #     res.import_data(dataset, dry_run=False)
+        dataset = Dataset()
+        res = InputFilePredictResource()
+        import_data = dataset.load(df_save)
+        result = res.import_data(dataset, dry_run=True, raise_errors=True)
+        if not result.has_errors():
+            res.import_data(dataset, dry_run=False)
                  
         #filter ข้อมูลตามสถานะ
         filt_pass = df_save['status'].str.contains('Pass')

@@ -2,57 +2,55 @@
 {% load static %}
 {% block site_title %}เข้าสู่ระบบ{% endblock %}
 {% block content %}
-        <section class="vh-100 bg-light">
-            <div class="container py-5 h-100">
-                <div class="row d-flex justify-content-center align-items-center h-100">
-                    <div class="col col-xl-10">
-                        <div class="card shadow" style="border-radius: 1rem;">
-                            <div class="row g-0">
-                                <div class="col-md-6 col-lg-5 d-none d-md-block">
-                                    <img src="{% static 'app_general/img/averie.jpg' %}" alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+    <div class="customLoginLayout">
+       <div class="customCardLogin shadow">
+            <div class="cardHeader">
+                <div class="row">
+                    <img src="{% static 'app_general/img/login.gif' %}" alt="img">
+                </div>
+                <div class="row">
+                    <h5>
+                        <strong>ระบบทำนายผลการสำเร็จการศึกษา</strong>
+                    </h5>
+                </div>
+                <div class="row">
+                    <div class="cardContent">
+                        <form action="{% url 'login' %}" method="post">
+                            {% csrf_token %}
+                            
+                            <div class="text-danger">{{ form.non_field_errors }}</div>
+                            <div class="formInput">
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="id_username">ชื่อผู้ใช้</label>
+                                    <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username" class="form-control"/>
                                 </div>
-                                <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                                    <div class="card-body p-4 p-lg-5 text-black">
 
-                                        <form action="{% url 'login' %}" method="post">
-                                            {% csrf_token %}
-                                            <div class="d-flex align-items-center mb-3 pb-1">
-                                                <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                                                <span class="h4 fw-bold mb-0">ระบบวิเคราะห์และทำนายการสำเร็จการศึกษา</span>
-                                            </div>
-
-                                            <!-- <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">เข้าสู่ระบบ</h5> -->
-
-                                            <div class="text-danger">{{ form.non_field_errors }}</div>
-
-                                            <div class="form-outline mb-4">
-                                                <label class="form-label" for="id_username">ชื่อผู้ใช้</label>
-                                                <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username" placeholder="Username" class="form-control form-control-lg" />
-                                            </div>
-
-                                            <div class="form-outline mb-4">
-                                                <label class="form-label" for="id_password">รหัสผ่าน</label>
-                                                <input type="password" name="password" autocomplete="current-password" required id="id_password" placeholder="Password" class="form-control form-control-lg" />
-                                                
-                                            </div>
-
-                                            <div class="pt-1 mb-4">
-                                                <button class="btn btn-primary btn-lg btn-block shadow" type="submit">เข้าสู่ระบบ</button>
-                                            </div>
-
-                                            <a class="small text-muted" href="{% url 'password_reset' %}">ลืมรหัสผ่าน?</a>
-                                            <p class="mb-5 pb-lg-2" style="color: #393f81;">ยังไม่มีบัญชี? <a href="{% url 'register' %}" style="color: #393f81;">ลงทะเบียน</a></p>
-                                            {% if request.GET.next %}
-                                                <input type="hidden" name="next" value="{{ request.GET.next }}">
-                                            {% else %}
-                                            {% endif %}
-                                        </form>
-                                    </div>
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="id_password">รหัสผ่าน</label>
+                                    <input type="password" name="password" autocomplete="current-password" required id="id_password" class="form-control" />
+                                    
                                 </div>
                             </div>
-                        </div>
+                            <div class="formButton mb-4">
+                                <button class="btn btn-primary shadow" type="submit">เข้าสู่ระบบ</button>
+                            </div>
+                            <div class="formFooter">
+                                <a class="small text-muted" href="{% url 'password_reset' %}">ลืมรหัสผ่าน?</a>
+                                <p>
+                                    ยังไม่มีบัญชี? 
+                                    <a href="{% url 'register' %}">ลงทะเบียน</a>
+                                </p>
+                                {% if request.GET.next %}
+                                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                                {% else %}
+                                {% endif %}
+                            </div>
+                        </form>  
                     </div>
+                    
                 </div>
             </div>
-        </section>
+       </div>
+        
+    </div>
 {% endblock %}

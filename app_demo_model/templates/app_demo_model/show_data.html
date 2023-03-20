@@ -68,7 +68,27 @@
 
     <script>
       $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable(
+          {
+            language:{
+                "emptyTable": "ไม่มีข้อมูลในตาราง",
+                "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 รายการ",
+                "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+                "lengthMenu": "แสดง _MENU_ รายการ",
+                "loadingRecords": "กำลังโหลด...",
+                "processing": "กำลังประมวลผล...",
+                "search": "ค้นหา:",
+                "zeroRecords": "ไม่พบรายการที่ตรงกับการค้นหา",
+                "paginate": {
+                  "first": "หน้าแรก",
+                  "last": "หน้าสุดท้าย",
+                  "next": "ถัดไป",
+                  "previous": "ก่อนหน้า"
+                }
+            }
+        }
+        );
     });
     </script>
   </div>

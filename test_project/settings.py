@@ -142,8 +142,16 @@ AUTH_USER_MODEL = "app_users.User"
 #Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'sirinya.ba.62@ubu.ac.th'
-EMAIL_HOST_PASSWORD = 'jlfA4434'
+EMAIL_HOST_USER = 'wichuda.ph.62@ubu.ac.th'
+EMAIL_HOST_PASSWORD = 'hwvY2265'
+# EMAIL_HOST_USER = 'sirinya.ba.62@ubu.ac.th'
+# EMAIL_HOST_PASSWORD = 'jlfA4434'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT = 180
+PASSWORD_RESET_TIMEOUT = 18000
+
+
+# EMAIL_HOST_USER = 'wichuda.ph.62@ubu.ac.th'
+# EMAIL_HOST_PASSWORD = 'hwvY2265'
+# EMAIL_HOST_USER = 'surasak.na.62@ubu.ac.th'
+# EMAIL_HOST_PASSWORD = 'aznK3283'

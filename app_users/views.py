@@ -73,21 +73,13 @@ def my_dashboard(request):
 @login_required
 def my_history(request):
     user0 = request.user.id
-    data = UserPredict
-    filter_user_id = data.objects.filter(user_id=user0).order_by('-predict_at')
-    total = filter_user_id.count()
-    
-    #Pagination
-    page = Paginator(filter_user_id, 8)
-    page_list = request.GET.get('page')
-    page = page.get_page(page_list)
-    
+    data = UserPredict.objects.filter(user_id=user0).order_by('-predict_at')
+    # filter_user_id = data
+    total = data.count()
     context = {
-        'filter_user_id': filter_user_id,
+        'data': data,
         'total': total,
-        'page': page,
     }
-    
     return render(request, 'app_users/my_history.html', context)
 
 @login_required
@@ -97,7 +89,6 @@ def history_item(request, id):
     context = {
         'item': data
     }
-    
     return render(request, 'app_users/my_history.html', context)
 
 @login_required
@@ -111,7 +102,6 @@ def add_teacher(request):
             user.is_teacher = True
             user.save()
             return HttpResponseRedirect(reverse('view_teacher'))
-        
     context = {
         'form': form,
         'branch': branch,
@@ -126,12 +116,6 @@ def update_teacher(request, id):
     branch = Branch.objects.all()
     if request.method == 'POST':
         form = UpdateTeacherForm(request.POST, instance=user_fil)
-        # username = request.POST['username']
-        # title = request.POST['title']
-        # first_name = request.POST['first_name']
-        # last_name = request.POST['last_name']
-        # branch_teacher = request.POST['branch']
-        # email = request.POST['email']
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('view_teacher'))

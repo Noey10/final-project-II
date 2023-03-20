@@ -18,8 +18,8 @@
         </div>
         <hr>
         <div class="row" >
-            <div class="container d-flex justify-content-center">
-                <table class="table table-hover w-75">
+            <div class="container w-100">
+                <table class="table table-hover" id="myTable">
                     <thead class="bg-light">
                         <th scope="col">วันที่ทำนาย</th>
                         <th scope="col">รหัสนักศึกษา</th>
@@ -30,8 +30,8 @@
 
                     </thead>
                     <tbody>
-                        {% for i in page %}
-                        <tr style="max-height: 25px;">
+                        {% for i in data %}
+                        <tr>
                             <td>
                                 <p>{{ i.predict_at|date:'j N Y | H:i' }}</p>
                             </td>
@@ -43,11 +43,11 @@
                             </td>
                             {% if i.status == 'Pass' %}
                             <td class="text-success fw-bold">
-                                <p>สำเร็จการศึกษา</p>
+                                <p>มีแนวโน้มสำเร็จการศึกษา</p>
                             </td>
                             {% else %}
                             <td class="text-danger fw-bold">
-                                <p>ไม่สำเร็จการศึกษา</p>
+                                <p>มีแนวโน้มไม่สำเร็จการศึกษา</p>
                             </td>
                             {% endif %}
                             <td>
@@ -160,11 +160,11 @@
                                             <div class="modal-footer text-center">
                                                 {% if i.status == 'Pass' %}
                                                     <div class="container shadow">
-                                                        <h4 class="text-success"> <strong>สำเร็จการศึกษา {{ i.probability_pass }} &#37;</strong> </h4>
+                                                        <h4 class="text-success"> <strong>มีแนวโน้มสำเร็จการศึกษา {{ i.probability_pass }} &#37;</strong> </h4>
                                                     </div>
                                                 {% else%}
                                                     <div class="container shadow">
-                                                        <h4 class="text-danger"> <strong>ไม่สำเร็จการศึกษา {{ i.probability_fail }} &#37;</strong> </h4>
+                                                        <h4 class="text-danger"> <strong>มีแนวโน้มไม่สำเร็จการศึกษา {{ i.probability_fail }} &#37;</strong> </h4>
                                                     </div>
                                                 {% endif %}
                                                 
@@ -180,25 +180,33 @@
                 </table>
             </div>
         </div>
-        
-        {% if total > 8 or total == 8 %}
-        <div class="container  mb-5 d-flex justify-content-center">
-
-            {% if page.has_previous %}
-              <a href="?page=1" class="ms-2 me-2">&laquo First</a>
-              <a href="?page={{ page.previous_page_number }}" class="ms-2 me-2">Previous</a>
-            {% endif %}
-            Page {{ page.number }} of {{ page.paginator.num_pages }}
-            {% if page.has_next %}
-              <a href="?page={{ page.next_page_number }}" class="ms-2 me-2">next</a>
-              <a href="?page={{ page.paginator.num_pages }}" class="ms-2 me-2">Last &raquo</a>
-            {% endif %}
-  
-        </div>
-        {% else %}
-        {% endif %}
     </div>
-</div>
+        <script>
+            $(document).ready(function () {
+                $('#myTable').DataTable(
+                  {
+                    language:{
+                        "emptyTable": "ไม่มีข้อมูลในตาราง",
+                        "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+                        "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 รายการ",
+                        "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+                        "lengthMenu": "แสดง _MENU_ รายการ",
+                        "loadingRecords": "กำลังโหลด...",
+                        "processing": "กำลังประมวลผล...",
+                        "search": "ค้นหา:",
+                        "zeroRecords": "ไม่พบรายการที่ตรงกับการค้นหา",
+                        "paginate": {
+                          "first": "หน้าแรก",
+                          "last": "หน้าสุดท้าย",
+                          "next": "ถัดไป",
+                          "previous": "ก่อนหน้า"
+                        }
+                    }
+                }
+                );
+            });
+        </script>
+    </div>
 
 
 {% endblock %}

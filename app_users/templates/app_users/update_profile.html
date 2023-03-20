@@ -11,7 +11,7 @@
                         <img src="{% static 'app_general/img/user_profile.png' %}" alt="img">
                     </div>
                     <h5 class="text-uppercase p-3">
-                        Your Profile <strong>{{ user.username }}</strong> 
+                        แก้ไขข้อมูล <strong>{{ user.username }}</strong> 
                     </h5>
                 </div>
                 <hr>
@@ -52,16 +52,16 @@
                             </p>
                         </div>
                         <div class="row">
-                            <div class="footer-card">
                             
-                                <div class="col-12 col-md-6 col-lg-6">
+                            
+                                <div class="col-6 pb-2">
                                     <a href="{% url 'profile' %}" class="btn btn-primary">กลับ</a> 
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-6">
+                                <div class="col-6 pb-2">
                                     <button type="submit"  class="btn btn-primary">อัปเดต</button> 
                                 </div>
                             
-                            </div>
+                            
                         </div>
 
                     </form>

@@ -18,7 +18,7 @@
         </div>
         <div class="col-12 col-md-12 col-lg-6 d-flex justify-content-end">
           <div class="w-50">
-            <select class="form-select" name="predictResult" id="predictResult" onchange="leaveChange(this)">
+            <select class="form-select" name="predictResult" id="predictResult" onchange="leaveChange(this.value)">
             <option value="1">ข้อมูลทั้งหมด</option>
             <option value="2">ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา</option>
             <option value="3">ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา</option>
@@ -34,9 +34,10 @@
           <strong>แสดงผลแบบรายบุคคล</strong>
         </p>
         <div class="row">
-          <table class="table w-75 shadow"  id="myTable">
+          <table class="table shadow" style="margin-left: auto; margin-right: auto;"  id="myTable">
             <thead class="bg-light">
               <tr>
+                <th scope="col">#</th>
                 <th scope="col">รหัสนักศึกษา</th>
                 <th scope="col">โอกาสที่จะสำเร็จการศึกษา</th>
                 <th scope="col">โอกาสที่จะไม่สำเร็จการศึกษา</th>
@@ -46,6 +47,7 @@
             <tbody id="overview">
               {% for i in df %}
                 <tr>
+                  <td>{{ forloop.counter }}</td>
                   <td>{{ i.student_id }}</td>
                   <td>{{ i.probability_pass}}&#37;</td>
                   <td>{{ i.probability_fail }}&#37;</td>
@@ -62,13 +64,6 @@
           </table>
         </div>
       </div>
-      <!-- <div class="container d-flex justify-content-center">
-        <div id="pagination-container">
-          <button class="btn btn-primary" id="prev-btn">&lt;</button>
-          <span id="page-num"></span>
-          <button  class="btn btn-primary" id="next-btn">&gt;</button>
-        </div>
-      </div> -->
       
     </div>
     <!--Slide 2-->
@@ -78,9 +73,10 @@
           <strong>ข้อมูลนักศึกษาที่มีแนวโน้มสำเร็จการศึกษา</strong>
         </p>
         <div class="row">
-          <table class="table w-75 shadow">
+          <table class="table shadow" style="margin-left: auto; margin-right: auto;" id="myTable2">
             <thead class="bg-light">
               <tr>
+                <th scope="col">#</th>
                 <th scope="col">รหัสนักศึกษา</th>
                 <th scope="col">โอกาสที่จะสำเร็จการศึกษา</th>
                 <th scope="col">โอกาสที่จะไม่สำเร็จการศึกษา</th>
@@ -91,6 +87,7 @@
               {% for i in df %}
               {% if i.status == 'Pass' %}
                 <tr>
+                  <td>{{ forloop.counter }}</td>
                   <td>{{ i.student_id }}</td>
                   <td>{{ i.probability_pass}}&#37;</td>
                   <td>{{ i.probability_fail }}&#37;</td>
@@ -113,9 +110,10 @@
           <strong>ข้อมูลนักศึกษาที่มีแนวโน้มไม่สำเร็จการศึกษา</strong>
         </p>
         <div class="row">
-          <table class="table w-75 shadow">
+          <table class="table shadow" style="margin-left: auto; margin-right: auto;" id="myTable3">
             <thead class="bg-light">
               <tr>
+                <th scope="col">#</th>
                 <th scope="col">รหัสนักศึกษา</th>
                 <th scope="col">โอกาสที่จะสำเร็จการศึกษา</th>
                 <th scope="col">โอกาสที่จะไม่สำเร็จการศึกษา</th>
@@ -126,6 +124,7 @@
               {% for i in df %}
               {% if i.status == 'Fail' %}
                 <tr>
+                  <td>{{ forloop.counter }}</td>
                   <td>{{ i.student_id }}</td>
                   <td>{{ i.probability_pass}}&#37;</td>
                   <td>{{ i.probability_fail }}&#37;</td>
@@ -148,7 +147,7 @@
 
     function leaveChange(data) {
 
-     switch (data.value) {
+     switch (data) {
       case "1": 
         x[0].style.display = "block";
         x[1].style.display = "none";
@@ -171,8 +170,76 @@
     }
 
     $(document).ready(function () {
-      $('#myTable').DataTable();
-  });
+      $('#myTable').DataTable(
+        {
+          language:{
+              "emptyTable": "ไม่มีข้อมูลในตาราง",
+              "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+              "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 รายการ",
+              "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+              "lengthMenu": "แสดง _MENU_ รายการ",
+              "loadingRecords": "กำลังโหลด...",
+              "processing": "กำลังประมวลผล...",
+              "search": "ค้นหา:",
+              "zeroRecords": "ไม่พบรายการที่ตรงกับการค้นหา",
+              "paginate": {
+                "first": "หน้าแรก",
+                "last": "หน้าสุดท้าย",
+                "next": "ถัดไป",
+                "previous": "ก่อนหน้า"
+              }
+          }
+      }
+      );
+    });
+
+    $(document).ready(function () {
+      $('#myTable2').DataTable(
+        {
+          language:{
+              "emptyTable": "ไม่มีข้อมูลในตาราง",
+              "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+              "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 รายการ",
+              "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+              "lengthMenu": "แสดง _MENU_ รายการ",
+              "loadingRecords": "กำลังโหลด...",
+              "processing": "กำลังประมวลผล...",
+              "search": "ค้นหา:",
+              "zeroRecords": "ไม่พบรายการที่ตรงกับการค้นหา",
+              "paginate": {
+                "first": "หน้าแรก",
+                "last": "หน้าสุดท้าย",
+                "next": "ถัดไป",
+                "previous": "ก่อนหน้า"
+              }
+          }
+      }
+      );
+    });
+    
+    $(document).ready(function () {
+      $('#myTable3').DataTable(
+        {
+          language:{
+              "emptyTable": "ไม่มีข้อมูลในตาราง",
+              "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ รายการ",
+              "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 รายการ",
+              "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+              "lengthMenu": "แสดง _MENU_ รายการ",
+              "loadingRecords": "กำลังโหลด...",
+              "processing": "กำลังประมวลผล...",
+              "search": "ค้นหา:",
+              "zeroRecords": "ไม่พบรายการที่ตรงกับการค้นหา",
+              "paginate": {
+                "first": "หน้าแรก",
+                "last": "หน้าสุดท้าย",
+                "next": "ถัดไป",
+                "previous": "ก่อนหน้า"
+              }
+          }
+      }
+      );
+    });
   </script>
 </div>
 {% endblock %}

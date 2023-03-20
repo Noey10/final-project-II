@@ -125,23 +125,9 @@ def show(request):
         data = Data.objects.filter(branch_id=branch)
         total = data.count()
     
-    if request.method == 'POST':
-        branch = request.POST['branch']
-        print(branch)
-        data = Data.objects.filter(branch_id=branch)
-        print(data)
-        total = data.count()
-    
-    #Pagination
-    # page = Paginator(data, 10)
-    # page_list = request.GET.get('page')
-    # page = page.get_page(page_list)
-    
-    
     context = {
         'branch': branch,
         'data': data,
-        # 'page': page,
         'total': total,
     }
     return render(request, 'app_demo_model/show_data.html', context)
