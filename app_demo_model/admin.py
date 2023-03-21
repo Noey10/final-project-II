@@ -14,7 +14,7 @@ from .models import *
 #         'hygiene',
 #         'art',
 #         'career',
-#         'langues',
+#         'language',
 #         'status',
 #     ]
 #     search_fields = ['branch']

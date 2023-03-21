@@ -14,7 +14,7 @@ from .models import UserPredict
 #         'hygiene',
 #         'art',
 #         'career',
-#         'langues',
+#         'language',
 #         'status',
 #         'predict_at',
 #         'user',

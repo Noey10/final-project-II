@@ -19,7 +19,7 @@ class Data(models.Model):
     hygiene = models.CharField(max_length=20)
     art = models.CharField(max_length=20)
     career = models.CharField(max_length=20)
-    langues = models.CharField(max_length=20)
+    language = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
     
     def __str__(self):

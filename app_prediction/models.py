@@ -15,7 +15,7 @@ class UserPredict(models.Model):
     hygiene = models.FloatField(max_length=10)
     art = models.FloatField(max_length=10)
     career = models.FloatField(max_length=10)
-    langues = models.FloatField(max_length=10)
+    language = models.FloatField(max_length=10)
     status = models.CharField(max_length=10)
     probability_fail = models.FloatField(max_length=10)
     probability_pass = models.FloatField(max_length=10)

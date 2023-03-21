@@ -24,7 +24,7 @@ def dashboard(request):
     user_teacher = user.is_teacher
     
     branch = Branch.objects.all()
-    data = UserPredict.objects
+    data = UserPredict.objects.filter(user_id=user_teacher) | UserPredict.objects.filter(user_id=user_admin)
     total = data.count()
     print('total = ', total)
     

@@ -5,7 +5,7 @@ class UserPredictForm(forms.ModelForm):
     
     class Meta:
         model = UserPredict
-        fields = ("student_id","branch", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "langues")
+        fields = ("student_id","branch", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "language")
         labels = {
             "student_id": "รหัสนักศึกษา",
             "branch": "สาขา",
@@ -18,7 +18,7 @@ class UserPredictForm(forms.ModelForm):
             "hygiene": "เกรดวิชาสุขศึกษาและพลศึกษา",
             "art": "เกรดวิชาศิลปศึกษา",
             "career": "เกรดวิชาการงานอาชีพ",
-            "langues": "เกรดวิชาภาษาต่างประเทศ",
+            "language": "เกรดวิชาภาษาต่างประเทศ",
         }
         widgets = {
             "student_id": forms.widgets.TextInput(attrs={'class':'form-control', 'placeholder': 'กรุณากรอกรหัสนักศึกษา'}),
@@ -32,11 +32,11 @@ class UserPredictForm(forms.ModelForm):
             "hygiene": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
             "art": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
             "career": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),
-            "langues": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),   
+            "language": forms.widgets.NumberInput(attrs={'step': '0.01', 'max': '4.00', 'min': '0', 'class': 'form-control', 'placeholder': '0.00 - 4.00',}),   
         }
         
         
 class InputFilePredictForm(forms.Form):
     class Meta:
         model = UserPredict
-        fields = ("branch", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "langues", "status")
+        fields = ("branch", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "language", "status")

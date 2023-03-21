@@ -68,7 +68,7 @@ def prediction(request):
         hygiene = request.POST.get('hygiene')
         art = request.POST.get('art')
         career = request.POST.get('career')
-        langues = request.POST.get('langues')
+        language = request.POST.get('language')
         
         data = Data.objects.filter(branch__id__contains=branch).values()
         try:
@@ -94,13 +94,13 @@ def prediction(request):
             'hygiene': float(hygiene),
             'art': float(art),
             'career': float(career),
-            'langues': float(langues)
+            'language': float(language)
         }
 
         df_input = pd.DataFrame([my_dict])     
         # print('df input = ', df_input)
         
-        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']
+        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language']
         df_predict = pd.DataFrame(columns=categories_feature)
         #จัดช่วงเกรด
         for i in categories_feature:
@@ -318,7 +318,7 @@ def process_predict_group(request):
             df_input = df_input.drop([ 'branch'], axis=1)
         except:
             df_input = df_input
-            
+        
         #จัดช่วงเกรด
         df_predict = pd.DataFrame(columns=df_input.columns.to_list())
         for i in df_input.columns.to_list():
@@ -326,13 +326,18 @@ def process_predict_group(request):
                 df_predict[i] = df_input[i].apply(condition)
             except:
                 df_predict[i] = df_input[i]
-        
+
         try: 
             df_predict = df_predict.drop(['student_id', 'branch'], axis=1)
         except:
             df_predict = df_predict
 
-        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues']   
+        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language']   
+        # check_col = df_predict.columns.to_list()
+        # print('check columns = ', check_col)
+        # if check_col != categories_feature: 
+        #     messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+        #     return HttpResponseRedirect(reverse('predict_group_student'))
         
         #Train model แบ่งข้อมูล X,y
         X = df_model[categories_feature]

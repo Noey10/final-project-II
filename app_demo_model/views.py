@@ -85,7 +85,7 @@ def upload(request):
         col = df.columns
         col_list =  col.to_list()
             
-        categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'langues', 'status']
+        categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language', 'status']
         if col_list != categories_feature:
             messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
             return HttpResponseRedirect(reverse('upload'))
