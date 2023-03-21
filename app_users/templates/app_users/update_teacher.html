@@ -31,8 +31,15 @@
                     </div>
                     <div class="form-outline">
                         {{ form.title.label_tag }}
-                        {{ form.title }} 
-                        <!-- <input type="text" name="title" value="{{ user_fil.title }}" class="form-control">-->
+                        <select name="title" class="form-select">
+                            {% for x, y in form.fields.title.choices %}
+                                {% if user_fil.title == x %}
+                                    <option selected value="{{ x }}">{{ y }}</option>
+                                {% else %}
+                                    <option value="{{ x }}">{{ y }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
                         <p class="text-danger">
                             {{ form.title.errors }}
                         </p>
