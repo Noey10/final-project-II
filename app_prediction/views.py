@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import UserPredict
+from .models import UserForecasts
 from .forms import UserPredictForm
 from app_users.models import User
 from app_demo_model.models import *
@@ -51,7 +51,7 @@ def condition(x):
 def prediction(request):
     t_start = time.time()
     result2 = ''
-    covert_proba = 0
+    proba = 0
     
     if request.method == 'POST':
         form = UserPredictForm(request.POST)
@@ -70,7 +70,7 @@ def prediction(request):
         career = request.POST.get('career')
         language = request.POST.get('language')
         
-        data = Data.objects.filter(branch__id__contains=branch).values()
+        data = TrainingData.objects.filter(branch__id__contains=branch).values()
         try:
             if data.count() < 100:
                 messages.info(request, "สาขาที่ท่านเลือกยังไม่พร้อมให้บริการ")
@@ -109,14 +109,14 @@ def prediction(request):
             except:
                 df_predict[i] = df_predict[i]
         
-        print('df predict = ', df_predict)
+        # print('df predict = ', df_predict)
         
         try:
             df_predict = df_predict.drop(['student_id', 'branch'], axis=1)
         except:
             df_predict = df_predict
 
-        print('df predict = ', df_predict)
+        # print('df predict = ', df_predict)
         
         #แบ่งข้อมูล X,y
         X = df_model[categories_feature]
@@ -150,20 +150,28 @@ def prediction(request):
         #model
         model = pipe.fit(X, y)
         
+        
+        #feature important
+        # importance_df = pd.DataFrame({
+        #     'feature': [categories_feature],
+        #     'importance': model.feature_importances_
+        # })
+        # print('feature important', '\n', importance_df)
+        
         #predict
         result = model.predict(df_predict)
         probability = model.predict_proba(df_predict)
-        covert_proba = np.around(probability * 100, 2)
+        proba = np.around(probability * 100, 2)
         result2 = result[0]
-        # print(covert_proba)
+        # print(proba)
         # print(result2)
                 
         if form.is_valid():
             user_input = form.save(commit=False)
             user_input.user = request.user  
             user_input.status = result2
-            user_input.probability_fail = covert_proba[0, 0]
-            user_input.probability_pass = covert_proba[0, 1]
+            user_input.probability_fail = proba[0, 0]
+            user_input.probability_pass = proba[0, 1]
             user_input.save()
         else:
             form = UserPredictForm()
@@ -173,7 +181,8 @@ def prediction(request):
     context = {
         # 'grade_dict': grade_list,
         'result': result2,
-        'probability': covert_proba,
+        'probability': proba,
+        'acc': acc2,
     }
     
     return render(request, 'app_prediction/prediction_result.html', context)
@@ -184,7 +193,7 @@ def information(request):
     user = request.user
     user_admin = request.user.is_superuser
     user_teacher = request.user.is_teacher
-    item = UserPredict
+    item = UserForecasts
     
     print('user = ', user)
     t_start = time.time()
@@ -220,11 +229,11 @@ def download_file(request):
         print(user_branch)
         branch = Branch.objects.get(abbreviation=user_branch)
         print(branch)
-        data = UserPredict.objects.filter(branch_id=branch).values()
+        data = UserForecasts.objects.filter(branch_id=branch).values()
         # print(data)
     
     else:
-        data = UserPredict.objects.all().values()
+        data = UserForecasts.objects.all().values()
         # print(data)
         
     df = pd.DataFrame(data)
@@ -282,7 +291,7 @@ def process_predict_group(request):
                 branch =i['id']
             
         try:
-            data = Data.objects.filter(branch__id__contains=branch).values()
+            data = TrainingData.objects.filter(branch__id__contains=branch).values()
             if data.count() > 100:
                 df_model = pd.DataFrame(data)
             else:
@@ -388,7 +397,11 @@ def process_predict_group(request):
         df_show = df_save.drop(columns=['branch'])
         dict_show = df_show.to_dict('records')#convert data frame to dictionary
         total = total_fail = len(df_save)
-       
+        
+        #ลบข้อมูลการทำนายที่มีในฐานข้อมูล
+        information = UserForecasts.objects.filter(branch__id__contains=branch)
+        information.delete()
+        
         #บันทึกข้อมูลลงฐานข้อมูล
         dataset = Dataset()
         res = InputFilePredictResource()
@@ -403,7 +416,6 @@ def process_predict_group(request):
         total_pass = len(df_save[filt_pass])
         total_fail = len(df_save[filt_fail])
         
-        
     t_end = time.time()
     print('time run : ', t_end-t_start)
     context = {
@@ -411,17 +423,14 @@ def process_predict_group(request):
         'total': total,
         'total_pass': total_pass,
         'total_fail': total_fail,
+        'acc': acc2,
         }
     return render(request, 'app_prediction/group_result.html', context)
 
 @login_required
 @user_passes_test(check_user, login_url='error_page')    
 def delete_data_user_input(request):
-    data_input = UserPredict.objects.all()
+    data_input = UserForecasts.objects.all()
     data_input.delete()
     return render(request, 'app_prediction/show_data_input.html')
   
-
-
-
-

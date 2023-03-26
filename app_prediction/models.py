@@ -3,7 +3,7 @@ from app_users.models import *
 from app_demo_model.models import *
 
 # Create your models here.
-class UserPredict(models.Model):
+class UserForecasts(models.Model):
     student_id = models.CharField(max_length=50, null=True)
     branch = models.ForeignKey('app_demo_model.Branch', on_delete=models.DO_NOTHING)
     admission_grade = models.FloatField(max_length=10)

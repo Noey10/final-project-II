@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import UserPredict
+from .models import UserForecasts
 
 # Register your models here.
-# class UserPredictAdmin(admin.ModelAdmin):
+# class UserForecastsAdmin(admin.ModelAdmin):
 #     list_display = [
 #         'branch',
 #         'admission_grade',
@@ -22,4 +22,4 @@ from .models import UserPredict
 #     search_fields = ['branch']
 #     list_filter = ['status']
 
-# admin.site.register(UserPredict, UserPredictAdmin)
+# admin.site.register(UserForecasts, UserForecastsAdmin)

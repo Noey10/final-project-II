@@ -89,6 +89,12 @@
                                 <span class="ml-2">จัดการข้อมูลอาจารย์</span>
                             </a>
                         </li>
+                        <li id="selector" class="nav-item">
+                            <a href="{% url 'about_model' %}" class="nav-link">
+                                <i data-feather="server"></i>
+                                <span class="ml-2">เกี่ยวกับโมเดลการทำนาย</span>
+                            </a>
+                        </li>
                         {% elif user.is_teacher == True %}
                         <li id="selector" class="nav-item">
                             <a href="{% url 'dashboard' %}" class="nav-link">
@@ -118,6 +124,12 @@
                             <a href="{% url 'show' %}" class="nav-link">
                                 <i data-feather="folder"></i>
                                 <span class="ml-2">แสดงข้อมูลในโมเดล</span>
+                            </a>
+                        </li>
+                        <li id="selector" class="nav-item">
+                            <a href="{% url 'about_model' %}" class="nav-link">
+                                <i data-feather="server"></i>
+                                <span class="ml-2">เกี่ยวกับโมเดลการทำนาย</span>
                             </a>
                         </li>
                         {% else %}

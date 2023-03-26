@@ -115,7 +115,7 @@ def show(request):
     t_start = time.time()
     user = request.user
     branch = Branch.objects.all()
-    data = Data.objects.all()
+    data = TrainingData.objects.all()
     total = data.count()
     
     
@@ -125,7 +125,7 @@ def show(request):
         print(user)
         branch = Branch.objects.get(id=user)
         print(branch)
-        data = Data.objects.filter(branch_id=branch)
+        data = TrainingData.objects.filter(branch_id=branch)
         total = data.count()
         
     t_end = time.time()

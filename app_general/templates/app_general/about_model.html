@@ -1,0 +1,627 @@
+{% extends 'app_general/components/base.html' %}
+{% load static %}
+{% block site_title %}แดชบอร์ด{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <h3 class="mt-3">เกี่ยวกับโมเดลการทำนาย</h3>
+    </div>
+    <hr>
+    <div class="container">
+        {% if user.is_superuser or user.is_staff %}
+            <div class="row shadow mb-5 p-3">
+                <p class="p-3">
+                    <strong>
+                        รายละเอียดเกี่ยวกับข้อมูลที่ใช้ในการฝึกโมเดล
+                    </strong>
+                    <br>
+                </p>
+                <div class="container ms-0 ms-lg-5">
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-12 col-lg-2">ข้อมูลที่ใช้ฝึกโมเดล</div>
+                        <div class="col-12 col-md-12 col-lg-10">
+                            ข้อมูลผลการเรียนของนักศึกษาระดับปริญญาตรี คณะวิทยาศาสตร์ มหาวิทยาลัยอุบลราชธานี ในปีการศึกษา 2559-2564 
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-12 col-lg-2">จำนวนข้อมูลทั้งหมด</div>
+                        <div class="col-12 col-md-12 col-lg-10">
+                            901 ชุดข้อมูล แบ่งออกเป็น 4 สาขาวิชา ดังนี้ <br>
+                            1. สาขาวิชาเคมี 258 ชุดข้อมูล<br>
+                            2. สาขาวิชาชีววิทยา 183 ชุดข้อมูล <br>
+                            3. สาขาวิชาเทคโนโลยีสารสนเทศและการสื่อสาร 206 ชุดข้อมูล <br>
+                            4. สาขาวิชาวิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์ 254 ชุดข้อมูล 
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-12 col-lg-2">ปัจจัยที่เกี่ยวข้อง</div>
+                        <div class="col-12 col-md-12 col-lg-10">
+                            เกรดเฉลี่ยชั้นปีที่ 1 เกรดเฉลี่ยรับเข้า เกรดภาษาไทย เกรดคณิตศาสตร์ เกรดวิทยาศาสตร์ เกรดสังคมศึกษา 
+                            เกรดสุขศึกษา <br>เกรดศิลปะ เกรดการงานอาชีพ และเกรดภาษาต่างประเทศ 
+                            <div class="row mt-2">
+                                <div class="col-12 col-md-12 col-lg-2">โดยค่าที่เป็นไปได้คือ</div>
+                                <div class="col-12 col-md-12 col-lg-10">
+                                    1.excellent (เกรดเฉลี่ย 3.50 - 4.00) <br>
+                                    2.very good  (เกรดเฉลี่ย 3.00 - 3.49) <br>
+                                    3.good  (เกรดเฉลี่ย 2.50 -2.99) <br>
+                                    4.medium  (เกรดเฉลี่ย 2.00 - 2.49) <br>
+                                    5.poor  (เกรดเฉลี่ย 1.50 - 1.99) <br>
+                                    6.very poor  (เกรดเฉลี่ย < 1.50)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-12 col-lg-2">สถานะที่ต้องการทำนาย</div>
+                        <div class="col-12 col-md-12 col-lg-10">
+                            มี 2 สถานะ ได้แก่ สำเร็จการศึกษา (Pass) และไม่สำเร็จการศึกษา (Fail)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row shadow mb-5 p-3">
+                <p class="p-3">
+                    <strong>
+                        รายละเอียดเกี่ยวกับเทคนิคที่ใช้ในการทำนาย
+                    </strong>
+                    <br>
+                </p>
+                <div class="container ms-0 ms-lg-5">
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-6 col-lg-3">เทคนิคที่ใช้ในการทำนาย</div>
+                        <div class="col-12 col-md-6 col-lg-9">
+                            <strong>เทคนิคการสุ่มป่าไม้ (Random Forest)</strong>
+                            <div class="row">
+                                <div class="col-12 col-md-6 col-lg-2">โดยกำหนด</div>
+                                <div class="col-12 col-md-6 col-lg-10">
+                                    number of tree = 100 <br>
+                                    max depth = 6
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-6 col-lg-3">วิธีการทดสอบผลลัพธ์</div>
+                        <div class="col-12 col-md-6 col-lg-9">
+                            <strong>Cross validate 10-Fold</strong> 
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-6 col-lg-3">โปรแกรมที่ใช้ในการทดสอบโมเดล</div>
+                        <div class="col-12 col-md-6 col-lg-9">
+                            <strong>Rapid miner studio</strong> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row shadow mb-5 p-3">
+                <p class="p-3">
+                    <strong>
+                        ประสิทธิภาพโมเดล
+                    </strong>
+                    <br>
+                    โดยจะแบ่งโมเดลออกเป็น 4 โมเดลตามสาขาวิชา และวัดประสิทธิภาพ ค่าความถูกต้อง (Accuracy), ค่าความแม่นยำ (Precision),
+                    ค่าความระลึก (Recall) <br> และค่าความถ่วงดุล (F-measure) ดังนี้
+                    <br>
+                </p>
+                <table class="table w-75 ms-0 ms-lg-5">
+                    <tr>
+                        <th>สาขาวิชา</th>
+                        <th>ค่าความแม่นยำ</th>
+                        <th>ค่าความถูกต้อง</th>
+                        <th>ค่าความระลึก</th>
+                        <th>ค่าความถ่วงดุล</th>
+                    </tr>
+                    <tr>
+                        <td>1. สาขาวิชาเคมี (CHEM)</td>
+                        <td>84.88 %</td>
+                        <td>79.63 %</td>
+                        <td>88.97 %</td>
+                        <td>84.04 %</td>
+                    </tr>
+                    <tr>
+                        <td>2. สาขาวิชาชีววิทยา (BIO)</td>
+                        <td>84.12 %</td>
+                        <td>91.27 %</td>
+                        <td>79.86 %</td>
+                        <td>85.18 %</td>
+                    </tr>
+                    <tr>
+                        <td>3. สาขาวิชาเทคโนโลยีสารสนเทศและการสื่อสาร (ICT)</td>
+                        <td>88.25 %</td>
+                        <td>83.87 %</td>
+                        <td>92.04 %</td>
+                        <td>87.77 %</td>
+                    </tr>
+                    <tr>
+                        <td>4. สาขาวิชาวิทยาการข้อมูลและนวัตกรรมซอฟต์แวร์ (DSSI)</td>
+                        <td>90.07 %</td>
+                        <td>85.50 %</td>
+                        <td>94.12 %</td>
+                        <td>89.60 %</td>
+                    </tr>
+                </table>
+            </div>
+        {% else %}
+            {% if user.is_teacher == True %}
+                <h5>
+                    <strong>สาขาวิชา{{ user.branch}} ({{ user.branch.abbreviation }})</strong>
+                </h5>
+                {% if user.branch.abbreviation == 'BIO' %}
+                    <div class="container">
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับข้อมูลที่ใช้ในการฝึกโมเดล
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ข้อมูลที่ใช้ฝึกโมเดล</div>
+                                    <div class="col-12 col-md-12 col-lg-10">ข้อมูลผลการเรียนของนักศึกษาระดับปริญญาตรี{{user.branch}} คณะวิทยาศาสตร์ มหาวิทยาลัยอุบลราชธานี ในปีการศึกษา 2559-2564</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">จำนวนข้อมูลทั้งหมด</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        183 ชุดข้อมูล <br>
+                                        <div class="row mt-1">
+                                            <div class="col-12 col-md-6 col-lg-1">
+                                                แบ่งเป็น
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-9">
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Pass) 126 ชุดข้อมูล <br>
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Fail)  57 ชุดข้อมูล
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ปัจจัยที่เกี่ยวข้อง</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        เกรดเฉลี่ยชั้นปีที่ 1 เกรดเฉลี่ยรับเข้า เกรดภาษาไทย เกรดคณิตศาสตร์ เกรดวิทยาศาสตร์ เกรดสังคมศึกษา 
+                                        เกรดสุขศึกษา <br>เกรดศิลปะ เกรดการงานอาชีพ และเกรดภาษาต่างประเทศ 
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-md-12 col-lg-2">โดยค่าที่เป็นไปได้คือ</div>
+                                            <div class="col-12 col-md-12 col-lg-10">
+                                                1.excellent (เกรดเฉลี่ย 3.50 - 4.00) <br>
+                                                2.very good  (เกรดเฉลี่ย 3.00 - 3.49) <br>
+                                                3.good  (เกรดเฉลี่ย 2.50 -2.99) <br>
+                                                4.medium  (เกรดเฉลี่ย 2.00 - 2.49) <br>
+                                                5.poor  (เกรดเฉลี่ย 1.50 - 1.99) <br>
+                                                6.very poor  (เกรดเฉลี่ย < 1.50)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">สถานะที่ต้องการทำนาย</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        มี 2 สถานะ ได้แก่ สำเร็จการศึกษา (Pass) และไม่สำเร็จการศึกษา (Fail)
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับเทคนิคที่ใช้ในการทำนาย
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">เทคนิคที่ใช้ในการทำนาย</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>เทคนิคการสุ่มป่าไม้ (Random Forest)</strong>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-2">โดยกำหนด</div>
+                                            <div class="col-12 col-md-6 col-lg-10">
+                                                number of tree = 100 <br>
+                                                max depth = 6
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">วิธีการทดสอบผลลัพธ์</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Cross validate 10-Fold</strong> 
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">โปรแกรมที่ใช้ในการทดสอบโมเดล</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Rapid miner studio</strong> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    ประสิทธิภาพโมเดล
+                                </strong>
+                            </p>
+                            <div class="container">
+                                <table class="table w-75 ms-0 ms-lg-5">
+                                    <tr>
+                                        <th>ค่าความแม่นยำ (Accuracy)</th>
+                                        <th>ค่าความถูกต้อง (Precision)</th>
+                                        <th>ค่าความระลึก (Recall)</th>
+                                        <th>ค่าความถ่วงดุล (F-measure)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>84.12 %</td>
+                                        <td>91.27 %</td>
+                                        <td>79.86 %</td>
+                                        <td>85.18 %</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% elif user.branch.abbreviation == 'CHEM' %}
+                    <div class="container">
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับข้อมูลที่ใช้ในการฝึกโมเดล
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ข้อมูลที่ใช้ฝึกโมเดล</div>
+                                    <div class="col-12 col-md-12 col-lg-10">ข้อมูลผลการเรียนของนักศึกษาระดับปริญญาตรี{{user.branch}} คณะวิทยาศาสตร์ มหาวิทยาลัยอุบลราชธานี ในปีการศึกษา 2559-2564</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">จำนวนข้อมูลทั้งหมด</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        183 ชุดข้อมูล <br>
+                                        <div class="row mt-1">
+                                            <div class="col-12 col-md-6 col-lg-1">
+                                                แบ่งเป็น
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-9">
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Pass) 162 ชุดข้อมูล <br>
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Fail)  96 ชุดข้อมูล
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ปัจจัยที่เกี่ยวข้อง</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        เกรดเฉลี่ยชั้นปีที่ 1 เกรดเฉลี่ยรับเข้า เกรดภาษาไทย เกรดคณิตศาสตร์ เกรดวิทยาศาสตร์ เกรดสังคมศึกษา 
+                                        เกรดสุขศึกษา <br>เกรดศิลปะ เกรดการงานอาชีพ และเกรดภาษาต่างประเทศ 
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-md-12 col-lg-2">โดยค่าที่เป็นไปได้คือ</div>
+                                            <div class="col-12 col-md-12 col-lg-10">
+                                                1.excellent (เกรดเฉลี่ย 3.50 - 4.00) <br>
+                                                2.very good  (เกรดเฉลี่ย 3.00 - 3.49) <br>
+                                                3.good  (เกรดเฉลี่ย 2.50 -2.99) <br>
+                                                4.medium  (เกรดเฉลี่ย 2.00 - 2.49) <br>
+                                                5.poor  (เกรดเฉลี่ย 1.50 - 1.99) <br>
+                                                6.very poor  (เกรดเฉลี่ย < 1.50)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">สถานะที่ต้องการทำนาย</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        มี 2 สถานะ ได้แก่ สำเร็จการศึกษา (Pass) และไม่สำเร็จการศึกษา (Fail)
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับเทคนิคที่ใช้ในการทำนาย
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">เทคนิคที่ใช้ในการทำนาย</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>เทคนิคการสุ่มป่าไม้ (Random Forest)</strong>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-2">โดยกำหนด</div>
+                                            <div class="col-12 col-md-6 col-lg-10">
+                                                number of tree = 100 <br>
+                                                max depth = 6
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">วิธีการทดสอบผลลัพธ์</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Cross validate 10-Fold</strong> 
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">โปรแกรมที่ใช้ในการทดสอบโมเดล</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Rapid miner studio</strong> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    ประสิทธิภาพโมเดล
+                                </strong>
+                            </p>
+                            <div class="container">
+                                <table class="table w-75 ms-0 ms-lg-5">
+                                    <tr>
+                                        <th>ค่าความแม่นยำ (Accuracy)</th>
+                                        <th>ค่าความถูกต้อง (Precision)</th>
+                                        <th>ค่าความระลึก (Recall)</th>
+                                        <th>ค่าความถ่วงดุล (F-measure)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>84.88 %</td>
+                                        <td>79.63 %</td>
+                                        <td>88.97 %</td>
+                                        <td>84.04 %</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% elif user.branch.abbreviation == 'ICT' %}
+                    <div class="container">
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับข้อมูลที่ใช้ในการฝึกโมเดล
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ข้อมูลที่ใช้ฝึกโมเดล</div>
+                                    <div class="col-12 col-md-12 col-lg-10">ข้อมูลผลการเรียนของนักศึกษาระดับปริญญาตรี{{user.branch}} คณะวิทยาศาสตร์ มหาวิทยาลัยอุบลราชธานี ในปีการศึกษา 2559-2564</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">จำนวนข้อมูลทั้งหมด</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        183 ชุดข้อมูล <br>
+                                        <div class="row mt-1">
+                                            <div class="col-12 col-md-6 col-lg-1">
+                                                แบ่งเป็น
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-9">
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Pass) 124 ชุดข้อมูล <br>
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Fail) 82 ชุดข้อมูล
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ปัจจัยที่เกี่ยวข้อง</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        เกรดเฉลี่ยชั้นปีที่ 1 เกรดเฉลี่ยรับเข้า เกรดภาษาไทย เกรดคณิตศาสตร์ เกรดวิทยาศาสตร์ เกรดสังคมศึกษา 
+                                        เกรดสุขศึกษา <br>เกรดศิลปะ เกรดการงานอาชีพ และเกรดภาษาต่างประเทศ 
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-md-12 col-lg-2">โดยค่าที่เป็นไปได้คือ</div>
+                                            <div class="col-12 col-md-12 col-lg-10">
+                                                1.excellent (เกรดเฉลี่ย 3.50 - 4.00) <br>
+                                                2.very good  (เกรดเฉลี่ย 3.00 - 3.49) <br>
+                                                3.good  (เกรดเฉลี่ย 2.50 -2.99) <br>
+                                                4.medium  (เกรดเฉลี่ย 2.00 - 2.49) <br>
+                                                5.poor  (เกรดเฉลี่ย 1.50 - 1.99) <br>
+                                                6.very poor  (เกรดเฉลี่ย < 1.50)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">สถานะที่ต้องการทำนาย</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        มี 2 สถานะ ได้แก่ สำเร็จการศึกษา (Pass) และไม่สำเร็จการศึกษา (Fail)
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับเทคนิคที่ใช้ในการทำนาย
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">เทคนิคที่ใช้ในการทำนาย</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>เทคนิคการสุ่มป่าไม้ (Random Forest)</strong>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-2">โดยกำหนด</div>
+                                            <div class="col-12 col-md-6 col-lg-10">
+                                                number of tree = 100 <br>
+                                                max depth = 6
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">วิธีการทดสอบผลลัพธ์</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Cross validate 10-Fold</strong> 
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">โปรแกรมที่ใช้ในการทดสอบโมเดล</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Rapid miner studio</strong> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    ประสิทธิภาพโมเดล
+                                </strong>
+                            </p>
+                            <div class="container">
+                                <table class="table w-75 ms-0 ms-lg-5">
+                                    <tr>
+                                        <th>ค่าความแม่นยำ (Accuracy)</th>
+                                        <th>ค่าความถูกต้อง (Precision)</th>
+                                        <th>ค่าความระลึก (Recall)</th>
+                                        <th>ค่าความถ่วงดุล (F-measure)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>88.25 %</td>
+                                        <td>83.87 %</td>
+                                        <td>92.04 %</td>
+                                        <td>89.60 %</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% elif user.branch.abbreviation == 'DSSI' %}
+                    <div class="container">
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับข้อมูลที่ใช้ในการฝึกโมเดล
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ข้อมูลที่ใช้ฝึกโมเดล</div>
+                                    <div class="col-12 col-md-12 col-lg-10">ข้อมูลผลการเรียนของนักศึกษาระดับปริญญาตรี{{user.branch}} คณะวิทยาศาสตร์ มหาวิทยาลัยอุบลราชธานี ในปีการศึกษา 2559-2564</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">จำนวนข้อมูลทั้งหมด</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        183 ชุดข้อมูล <br>
+                                        <div class="row mt-1">
+                                            <div class="col-12 col-md-6 col-lg-1">
+                                                แบ่งเป็น
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-9">
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Pass) 114 ชุดข้อมูล <br>
+                                                ข้อมูลที่มีสถานะสำเร็จการศึกษา (Fail) 131 ชุดข้อมูล
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">ปัจจัยที่เกี่ยวข้อง</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        เกรดเฉลี่ยชั้นปีที่ 1 เกรดเฉลี่ยรับเข้า เกรดภาษาไทย เกรดคณิตศาสตร์ เกรดวิทยาศาสตร์ เกรดสังคมศึกษา 
+                                        เกรดสุขศึกษา <br>เกรดศิลปะ เกรดการงานอาชีพ และเกรดภาษาต่างประเทศ 
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-md-12 col-lg-2">โดยค่าที่เป็นไปได้คือ</div>
+                                            <div class="col-12 col-md-12 col-lg-10">
+                                                1.excellent (เกรดเฉลี่ย 3.50 - 4.00) <br>
+                                                2.very good  (เกรดเฉลี่ย 3.00 - 3.49) <br>
+                                                3.good  (เกรดเฉลี่ย 2.50 -2.99) <br>
+                                                4.medium  (เกรดเฉลี่ย 2.00 - 2.49) <br>
+                                                5.poor  (เกรดเฉลี่ย 1.50 - 1.99) <br>
+                                                6.very poor  (เกรดเฉลี่ย < 1.50)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-12 col-lg-2">สถานะที่ต้องการทำนาย</div>
+                                    <div class="col-12 col-md-12 col-lg-10">
+                                        มี 2 สถานะ ได้แก่ สำเร็จการศึกษา (Pass) และไม่สำเร็จการศึกษา (Fail)
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    รายละเอียดเกี่ยวกับเทคนิคที่ใช้ในการทำนาย
+                                </strong>
+                                <br>
+                            </p>
+                            <div class="container ms-0 ms-lg-5">
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">เทคนิคที่ใช้ในการทำนาย</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>เทคนิคการสุ่มป่าไม้ (Random Forest)</strong>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-2">โดยกำหนด</div>
+                                            <div class="col-12 col-md-6 col-lg-10">
+                                                number of tree = 100 <br>
+                                                max depth = 6
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">วิธีการทดสอบผลลัพธ์</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Cross validate 10-Fold</strong> 
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 col-lg-3">โปรแกรมที่ใช้ในการทดสอบโมเดล</div>
+                                    <div class="col-12 col-md-6 col-lg-9">
+                                        <strong>Rapid miner studio</strong> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="p-3">
+                                <strong>
+                                    ประสิทธิภาพโมเดล
+                                </strong>
+                            </p>
+                            <div class="container">
+                                <table class="table w-75 ms-0 ms-lg-5">
+                                    <tr>
+                                        <th>ค่าความแม่นยำ (Accuracy)</th>
+                                        <th>ค่าความถูกต้อง (Precision)</th>
+                                        <th>ค่าความระลึก (Recall)</th>
+                                        <th>ค่าความถ่วงดุล (F-measure)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>90.07 %</td>
+                                        <td>85.50 %</td>
+                                        <td>94.12 %</td>
+                                        <td>89.60 %</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+    </div>
+</div>
+
+
+
+{% endblock %}

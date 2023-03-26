@@ -8,7 +8,7 @@ class Branch(models.Model):
     def __str__(self):
         return self.name
     
-class Data(models.Model):
+class TrainingData(models.Model):
     branch = models.ForeignKey('Branch', blank="True", null="True", on_delete=models.CASCADE)
     admission_grade = models.CharField(max_length=20)
     gpa_year_1 = models.CharField(max_length=20)

@@ -3,4 +3,4 @@ from .models import *
 
 class InputFilePredictResource(resources.ModelResource):
     class Meta:
-        model = UserPredict
+        model = UserForecasts

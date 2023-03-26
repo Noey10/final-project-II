@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse
 from app_users.forms import *
 from .models import User
-from app_prediction.models import UserPredict
+from app_prediction.models import UserForecasts
 from app_prediction.forms import *
 from app_demo_model.models import *
 from django.core.paginator import Paginator
@@ -15,6 +15,8 @@ from django.contrib import messages
 # Create your views here.
 def check_admin(user):
     return user.is_superuser or user.is_staff
+
+
 
 def register(request):
     if request.method == "POST":
@@ -73,7 +75,7 @@ def my_dashboard(request):
 @login_required
 def my_history(request):
     user0 = request.user.id
-    data = UserPredict.objects.filter(user_id=user0).order_by('-predict_at')
+    data = UserForecasts.objects.filter(user_id=user0).order_by('-predict_at')
     # filter_user_id = data
     total = data.count()
     context = {
@@ -84,7 +86,7 @@ def my_history(request):
 
 @login_required
 def history_item(request, id):
-    data = UserPredict.objects.filter(id=id)
+    data = UserForecasts.objects.filter(id=id)
     print(data)
     context = {
         'item': data
@@ -92,6 +94,7 @@ def history_item(request, id):
     return render(request, 'app_users/my_history.html', context)
 
 @login_required
+@user_passes_test(check_admin, login_url='error_page')
 def add_teacher(request):
     branch = Branch.objects.all().values()
     form = TeacherForm()
@@ -122,31 +125,26 @@ def update_teacher(request, id):
         else:
             form = UpdateTeacherForm(request.POST, instance=user_fil)
     context = {
-        'id': id,
         'form': form,
         'user_fil': user_fil,
         'branch': branch,
     }
     return render(request, 'app_users/update_teacher.html', context)
 
+@login_required
+@user_passes_test(check_admin, login_url='error_page')
 def view_teacher(request):
-    form = TeacherForm()
     teacher = User.objects.filter(is_teacher=True)
     teacher_total = teacher.count()
     
-    #Pagination
-    page = Paginator(teacher, 10)
-    page_list = request.GET.get('page')
-    page = page.get_page(page_list)
-    
     context = {
-        'form' : form,
         'teacher': teacher,
         'teacher_total': teacher_total,
-        'page': page,
     }
     return render(request, 'app_users/teacher.html', context)
 
+@login_required
+@user_passes_test(check_admin, login_url='error_page')
 def delete_teacher(request, id):
     teacher = User.objects.filter(id=id)
     teacher.delete()

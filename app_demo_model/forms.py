@@ -10,5 +10,5 @@ class BranchForm(forms.ModelForm):
         
 class DataForm(forms.Form):
     class Meta:
-        model = Data
+        model = TrainingData
         fields = '__all__'

@@ -1,10 +1,10 @@
 from django import forms
-from .models import UserPredict
+from .models import UserForecasts
 
 class UserPredictForm(forms.ModelForm):
     
     class Meta:
-        model = UserPredict
+        model = UserForecasts
         fields = ("student_id","branch", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "language")
         labels = {
             "student_id": "รหัสนักศึกษา",
@@ -38,5 +38,5 @@ class UserPredictForm(forms.ModelForm):
         
 class InputFilePredictForm(forms.Form):
     class Meta:
-        model = UserPredict
+        model = UserForecasts
         fields = ("branch", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "language", "status")

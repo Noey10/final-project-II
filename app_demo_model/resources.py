@@ -3,5 +3,5 @@ from .models import *
 
 class DataResource(resources.ModelResource):
     class Meta:
-        model = Data
+        model = TrainingData
         

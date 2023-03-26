@@ -15,6 +15,10 @@
             ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา {{ total_pass }} ข้อมูล <br>
             ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา {{ total_fail }} ข้อมูล
           </p>
+          <p class="text-dark text-start" style="font-size: 14px;">
+            การทำนายนี้ใช้อัลกอริทึม Random Forest ในการทำนาย <br>
+            โดยมีประสิทธิภาพค่าความแม่นยำ {{ acc }}&#37;
+        </p>
         </div>
         <div class="col-12 col-md-12 col-lg-6 d-flex justify-content-end">
           <div class="w-50">
@@ -46,19 +50,27 @@
             </thead>
             <tbody id="overview">
               {% for i in df %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td>{{ i.student_id }}</td>
-                  <td>{{ i.probability_pass}}&#37;</td>
-                  <td>{{ i.probability_fail }}&#37;</td>
-                  <th>
-                    {% if i.status == 'Pass' %}
-                    มีแนวโน้มสำเร็จการศึกษา
-                    {% else %}
-                    มีแนวโน้มไม่สำเร็จการศึกษา
-                    {% endif %}
-                  </th>
-                </tr>
+                {% if i.status == 'Pass' %}
+                  <tr style="background-color: #38E54D4d;">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.student_id }}</td>
+                    <td>{{ i.probability_pass}}&#37;</td>
+                    <td>{{ i.probability_fail }}&#37;</td>
+                    <th>
+                      มีแนวโน้มสำเร็จการศึกษา
+                    </th>
+                  </tr>
+                {% else %}
+                  <tr style="background-color: #FF64644d;">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.student_id }}</td>
+                    <td>{{ i.probability_pass}}&#37;</td>
+                    <td>{{ i.probability_fail }}&#37;</td>
+                    <th>
+                      มีแนวโน้มไม่สำเร็จการศึกษา
+                    </th>
+                  </tr>
+                {% endif %}
               {% endfor %}
             </tbody>
           </table>
@@ -146,7 +158,6 @@
     x[0].style.display = "block";
 
     function leaveChange(data) {
-
      switch (data) {
       case "1": 
         x[0].style.display = "block";

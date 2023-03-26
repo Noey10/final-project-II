@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.shortcuts import render
-from app_prediction.models import UserPredict
+from app_prediction.models import UserForecasts
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
@@ -24,7 +24,7 @@ def dashboard(request):
     user_teacher = user.is_teacher
     
     branch = Branch.objects.all()
-    data = UserPredict.objects.filter(user_id=user_teacher) | UserPredict.objects.filter(user_id=user_admin)
+    data = UserForecasts.objects.filter(user_id=user_teacher) | UserForecasts.objects.filter(user_id=user_admin)
     total = data.count()
     print('total = ', total)
     
@@ -78,8 +78,10 @@ def dashboard(request):
     
     return render(request, 'app_general/dashboard.html', context)
 
+def about_model(request):       
+    return render(request, 'app_general/about_model.html')
+
+
 
 def error_page(request):  
     return render(request, 'app_general/errors_page.html')
-
-    
