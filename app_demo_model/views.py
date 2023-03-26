@@ -31,48 +31,33 @@ def condition(x):
     else:
         return'very poor'
 
+
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def upload(request):
     user = request.user
     form = BranchForm()
     b = Branch.objects.all()
+    
     if request.method == 'POST':
-        res = DataResource()
-        
-        if user.is_teacher == True:
-            user_branch = user.branch_id
-            branch_fil = Branch.objects.filter(id=user_branch).values('id')
-            for i in branch_fil:
-                branch = i['id']
-            # print('branch :', branch)
-        else:
-            branch = request.POST.get('branch')
-            
-        if branch == None:
-            messages.info(request, "กรุณาเลือกสาขาวิชาที่ท่านต้องการอัปโหลดข้อมูล")
-            return HttpResponseRedirect(reverse('upload'))
-        else:
-            dataset = Dataset()
-            file = request.FILES['myfile']
-            #check type file
-            if file.name.endswith('csv'):
-                df = pd.read_csv(file)
-            elif file.name.endswith('xlsx'):
-                df = pd.read_excel(file)
-            else :
-                messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
-                return HttpResponseRedirect(reverse('upload'))
-            
-        #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
+        file = request.FILES['myfile']
+        #check type file
+        if file.name.endswith('csv'):
+            df = pd.read_csv(file)
+        elif file.name.endswith('xlsx'):
+             df = pd.read_excel(file)
+
         if 'branch' in df.columns.to_list():
-            df = df.drop(['branch'], axis=1)
+                df = df.drop(['branch'], axis=1)
         else:
             print("ok")
-            
-        #ลบแถวที่มี missing value
-        df = df.dropna()
-            
+        
+        if user.is_teacher == True:
+            branch = user.branch
+        else:
+            branch_input = request.POST.get('branch')
+            branch = Branch.objects.get(pk=branch_input)
+        
         data_branch = []
         for i in range(len(df)):
             data_branch.append(branch)
@@ -80,29 +65,58 @@ def upload(request):
         df_branch = pd.DataFrame(data_branch, columns=['branch'])
            
         df = pd.concat([df_branch, df], axis=1)
-    
-        #เช็ค column
-        col = df.columns
-        col_list =  col.to_list()
-            
+        
+        col_list = df.columns.tolist()
+        # print('column df = ', col_list)
+        # print('len col_list = ', len(col_list))
+        
         categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language', 'status']
-        if col_list != categories_feature:
-            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+        # print('len categories = ', len(categories_feature))
+        
+        #ลบคอลัมน์ที่ไม่ต้องการ
+        for item in col_list:
+            if item not in categories_feature:
+                df = df.drop(item, axis=1)
+                # print(f"{item} ไม่อยู่ใน categories_feature")
+            else:
+                pass
+                # print(f"{item} อยู่ใน categories_feature")
+        
+        #ตรวจสอบคอลัมน์ที่แตกต่าง
+        missing = list(set(categories_feature) - set(col_list))
+        print('col diff = ', missing)
+        if len(missing) != 0:
+            messages.info(request, f'ต้องการคอลัมน์ { missing } กรุณาตรวจสอบไฟล์ข้อมูลของท่าน')
+            
             return HttpResponseRedirect(reverse('upload'))
             
         #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด
         for i in categories_feature:
-            # print(df.dtypes[i])
             if df.dtypes[i] == np.float64:
                 df[i] = df[i].apply(condition)
-            
-        import_data = dataset.load(df)
-        result = res.import_data(dataset, dry_run=True, raise_errors=True)
-        if not result.has_errors():
-            res.import_data(dataset, dry_run=False)
-            
-            messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
-            print('upload success.')
+                # df[i] = df[i].apply(con)
+        
+        #บันทึกข้อมูล
+        for _, row in df.iterrows():
+            item = TrainingData(
+                branch = row['branch'],
+                admission_grade = row['admission_grade'],
+                gpa_year_1 = row['gpa_year_1'],
+                thai = row['thai'],
+                math = row['math'],
+                sci = row['sci'],
+                society = row['society'],
+                hygiene = row['hygiene'],
+                art = row['art'],
+                career = row['career'],
+                language = row['language'],
+                status = row['status']
+            )
+            item.save()
+        
+        messages.success(request, "อัปโหลดข้อมูลสำเร็จ")
+        print('upload success.')
+    
     context = {
         'b': b,
         'form': form,
@@ -136,6 +150,11 @@ def show(request):
         'total': total,
     }
     return render(request, 'app_demo_model/show_data.html', context)
+
+def delete_data(request):
+    data = TrainingData.objects.all()
+    data.delete()
+    return render(request, 'app_demo_model/show_data.html')
 
 @login_required
 @user_passes_test(check_user, login_url='error_page')

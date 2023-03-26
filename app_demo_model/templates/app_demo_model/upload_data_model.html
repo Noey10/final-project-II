@@ -64,7 +64,7 @@
                             <select id="branch" name="branch" required class="form-select">
                                 <option selected disabled>สาขา</option>
                                 {% for i in b %}
-                                    <option value="{{ i.id }}">{{ i.name }}</option>
+                                    <option value={{ i.id }}>{{ i.name }}</option>
                                 {% endfor %}
                             </select>
                         {% else %}

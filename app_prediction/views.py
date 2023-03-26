@@ -403,12 +403,12 @@ def process_predict_group(request):
         information.delete()
         
         #บันทึกข้อมูลลงฐานข้อมูล
-        dataset = Dataset()
-        res = InputFilePredictResource()
-        import_data = dataset.load(df_save)
-        result = res.import_data(dataset, dry_run=True, raise_errors=True)
-        if not result.has_errors():
-            res.import_data(dataset, dry_run=False)
+        # dataset = Dataset()
+        # res = InputFilePredictResource()
+        # import_data = dataset.load(df_save)
+        # result = res.import_data(dataset, dry_run=True, raise_errors=True)
+        # if not result.has_errors():
+        #     res.import_data(dataset, dry_run=False)
                  
         #filter ข้อมูลตามสถานะ
         filt_pass = df_save['status'].str.contains('Pass')

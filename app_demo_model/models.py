@@ -22,5 +22,5 @@ class TrainingData(models.Model):
     language = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
     
-    def __str__(self):
-        return self.status
+    # def __str__(self):
+    #     return self.status
