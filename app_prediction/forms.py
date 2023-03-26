@@ -8,7 +8,7 @@ class UserPredictForm(forms.ModelForm):
         fields = ("student_id","branch", "admission_grade", "gpa_year_1", "thai", "math", "sci", "society", "hygiene", "art", "career", "language")
         labels = {
             "student_id": "รหัสนักศึกษา",
-            "branch": "สาขา",
+            "branch": "สาขาวิชา",
             "admission_grade": "เกรดเฉลี่ยรับเข้า",
             "gpa_year_1": "เกรดเฉลี่ยชั้นปีที่ 1",
             "thai": "เกรดวิชาภาษาไทย",

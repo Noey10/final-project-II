@@ -16,19 +16,74 @@
                     <h3 class="text-danger">มีแนวโน้มที่จะไม่สำเร็จการศึกษา</h3>
                     <table class="table">
                         <tr>
-                            <td>โอกาสที่จะสำเร็จการศึกษา</td>
+                            <td>ความน่าจะเป็นที่จะสำเร็จการศึกษา</td>
 
-                            <td>โอกาสที่จะไม่สำเร็จการศึกษา</td>
+                            <td>ความน่าจะเป็นที่จะไม่สำเร็จการศึกษา</td>
                         </tr>
                         <tr>
                             <td>{{ probability.0.1 }}&#37;</td>
                             <td>{{ probability.0.0 }}&#37;</td>
                         </tr>
                     </table>
-                    <p class="text-dark text-start" style="font-size: 14px;">
-                        การทำนายนี้ใช้อัลกอริทึม Random Forest ในการทำนาย <br>
-                        โดยประสิทธิภาพความแม่นยำ {{ acc }}&#37;
-                    </p>
+                    <div class="container text-dark text-start">
+                        <p>
+                            <strong>ปัจจัยที่มีผลต่อการทำนาย:</strong>
+                            {% for i in mylist|slice:4 %}
+                              {% if i == 'admission_grade' %}
+                              เกรดเฉลี่ยรับเข้า, 
+                              {% elif i == 'gpa_year_1' %}
+                              เกรดเฉลี่ยปี1, 
+                              {% elif i == 'thai' %}
+                              เกรดภาษาไทย, 
+                              {% elif i == 'math' %}
+                              เกรดคณิตศาสตร์, 
+                              {% elif i == 'sci' %}
+                              เกรดวิทยาศาสตร์, 
+                              {% elif i == 'society' %}
+                              เกรดสังคมศึกษา, 
+                              {% elif i == 'hygiene' %}
+                              เกรดสุขศึกษา, 
+                              {% elif i == 'art' %}
+                              เกรดศิลปะ, 
+                              {% elif i == 'career' %}
+                              เกรดการงานอาชีพ, 
+                              {% elif i == 'langues' %}
+                              เกรดภาษาต่างประเทศ, 
+                              {% endif %}
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <div class="container">
+                        {% if branch.abbreviation == 'BIO' %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 183 ข้อมูล และได้รับประสิทธิภาพค่าความแม่นยำ 84.12&#37;
+                            
+                        </p>
+                        {% elif branch.abbreviation == 'CHEM' %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 258 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 84.88&#37;
+                            
+                        </p>
+                        {% elif branch.abbreviation == 'DSSI' %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 254 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 90.97&#37;
+                            
+                        </p>
+                        {% else %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 206 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 88.25&#37;
+                            
+                        </p>
+                        {% endif %}
+                    </div>
                 </div> 
             </div>
         </div>
@@ -42,21 +97,76 @@
                     <div class="emoji">
                         <span>&#128512;</span>
                     </div>
-                    <h3 class="text-success">มีแนวโน้มที่จะสำเร็จการศึกษา</h3>
+                    <h3 class="text-success fw-bold">มีแนวโน้มที่จะสำเร็จการศึกษา</h3>
                     <table class="table">
                         <tr>
-                            <td>โอกาสที่จะสำเร็จการศึกษา</td>
-                            <td>โอกาสที่จะไม่สำเร็จการศึกษา</td>
+                            <td>ความน่าจะเป็นที่จะสำเร็จการศึกษา</td>
+                            <td>ความน่าจะเป็นที่จะไม่สำเร็จการศึกษา</td>
                         </tr>
                         <tr>
                             <td>{{  probability.0.1  }}&#37;</td>
                             <td>{{  probability.0.0  }}&#37;</td>
                         </tr>
                     </table>
-                    <p class="text-dark text-start" style="font-size: 14px;">
-                        การทำนายนี้ใช้อัลกอริทึม Random Forest ในการทำนาย <br>
-                        โดยประสิทธิภาพค่าความแม่นยำ {{ acc }}&#37;
-                    </p>
+                    <div class="container text-dark text-start">
+                        <p>
+                            <strong>ปัจจัยที่มีผลต่อการทำนาย:</strong>
+                            {% for i in mylist|slice:4 %}
+                              {% if i == 'admission_grade' %}
+                              เกรดเฉลี่ยรับเข้า, 
+                              {% elif i == 'gpa_year_1' %}
+                              เกรดเฉลี่ยปี1, 
+                              {% elif i == 'thai' %}
+                              เกรดภาษาไทย, 
+                              {% elif i == 'math' %}
+                              เกรดคณิตศาสตร์, 
+                              {% elif i == 'sci' %}
+                              เกรดวิทยาศาสตร์, 
+                              {% elif i == 'society' %}
+                              เกรดสังคมศึกษา, 
+                              {% elif i == 'hygiene' %}
+                              เกรดสุขศึกษา, 
+                              {% elif i == 'art' %}
+                              เกรดศิลปะ, 
+                              {% elif i == 'career' %}
+                              เกรดการงานอาชีพ, 
+                              {% elif i == 'langues' %}
+                              เกรดภาษาต่างประเทศ, 
+                              {% endif %}
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <div class="container">
+                        {% if branch.abbreviation == 'BIO' %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 183 ข้อมูล และได้รับประสิทธิภาพค่าความแม่นยำ 84.12&#37;
+                            
+                        </p>
+                        {% elif branch.abbreviation == 'CHEM' %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 258 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 84.88&#37;
+                            
+                        </p>
+                        {% elif branch.abbreviation == 'DSSI' %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 254 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 90.97&#37;
+                            
+                        </p>
+                        {% else %}
+                        <p class="text-dark text-start" style="font-size: 14px;">
+                            ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
+                            ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
+                            ใช้ข้อมูลในการฝึกโมเดลจำนวน 206 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 88.25&#37;
+                            
+                        </p>
+                        {% endif %}
+                    </div>
                 </div> 
             </div>
         </div>

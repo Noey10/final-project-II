@@ -28,6 +28,9 @@
     <div class="container mt-3 d-flex justify-content-center">
         <form action="{% url 'process_predict' %}" method="post" class="form w-sm-100 w-50">
             {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <!-- {{ form.student_id.label_tag }} -->
             {{ form.as_p }}
             <p>
                 <button type="submit" class="btn btn-primary w-100 mt-3">ทำนาย</button>

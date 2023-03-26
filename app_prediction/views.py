@@ -14,6 +14,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_validate
+from sklearn.inspection import permutation_importance
 from tablib import Dataset
 from io import BytesIO
 from .resources import InputFilePredictResource
@@ -69,7 +70,7 @@ def prediction(request):
         art = request.POST.get('art')
         career = request.POST.get('career')
         language = request.POST.get('language')
-        
+                
         data = TrainingData.objects.filter(branch__id__contains=branch).values()
         try:
             if data.count() < 100:
@@ -150,22 +151,14 @@ def prediction(request):
         #model
         model = pipe.fit(X, y)
         
-        
-        #feature important
-        # importance_df = pd.DataFrame({
-        #     'feature': [categories_feature],
-        #     'importance': model.feature_importances_
-        # })
-        # print('feature important', '\n', importance_df)
-        
-        #predict
+        #ทำนายผล
         result = model.predict(df_predict)
+        result2 = result[0]
+        
+        #ทำนายค่าความน่าจะเป็น
         probability = model.predict_proba(df_predict)
         proba = np.around(probability * 100, 2)
-        result2 = result[0]
-        # print(proba)
-        # print(result2)
-                
+        
         if form.is_valid():
             user_input = form.save(commit=False)
             user_input.user = request.user  
@@ -178,11 +171,21 @@ def prediction(request):
 
     t_end = time.time()
     print('time run : ', t_end-t_start)
+    
+    #ตรวจสอบคอลัมน์ที่มีความสำคัญต่อการทำนาย
+    results = permutation_importance(model, X, y, random_state=0)
+    my_list = []
+    for i in results.importances_mean.argsort()[::-1]:
+        case = X.columns[i]
+        my_list.append(case)
+
+    branch_filter = Branch.objects.get(id=branch)
+    print('branch = ', branch_filter)
     context = {
-        # 'grade_dict': grade_list,
         'result': result2,
         'probability': proba,
-        'acc': acc2,
+        'mylist': my_list,
+        'branch': branch_filter,
     }
     
     return render(request, 'app_prediction/prediction_result.html', context)
@@ -424,6 +427,7 @@ def process_predict_group(request):
         'total_pass': total_pass,
         'total_fail': total_fail,
         'acc': acc2,
+        'branch': branch,
         }
     return render(request, 'app_prediction/group_result.html', context)
 

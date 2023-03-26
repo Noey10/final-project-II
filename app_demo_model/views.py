@@ -31,7 +31,6 @@ def condition(x):
     else:
         return'very poor'
 
-
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def upload(request):
@@ -151,6 +150,8 @@ def show(request):
     }
     return render(request, 'app_demo_model/show_data.html', context)
 
+@login_required
+@user_passes_test(check_user, login_url='error_page')
 def delete_data(request):
     data = TrainingData.objects.all()
     data.delete()
