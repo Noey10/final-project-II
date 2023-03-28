@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import render
 from app_prediction.models import UserForecasts
+from app_users.models import User
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
@@ -20,11 +21,10 @@ def check_user(user):
 @user_passes_test(check_user, login_url='my_dashboard')
 def dashboard(request):
     user = request.user
-    user_admin = user.is_superuser
-    user_teacher = user.is_teacher
-    
+    item = UserForecasts.objects.all()
     branch = Branch.objects.all()
-    data = UserForecasts.objects.filter(user_id=user_teacher) | UserForecasts.objects.filter(user_id=user_admin)
+    data =  item.filter(user__is_superuser=True) | item.filter(user__is_teacher=True)
+        
     total = data.count()
     print('total = ', total)
     
@@ -80,8 +80,6 @@ def dashboard(request):
 
 def about_model(request):       
     return render(request, 'app_general/about_model.html')
-
-
 
 def error_page(request):  
     return render(request, 'app_general/errors_page.html')

@@ -21,10 +21,15 @@ from .resources import InputFilePredictResource
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 import time
+from django.db.models import Q
 
 # Create your views here.
 def check_user(user):
-    return user.is_staff or user.is_teacher
+    return user.is_superuser or user.is_teacher
+
+def check_admin(user):
+    return user.is_superuser
+
 
 @login_required
 def form(request):
@@ -173,14 +178,14 @@ def prediction(request):
     print('time run : ', t_end-t_start)
     
     #ตรวจสอบคอลัมน์ที่มีความสำคัญต่อการทำนาย
-    results = permutation_importance(model, X, y, random_state=0)
+    feature_importance = permutation_importance(model, X, y, random_state=0)
     my_list = []
-    for i in results.importances_mean.argsort()[::-1]:
+    for i in feature_importance.importances_mean.argsort()[::-1]:
         case = X.columns[i]
         my_list.append(case)
 
     branch_filter = Branch.objects.get(id=branch)
-    print('branch = ', branch_filter)
+
     context = {
         'result': result2,
         'probability': proba,
@@ -189,40 +194,28 @@ def prediction(request):
     }
     
     return render(request, 'app_prediction/prediction_result.html', context)
-    
+
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def information(request):
     user = request.user
-    user_admin = request.user.is_superuser
-    user_teacher = request.user.is_teacher
-    item = UserForecasts
+    branch = user.branch
+    item = UserForecasts.objects.all()
     
-    print('user = ', user)
-    t_start = time.time()
-    if user.is_superuser or user.is_staff == True:
-        data = item.objects.filter(user_id=user_teacher) | item.objects.filter(user_id=user_admin)
-        data = data.order_by('-predict_at')
-        total = data.count()
-        
+    if user.is_teacher == True:
+        data = item.filter(branch__name=branch, user__is_teacher=True) | item.filter(branch__name=branch, user__is_superuser=True)
     else:
-        branch = request.user.branch_id
-        print('branch = ', branch)
-        id_branch = Branch.objects.get(id=branch)
-        data = item.objects.filter(branch_id=id_branch, user_id=user_teacher) | item.objects.filter(branch_id=id_branch, user_id=user_admin)
-        data = data.order_by('-predict_at')
-        total = data.count()    
+        data =  item.filter(user__is_superuser=True) | item.filter(user__is_teacher=True)
     
-    print('total = ', total)
-    t_end = time.time()
-    print('time run = ', t_end-t_start)
+    total = data.count()
+  
+    
     context={
         'data': data,
         'total': total,
     } 
     return render(request, 'app_prediction/show_data_input.html', context)
 
-    
 @login_required
 @user_passes_test(check_user, login_url='error_page')
 def download_file(request):
@@ -282,19 +275,18 @@ def predict_group_student(request):
 @user_passes_test(check_user, login_url='error_page')
 def process_predict_group(request):
     t_start = time.time()
-    user=request.user
+    user = request.user
     
     if request.method == 'POST':
-        if user.is_superuser == True or user.is_staff == True:
-            branch = request.POST.get('branch')
+        if user.is_teacher == True:
+            branch = user.branch
         else:
-            user_branch = user.branch.id
-            branch = Branch.objects.filter(id=user_branch).values('id')   
-            for i in branch :
-                branch =i['id']
-            
+            branch_input = request.POST.get('branch')
+            branch = Branch.objects.get(pk=branch_input)
+
+        #อ่านข้อมูลในดาต้าเบสเพื่อสร้าง df สำหรับฝึกโมเดล
         try:
-            data = TrainingData.objects.filter(branch__id__contains=branch).values()
+            data = TrainingData.objects.filter(branch_id=branch).values()
             if data.count() > 100:
                 df_model = pd.DataFrame(data)
             else:
@@ -304,7 +296,7 @@ def process_predict_group(request):
             messages.info(request, "กรุณาตรวจสอบการเลือกสาขาที่จะทำนาย")
             return HttpResponseRedirect(reverse('predict_group_student'))
         
-        #รับไฟล์
+        #อ่านไฟล์ที่อินพุตมา
         file = request.FILES['myfile']
         try:
             if file.name.endswith('csv'):
@@ -322,34 +314,46 @@ def process_predict_group(request):
                     messages.info(request, "ข้อมูลของท่านมีค่าว่างระบบไม่สามารถประวลผลได้ กรุณาตรวจสอบข้อมูลของท่านอีกครั้ง")
                     return HttpResponseRedirect(reverse('predict_group_student'))
         except:
-            messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
+            messages.info(request, "ต้องการไฟล์ข้อมูลประเภท XLSX หรือ CSV เท่านั้น")
             return HttpResponseRedirect(reverse('predict_group_student'))
-        
+               
         #ถ้ามีคอลัมน์ branch ให้ลบออกไปก่อน
         try:
-            df_input = df_input.drop([ 'branch'], axis=1)
+            df_input = df_input.drop(['branch'], axis=1)
         except:
-            df_input = df_input
+            pass
         
-        #จัดช่วงเกรด
         df_predict = pd.DataFrame(columns=df_input.columns.to_list())
-        for i in df_input.columns.to_list():
+        #จัดช่วงเกรด
+        for i in df_predict.columns.to_list():
             try:
                 df_predict[i] = df_input[i].apply(condition)
             except:
                 df_predict[i] = df_input[i]
-
-        try: 
-            df_predict = df_predict.drop(['student_id', 'branch'], axis=1)
+        
+        try:
+            df_predict = df_predict.drop(['student_id'])
         except:
-            df_predict = df_predict
-
-        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language']   
-        # check_col = df_predict.columns.to_list()
-        # print('check columns = ', check_col)
-        # if check_col != categories_feature: 
-        #     messages.info(request, "กรุณาอ่านข้อกำหนดการอัปโหลดไฟล์ข้อมูล และตรวจสอบข้อมูลของท่านอีกครั้ง")
-        #     return HttpResponseRedirect(reverse('predict_group_student'))
+            pass
+        
+        #เลือกคอลัมน์ที่ต้องการ
+        categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language']
+        col_list = df_predict.columns.to_list()
+        
+        
+        #ลบคอลัมน์ที่ไม่ต้องการ
+        for item in col_list:
+            if item not in categories_feature:
+                df_predict = df_predict.drop(item, axis=1)
+            else:
+                pass
+                
+        #ตรวจสอบคอลัมน์ที่แตกต่าง
+        missing = list(set(categories_feature) - set(col_list))
+        # print('col diff = ', missing)
+        if len(missing) != 0:
+            messages.info(request, f'ต้องการคอลัมน์ { missing } กรุณาตรวจสอบไฟล์ข้อมูลของท่าน')
+            return HttpResponseRedirect(reverse('predict_group_student'))
         
         #Train model แบ่งข้อมูล X,y
         X = df_model[categories_feature]
@@ -388,13 +392,25 @@ def process_predict_group(request):
         #ทำนายความน่าจะเป็นของผลลัพธ์        
         probability = model.predict_proba(df_predict)
         
-         #สร้าง DataFrame ให้ผลลัพธ์
+        #ตรวจสอบคอลัมน์ที่มีความสำคัญต่อการทำนาย
+        feature_importance = permutation_importance(model, X, y, random_state=0)
+        my_list = []
+        for i in feature_importance.importances_mean.argsort()[::-1]:
+            # print(f"{X.columns[i]} : {feature_importance.importances_mean[i]:.5f}")
+            if feature_importance.importances_mean[i] > 0.0001:
+                case = X.columns[i]
+                my_list.append(case)
+        
+        # print('my_list = ', my_list)
+        
+        #สร้าง DataFrame ให้ผลลัพธ์
         df_result = pd.DataFrame(result, columns=['status'])
         df_probability = pd.DataFrame(np.around(probability*100, 2), columns=['probability_fail', 'probability_pass'])
         
         #สร้าง DataFrame ให้ branch ที่รับมาจาก input เพื่อบันทึกลงดาต้าเบส
         df_branch = pd.DataFrame({'branch': [branch] * len(df_input)})
-        df_save = pd.concat([df_branch, df_input, df_result, df_probability], axis=1)
+        df_user = pd.DataFrame({'user': [User.objects.get(pk=user.id)] * len(df_input)})
+        df_save = pd.concat([df_branch, df_input, df_result, df_probability, df_user], axis=1)
         
         #send data to show in HTML
         df_show = df_save.drop(columns=['branch'])
@@ -402,23 +418,40 @@ def process_predict_group(request):
         total = total_fail = len(df_save)
         
         #ลบข้อมูลการทำนายที่มีในฐานข้อมูล
-        information = UserForecasts.objects.filter(branch__id__contains=branch)
+        information = UserForecasts.objects.filter(branch=branch)
         information.delete()
+        print('delete success.')
         
-        #บันทึกข้อมูลลงฐานข้อมูล
-        # dataset = Dataset()
-        # res = InputFilePredictResource()
-        # import_data = dataset.load(df_save)
-        # result = res.import_data(dataset, dry_run=True, raise_errors=True)
-        # if not result.has_errors():
-        #     res.import_data(dataset, dry_run=False)
-                 
+        #บันทึกข้อมูล
+        for _, row in df_save.iterrows():
+            item = UserForecasts(
+                branch = row['branch'],
+                student_id = row['student_id'],
+                admission_grade = row['admission_grade'],
+                gpa_year_1 = row['gpa_year_1'],
+                thai = row['thai'],
+                math = row['math'],
+                sci = row['sci'],
+                society = row['society'],
+                hygiene = row['hygiene'],
+                art = row['art'],
+                career = row['career'],
+                language = row['language'],
+                status = row['status'],
+                probability_fail = row['probability_fail'],
+                probability_pass = row['probability_pass'],
+                user= row['user'],
+            )
+            item.save()
+
+        print('save success.')
+        
         #filter ข้อมูลตามสถานะ
         filt_pass = df_save['status'].str.contains('Pass')
         filt_fail = df_save['status'].str.contains('Fail')
         total_pass = len(df_save[filt_pass])
         total_fail = len(df_save[filt_fail])
-        
+      
     t_end = time.time()
     print('time run : ', t_end-t_start)
     context = {
@@ -426,13 +459,13 @@ def process_predict_group(request):
         'total': total,
         'total_pass': total_pass,
         'total_fail': total_fail,
-        'acc': acc2,
         'branch': branch,
+        'mylist': my_list,
         }
     return render(request, 'app_prediction/group_result.html', context)
 
 @login_required
-@user_passes_test(check_user, login_url='error_page')    
+@user_passes_test(check_admin, login_url='error_page')    
 def delete_data_user_input(request):
     data_input = UserForecasts.objects.all()
     data_input.delete()

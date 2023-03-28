@@ -45,11 +45,15 @@ def upload(request):
             df = pd.read_csv(file)
         elif file.name.endswith('xlsx'):
              df = pd.read_excel(file)
-
+        else: 
+            messages.info(request, "ต้องการไฟล์ข้อมูลประเภท XLSX หรือ CSV เท่านั้น")
+            return HttpResponseRedirect(reverse('upload'))
+        
+        
         if 'branch' in df.columns.to_list():
                 df = df.drop(['branch'], axis=1)
         else:
-            print("ok")
+            pass
         
         if user.is_teacher == True:
             branch = user.branch
@@ -65,10 +69,7 @@ def upload(request):
            
         df = pd.concat([df_branch, df], axis=1)
         
-        col_list = df.columns.tolist()
-        # print('column df = ', col_list)
-        # print('len col_list = ', len(col_list))
-        
+        col_list = df.columns.tolist()       
         categories_feature = ['branch', 'admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language', 'status']
         # print('len categories = ', len(categories_feature))
         
@@ -86,7 +87,6 @@ def upload(request):
         print('col diff = ', missing)
         if len(missing) != 0:
             messages.info(request, f'ต้องการคอลัมน์ { missing } กรุณาตรวจสอบไฟล์ข้อมูลของท่าน')
-            
             return HttpResponseRedirect(reverse('upload'))
             
         #เช็ค type ของ column ถ้าเป็น float ก็แปลงเป็นช่วงเกรด

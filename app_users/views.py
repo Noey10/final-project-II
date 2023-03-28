@@ -16,8 +16,6 @@ from django.contrib import messages
 def check_admin(user):
     return user.is_superuser or user.is_staff
 
-
-
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
