@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'app_prediction.apps.AppPredictionConfig',
     'app_demo_model.apps.AppDemoModelConfig',
     'import_export',
-    
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +155,8 @@ PASSWORD_RESET_TIMEOUT = 18000
 # EMAIL_HOST_PASSWORD = 'hwvY2265'
 # EMAIL_HOST_USER = 'surasak.na.62@ubu.ac.th'
 # EMAIL_HOST_PASSWORD = 'aznK3283'
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}

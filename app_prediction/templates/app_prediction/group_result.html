@@ -15,7 +15,7 @@
             ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา {{ total_pass }} ข้อมูล <br>
             ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา {{ total_fail }} ข้อมูล
           </p>
-          <div class="container text-dark text-start">
+          <!-- <div class="container text-dark text-start">
             <p>
                 <strong>ปัจจัยที่มีผลต่อการทำนาย:</strong>
                 {% for i in mylist|slice:3 %}
@@ -42,14 +42,14 @@
                   {% endif %}
                 {% endfor %}
             </p>
-          </div>
+          </div> -->
         </div>
         <div class="col-12 col-md-12 col-lg-6 d-flex justify-content-end">
           <div class="w-50">
             <select class="form-select" name="predictResult" id="predictResult" onchange="leaveChange(this.value)">
-            <option value="1">ข้อมูลทั้งหมด</option>
-            <option value="2">ข้อมูลที่มีแนวโน้มสำเร็จการศึกษา</option>
-            <option value="3">ข้อมูลที่มีแนวโน้มไม่สำเร็จการศึกษา</option>
+            <option value="1">ผลการทำนายข้อมูลทั้งหมด</option>
+            <option value="2">ผลการทำนายที่มีแนวโน้มสำเร็จการศึกษา</option>
+            <option value="3">ผลการทำนายที่มีแนวโน้มไม่สำเร็จการศึกษา</option>
           </select>
           </div>
         </div>

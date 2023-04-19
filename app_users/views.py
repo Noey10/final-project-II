@@ -30,7 +30,7 @@ def register(request):
     return render(request, "app_users/register.html", context)
 
 @login_required
-def profile(request):
+def show_profile(request):
     user = request.user
     print('user = ', user)
     form = TeacherForm()

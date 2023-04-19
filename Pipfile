@@ -16,6 +16,9 @@ scikit-learn = "*"
 import-export = "*"
 ipython = "*"
 pydotplus = "*"
+django-extensions = "*"
+pyparsing = "*"
+pydot = "*"
 
 [dev-packages]
 autopep8 = "*"
