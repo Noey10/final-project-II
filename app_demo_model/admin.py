@@ -19,7 +19,5 @@ from .models import *
 #     ]
 #     search_fields = ['branch']
 #     list_filter = ['status']
-    
-# admin.site.register(AppliedScience, ScienceModelAdmin)
-# admin.site.register(HealthScience, ScienceModelAdmin)
-# admin.site.register(PureScience, ScienceModelAdmin)
+admin.site.register(TrainingData)
+admin.site.register(Branch)

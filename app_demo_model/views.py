@@ -150,25 +150,12 @@ def show_training_data(request):
     }
     return render(request, 'app_demo_model/show_data.html', context)
 
-# @login_required
-# @user_passes_test(check_user, login_url='error_page')
-# def delete_data(request):
-#     data = TrainingData.objects.all()
-#     data.delete()
-#     return render(request, 'app_demo_model/show_data.html')
-
-# @login_required
-# @user_passes_test(check_user, login_url='error_page')
-# def add_branch(request):
-#     if request.method == 'POST':
-#         form = BranchForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-
-#         form = BranchForm()
-#         messages.success(request, "เพิ่มข้อมูลสาขาสำเร็จ")
-#         # return HttpResponseRedirect(reverse('upload'))
-#         return HttpResponseRedirect(request.headers.get("referer"))
+@login_required
+@user_passes_test(check_user, login_url='error_page')
+def delete_data(request):
+    data = TrainingData.objects.all()
+    data.delete()
+    return render(request, 'app_demo_model/show_data.html')
 
 @login_required
 @user_passes_test(check_user, login_url='error_page')
@@ -178,28 +165,3 @@ def show_branch(request):
         'branch': branch,
     }
     return render(request, 'app_demo_model/show_data_branch.html', context)
-
-# @login_required
-# @user_passes_test(check_user, login_url='error_page')
-# def delete_branch(request, id):
-#     branch = Branch.objects.filter(id=id)
-#     branch.delete()
-#     return HttpResponseRedirect(reverse('show_branch'))
-#     # return render(request, 'app_demo_model/show_data_branch.html')
-
-# @login_required
-# @user_passes_test(check_user, login_url='error_page')
-# def update_branch(request, id):
-#     if request.method == 'POST':
-#         name = request.POST['name']
-#         abbreviation = request.POST['abbreviation']
-        
-#         branch = Branch.objects.get(id=id)
-        
-#         branch.name = name
-#         branch.abbreviation = abbreviation
-#         branch.save()
-#     messages.success(request, "อัปเดตข้อมูลสาขาสำเร็จ")
-#     return HttpResponseRedirect(reverse('show_branch'))
-
-    

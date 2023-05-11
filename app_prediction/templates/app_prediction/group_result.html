@@ -76,7 +76,7 @@
             <tbody id="overview">
               {% for i in df %}
                 {% if i.status == 'Pass' %}
-                  <tr style="background-color: #38E54D4d;">
+                  <tr style="background-color: #B0E5BD4d;">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ i.student_id }}</td>
                     <td>{{ i.probability_pass}}&#37;</td>
@@ -86,7 +86,7 @@
                     </th>
                   </tr>
                 {% else %}
-                  <tr style="background-color: #FF64644d;">
+                  <tr style="background-color: #FF646432;">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ i.student_id }}</td>
                     <td>{{ i.probability_pass}}&#37;</td>
@@ -183,28 +183,28 @@
         <p class="text-dark text-start" style="font-size: 14px;">
             ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
             ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
-            ใช้ข้อมูลในการฝึกโมเดลจำนวน 183 ข้อมูล และได้รับประสิทธิภาพค่าความแม่นยำ 84.12&#37;
+            ใช้ข้อมูลในการฝึกโมเดลจำนวน 183 ข้อมูล และได้รับประสิทธิภาพค่าความแม่นยำ 83.74&#37;
             
         </p>
         {% elif branch.abbreviation == 'CHEM' %}
         <p class="text-dark text-start" style="font-size: 14px;">
             ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
             ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
-            ใช้ข้อมูลในการฝึกโมเดลจำนวน 258 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 84.88&#37;
+            ใช้ข้อมูลในการฝึกโมเดลจำนวน 258 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 86.37&#37;
             
         </p>
         {% elif branch.abbreviation == 'DSSI' %}
         <p class="text-dark text-start" style="font-size: 14px;">
             ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
             ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
-            ใช้ข้อมูลในการฝึกโมเดลจำนวน 254 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 90.97&#37;
+            ใช้ข้อมูลในการฝึกโมเดลจำนวน 254 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 87.70&#37;
             
         </p>
         {% else %}
         <p class="text-dark text-start" style="font-size: 14px;">
             ระบบนี้ใช้เทคนิค Random Forest ในการทำนาย <br>
             ผ่านการทดสอบด้วยโปรแกรม Rapid miner Studio<br>
-            ใช้ข้อมูลในการฝึกโมเดลจำนวน 206 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 88.25&#37;
+            ใช้ข้อมูลในการฝึกโมเดลจำนวน 206 ข้อมูลและได้รับประสิทธิภาพค่าความแม่นยำ 88.48&#37;
             
         </p>
         {% endif %}

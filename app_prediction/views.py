@@ -214,47 +214,11 @@ def information(request):
         'total': total,
     } 
     return render(request, 'app_prediction/show_data_input.html', context)
-
-# @login_required
-# @user_passes_test(check_user, login_url='error_page')
-# def download_file(request):
-#     user = request.user
-#     if user.is_teacher == True:
-#         user_branch = user.branch
-#         print(user_branch)
-#         branch = Branch.objects.get(abbreviation=user_branch)
-#         print(branch)
-#         data = UserForecasts.objects.filter(branch_id=branch).values()
-#         # print(data)
-    
-#     else:
-#         data = UserForecasts.objects.all().values()
-#         # print(data)
-        
-#     df = pd.DataFrame(data)
-#     df = df.drop('predict_at', axis=1)
-#     df = df.drop('user_id', axis=1)
-   
-#     with BytesIO() as b:
-#         with pd.ExcelWriter(b) as writer:
-            
-#             #ตั้งชื่อ sheet
-#             df.to_excel(writer, sheet_name="DATA 1", index=False)
-            
-#         #ตั้งชื่อ file
-#         filename = "dataset.xlsx"
-    
-#         res = HttpResponse(
-#             b.getvalue(),
-#             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-#         )
-#         res['Content-Disposition'] = f'attachment; filename={filename}'
-#         return res
   
 @login_required
 @user_passes_test(check_user, login_url='error_page')    
 def predict_for_admin(request): 
-    return render(request, 'app_prediction/predict_for_admin.html')
+    return render(request, 'app_prediction/predict_options.html')
 
 @login_required
 @user_passes_test(check_user, login_url='error_page')   
@@ -463,10 +427,5 @@ def process_predict_group(request):
         }
     return render(request, 'app_prediction/group_result.html', context)
 
-# @login_required
-# @user_passes_test(check_admin, login_url='error_page')    
-# def delete_data_user_input(request):
-#     data_input = UserForecasts.objects.all()
-#     data_input.delete()
-#     return render(request, 'app_prediction/show_data_input.html')
+
   

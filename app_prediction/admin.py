@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserForecasts
+from .models import *
 
 # Register your models here.
 # class UserForecastsAdmin(admin.ModelAdmin):
@@ -22,4 +22,4 @@ from .models import UserForecasts
 #     search_fields = ['branch']
 #     list_filter = ['status']
 
-# admin.site.register(UserForecasts, UserForecastsAdmin)
+admin.site.register(UserForecasts)

@@ -9,7 +9,7 @@ urlpatterns = [
     path('show_branch', views.show_branch, name="show_branch"), 
     # path('delete_branch/<str:id>', views.delete_branch, name="delete_branch"), 
     # path('update_branch/<str:id>', views.update_branch, name="update_branch"), 
-    # path('delete', views.delete_data, name='delete')
+    path('delete', views.delete_data, name='delete')
     
     
        
