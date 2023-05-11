@@ -297,7 +297,7 @@ def process_predict_group(request):
         try:
             df_predict = df_predict.drop(['student_id'])
         except:
-            pass
+            df_predict = df_predict
         
         #เลือกคอลัมน์ที่ต้องการ
         categories_feature = ['admission_grade', 'gpa_year_1', 'thai', 'math', 'sci', 'society', 'hygiene', 'art', 'career', 'language']
@@ -387,25 +387,46 @@ def process_predict_group(request):
         
         #บันทึกข้อมูล
         for _, row in df_save.iterrows():
-            item = UserForecasts(
-                branch = row['branch'],
-                student_id = row['student_id'],
-                admission_grade = row['admission_grade'],
-                gpa_year_1 = row['gpa_year_1'],
-                thai = row['thai'],
-                math = row['math'],
-                sci = row['sci'],
-                society = row['society'],
-                hygiene = row['hygiene'],
-                art = row['art'],
-                career = row['career'],
-                language = row['language'],
-                status = row['status'],
-                probability_fail = row['probability_fail'],
-                probability_pass = row['probability_pass'],
-                user= row['user'],
-            )
-            item.save()
+            try:
+                item = UserForecasts(
+                    branch = row['branch'],
+                    student_id = row['student_id'],
+                    admission_grade = row['admission_grade'],
+                    gpa_year_1 = row['gpa_year_1'],
+                    thai = row['thai'],
+                    math = row['math'],
+                    sci = row['sci'],
+                    society = row['society'],
+                    hygiene = row['hygiene'],
+                    art = row['art'],
+                    career = row['career'],
+                    language = row['language'],
+                    status = row['status'],
+                    probability_fail = row['probability_fail'],
+                    probability_pass = row['probability_pass'],
+                    user= row['user'],
+                )
+                item.save()
+            except:
+                item = UserForecasts(
+                    branch = row['branch'],
+                    # student_id = row['student_id'],
+                    admission_grade = row['admission_grade'],
+                    gpa_year_1 = row['gpa_year_1'],
+                    thai = row['thai'],
+                    math = row['math'],
+                    sci = row['sci'],
+                    society = row['society'],
+                    hygiene = row['hygiene'],
+                    art = row['art'],
+                    career = row['career'],
+                    language = row['language'],
+                    status = row['status'],
+                    probability_fail = row['probability_fail'],
+                    probability_pass = row['probability_pass'],
+                    user= row['user'],
+                )
+                item.save()                
 
         print('save success.')
         
